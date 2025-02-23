@@ -1,35 +1,21 @@
-import { fetchMovieDetails, fetchMoviePoster } from "@/backend/movie";
-import MovieCard from "@/components/cards/movieCard";
-import { useState, useEffect } from "react";
-import { Text, View, Image } from "react-native";
+import React from "react";
+import { useRouter } from "expo-router";
+import { onAuthStateChanged } from "firebase/auth";
+import WelcomeScreen from "./(auth)/welcome";
+import { FIREBASE_AUTH } from "../firebaseConfig";
 
-export default function Index() {
-  const [movieDetails, setMovieDetails] = useState<Movie>();
-  const [moviePoster, setMoviePoster] = useState("");
+function App() {
+  const router = useRouter();
 
-  useEffect(() => {
-    const fetchDetails = async () => {
-      const details = await fetchMovieDetails(551); // Replace 1 with the desired movie ID
-      setMoviePoster(fetchMoviePoster(details?.poster_path));
-      setMovieDetails(details);
-      console.log("here" + details?.poster_path);
-    };
+  onAuthStateChanged(FIREBASE_AUTH, (user) => {
+    if (user) {
+      router.replace("/(tabs)/(home)/TrendingScreen");
+    } else {
+      router.replace("/(auth)/welcome");
+    }
+  });
 
-    fetchDetails();
-  }, []);
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <MovieCard
-        title={movieDetails?.title || "Unknown Title"}
-        posterPath={moviePoster}
-        genres={movieDetails?.genres || []}
-      />
-    </View>
-  );
+  return <WelcomeScreen />;
 }
+
+export default App;

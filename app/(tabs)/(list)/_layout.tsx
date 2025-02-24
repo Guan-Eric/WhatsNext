@@ -1,7 +1,7 @@
 import React from "react";
 import { Stack } from "expo-router";
 
-function HomeStackLayout() {
+function ListStackLayout() {
   return (
     <Stack>
       <Stack.Screen
@@ -12,4 +12,4 @@ function HomeStackLayout() {
   );
 }
 
-export default HomeStackLayout;
+export default ListStackLayout;

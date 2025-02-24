@@ -1,15 +1,15 @@
 import React from "react";
 import { Stack } from "expo-router";
 
-function HomeStackLayout() {
+function GenerateStackLayout() {
   return (
     <Stack>
       <Stack.Screen
-        name="TrendingScreen"
+        name="GenerateScreen"
         options={{ headerShown: false, gestureEnabled: false }}
       />
     </Stack>
   );
 }
 
-export default HomeStackLayout;
+export default GenerateStackLayout;

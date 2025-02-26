@@ -1,19 +1,23 @@
-import { Button, Rating } from "@rneui/base";
+import { Button } from "@rneui/themed";
 import React, { useState } from "react";
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Modal, View, Text, StyleSheet } from "react-native";
+import { Rating } from "react-native-ratings";
 
 interface StreakModalProps {
   modalVisible: boolean;
   onClose: () => void;
   save: (rating: number) => void;
+  theme: any;
 }
 
 const RatingModal: React.FC<StreakModalProps> = ({
   modalVisible,
   onClose,
   save,
+  theme,
 }) => {
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(2.5);
+
   return (
     <Modal
       animationType="fade"
@@ -22,27 +26,40 @@ const RatingModal: React.FC<StreakModalProps> = ({
       onRequestClose={onClose}
     >
       <View style={styles.modalOverlay}>
-        <View style={[styles.modalContent, { backgroundColor: "#1f1f1f" }]}>
-          <Text style={[styles.modalText, { color: "#f8f9fa" }]}>
-            Password must:
-          </Text>
+        <View
+          style={[styles.modalContent, { backgroundColor: theme.colors.grey1 }]}
+        >
           <Rating
+            type="custom"
+            style={{ paddingVertical: 10, backgroundColor: theme.colors.grey1 }}
+            imageSize={40}
+            ratingBackgroundColor={theme.colors.grey1}
+            onFinishRating={(value: number) => {
+              setRating(value);
+            }}
+            ratingCount={5}
             showRating
-            imageSize={20}
-            startingValue={0}
-            onFinishRating={(value: number) => setRating(value)}
+            fractions={1}
+            jumpValue={0.5}
           />
-          ;
           <View style={styles.buttonContainer}>
             <Button
               onPress={() => save(rating)}
-              buttonStyle={[
-                styles.newStreakButton,
-                { backgroundColor: "#3490de" },
-              ]}
+              buttonStyle={[styles.newStreakButton]}
             >
               <Text style={[styles.buttonText, { color: "#f8f9fa" }]}>
                 Save
+              </Text>
+            </Button>
+            <Button
+              onPress={() => onClose()}
+              buttonStyle={[
+                styles.newStreakButton,
+                { backgroundColor: theme.colors.grey2 },
+              ]}
+            >
+              <Text style={[styles.buttonText, { color: "#f8f9fa" }]}>
+                Close
               </Text>
             </Button>
           </View>
@@ -90,7 +107,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   newStreakButton: {
-    backgroundColor: "#e74c3c",
     padding: 10,
     marginVertical: 5,
     borderRadius: 10,

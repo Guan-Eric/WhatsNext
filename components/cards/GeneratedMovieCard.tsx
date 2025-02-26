@@ -26,8 +26,8 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
       containerStyle={[
         styles.card,
         {
-          backgroundColor: theme.colors.grey0,
-          borderColor: theme.colors.grey0,
+          backgroundColor: theme.colors.grey1,
+          borderColor: theme.colors.grey1,
         },
       ]}
     >
@@ -63,7 +63,7 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
         />
         <Button
           disabled={listDisabled}
-          title={"Already watched?"}
+          title={"Already seen?"}
           buttonStyle={{ borderRadius: 30 }}
           onPress={() => setIsModalVisible(true)}
         />
@@ -77,6 +77,7 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
           setListDisabled(true);
           setWatchDisabled(false);
         }}
+        theme={theme}
       />
     </Card>
   );

@@ -14,8 +14,8 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, posterPath, theme }) => {
       containerStyle={[
         styles.card,
         {
-          backgroundColor: theme.colors.grey0,
-          borderColor: theme.colors.grey0,
+          backgroundColor: theme.colors.grey1,
+          borderColor: theme.colors.grey1,
         },
       ]}
     >

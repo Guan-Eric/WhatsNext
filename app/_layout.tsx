@@ -8,7 +8,7 @@ import { useColorScheme } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const theme = createTheme({
-  lightColors: {
+  darkColors: {
     primary: "#3490de", // Same primary blue
     secondary: "#f5a623", // Complementary orange
     background: "#181818", // Deep dark grey background
@@ -27,7 +27,7 @@ const theme = createTheme({
     warning: "#ffc107", // Yellow for warnings (same as light mode)
     divider: "#2d2d2d", // Subtle divider line for dark mode
   },
-  mode: "light", // Default to dark mode
+  mode: "dark", // Default to dark mode
 });
 
 function AppLayout() {

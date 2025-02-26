@@ -3,18 +3,28 @@ import { View, Text, Image, StyleSheet } from "react-native";
 import { Card } from "@rneui/themed";
 
 interface MovieCardProps {
-  title: string;
+  movie: Movie;
   posterPath: string;
-  genres: Genre[];
+  theme: any;
 }
 
-const MovieCard: React.FC<MovieCardProps> = ({ title, posterPath, genres }) => {
+const MovieCard: React.FC<MovieCardProps> = ({ movie, posterPath, theme }) => {
   return (
-    <Card containerStyle={styles.card}>
+    <Card
+      containerStyle={[
+        styles.card,
+        {
+          backgroundColor: theme.colors.grey0,
+          borderColor: theme.colors.grey0,
+        },
+      ]}
+    >
       <Image source={{ uri: posterPath }} style={styles.poster} />
-      <Text style={styles.title}>{title}</Text>
+      <Text style={[styles.title, { color: theme.colors.black }]}>
+        {movie.title}
+      </Text>
       <View style={styles.genresContainer}>
-        {genres?.map((genre, index) => (
+        {movie.genres?.map((genre, index) => (
           <Text key={index} style={styles.genre}>
             {genre.name}
           </Text>

@@ -8,8 +8,8 @@ import {
 } from "react-native";
 import { Button, CheckBox, Input, Slider, useTheme } from "@rneui/themed";
 import { ScrollView } from "react-native-gesture-handler";
-import BackButton from "../../../components/BackButton";
 import { router } from "expo-router";
+import { GenerateStringList } from "@/backend/ai";
 
 export default function GenerateScreen() {
   const [genre, setGenre] = useState<string>("");
@@ -18,10 +18,32 @@ export default function GenerateScreen() {
     "all-time" | "recent" | "classic"
   >("all-time");
   const [language, setLanguage] = useState<string>("");
+  const [type, setType] = useState<"movie" | "tv">("movie");
+  const [preference, setPreference] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const { theme } = useTheme();
 
-  async function handleGenerateMovies() {}
+  async function handleGenerateMovies() {
+    try {
+      setLoading(true);
+      const list = await GenerateStringList(
+        genre,
+        mood,
+        releaseYear,
+        language,
+        type,
+        preference
+      );
+      router.push({
+        pathname: "/(tabs)/(generate)/GeneratedListScreen",
+        params: { list: list, type: type },
+      });
+    } catch (error) {
+      console.error("Error genereating list", error);
+    } finally {
+      setLoading(false);
+    }
+  }
   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
@@ -56,6 +78,29 @@ export default function GenerateScreen() {
               value={genre}
               onChangeText={setGenre}
             />
+            <Text style={[styles.sectionTitle, { color: theme.colors.black }]}>
+              Release Year
+            </Text>
+            <View style={styles.checkboxRow}>
+              <CheckBox
+                textStyle={{ color: theme.colors.black }}
+                containerStyle={styles.checkboxContainer}
+                checked={type === "movie"}
+                title={"Movie"}
+                onIconPress={() => {
+                  setType("movie");
+                }}
+              />
+              <CheckBox
+                textStyle={{ color: theme.colors.black }}
+                containerStyle={styles.checkboxContainer}
+                checked={type === "tv"}
+                title={"TV Show"}
+                onIconPress={() => {
+                  setType("tv");
+                }}
+              />
+            </View>
             <Input
               labelStyle={[
                 styles.sectionTitle,
@@ -93,6 +138,7 @@ export default function GenerateScreen() {
               />
               <CheckBox
                 textStyle={{ color: theme.colors.black }}
+                containerStyle={styles.checkboxContainer}
                 checked={releaseYear === "recent"}
                 title={"Recent"}
                 onIconPress={() => {
@@ -131,6 +177,27 @@ export default function GenerateScreen() {
               value={language}
               onChangeText={setLanguage}
             />
+            <Input
+              labelStyle={[
+                styles.sectionTitle,
+                {
+                  paddingLeft: 0,
+                  marginTop: 0,
+                  color: theme.colors.black,
+                  marginBottom: 5,
+                },
+              ]}
+              inputStyle={{ color: theme.colors.black }}
+              inputContainerStyle={[
+                styles.inputRoundedContainer,
+                { backgroundColor: theme.colors.grey0 },
+              ]}
+              containerStyle={styles.inputContainer}
+              style={styles.input}
+              label="Other Preferences"
+              value={preference}
+              onChangeText={setPreference}
+            />
 
             <Button
               titleStyle={styles.buttonTitle}
@@ -141,7 +208,7 @@ export default function GenerateScreen() {
                 borderRadius: 20,
                 alignSelf: "center",
               }}
-              title="Generate Movie Lists"
+              title="Generate List"
               onPress={handleGenerateMovies}
               loading={loading}
               containerStyle={styles.buttonContainer}

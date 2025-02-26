@@ -9,7 +9,7 @@ function App() {
 
   onAuthStateChanged(FIREBASE_AUTH, (user) => {
     if (user) {
-      router.replace("/(tabs)/(home)/TrendingScreen");
+      router.replace("/(tabs)/(home)/HomeScreen");
     } else {
       router.replace("/(auth)/welcome");
     }

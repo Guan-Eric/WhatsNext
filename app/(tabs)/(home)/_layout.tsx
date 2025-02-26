@@ -5,7 +5,7 @@ function HomeStackLayout() {
   return (
     <Stack>
       <Stack.Screen
-        name="TrendingScreen"
+        name="HomeScreen"
         options={{ headerShown: false, gestureEnabled: false }}
       />
     </Stack>

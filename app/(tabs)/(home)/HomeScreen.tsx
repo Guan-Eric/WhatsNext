@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-const TrendingScreen = () => {
+const HomeScreen = () => {
   return (
     <View>
       <Text>Hello, World!</Text>
@@ -11,4 +11,4 @@ const TrendingScreen = () => {
 
 const styles = StyleSheet.create({});
 
-export default TrendingScreen;
+export default HomeScreen;

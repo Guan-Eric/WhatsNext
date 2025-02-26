@@ -8,6 +8,10 @@ function GenerateStackLayout() {
         name="GenerateScreen"
         options={{ headerShown: false, gestureEnabled: false }}
       />
+      <Stack.Screen
+        name="GeneratedListScreen"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 }

@@ -47,6 +47,9 @@ export default {
       messagingSenderId: process.env.MESSAGING_SENDER_ID,
       appId: process.env.APP_ID,
       measurementId: process.env.MEASUREMENT_ID,
+      openaiOrganizationId: process.env.OPENAI_ORGANIZATION_ID,
+      openaiProjectId: process.env.OPENAI_PROJECT_ID,
+      openaiApiKey: process.env.OPENAI_API_KEY,
     },
     experiments: {
       typedRoutes: true,

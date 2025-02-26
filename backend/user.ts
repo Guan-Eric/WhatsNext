@@ -1,16 +1,4 @@
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  orderBy,
-  query,
-  setDoc,
-  updateDoc,
-  where,
-} from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../firebaseConfig";
 
 export async function addUser() {
@@ -27,28 +15,6 @@ export async function addUser() {
   } catch (error) {
     console.error("Error creating user:", error);
   }
-}
-
-export async function updateUsername(username: string) {
-  try {
-    const userDocRef = doc(
-      FIRESTORE_DB,
-      `Users/${FIREBASE_AUTH?.currentUser?.uid}`
-    );
-    await updateDoc(userDocRef, {
-      username: username,
-      prefixes: generatePrefixes(username),
-    });
-  } catch (error) {
-    console.error("Error updating username", error);
-  }
-}
-function generatePrefixes(username: string) {
-  const prefixes = [];
-  for (let i = 1; i <= username.length; i++) {
-    prefixes.push(username.substring(0, i).toLowerCase());
-  }
-  return prefixes;
 }
 
 export async function getUser(userId: string): Promise<User | undefined> {

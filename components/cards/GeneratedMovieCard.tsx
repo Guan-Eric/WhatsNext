@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
 import { Button, Card } from "@rneui/themed";
 import { saveToMyList, saveToWatchlist } from "@/backend/movie";
 import RatingModal from "../modal/RatingModal";
@@ -20,6 +20,8 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
   const [isModelVisible, setIsModalVisible] = useState(false);
   const [listDisabled, setListDisabled] = useState(false);
   const [watchDisabled, setWatchDisabled] = useState(false);
+  const screenWidth = Dimensions.get("screen").width;
+  const screenHeight = Dimensions.get("screen").height;
 
   return (
     <Card
@@ -31,7 +33,13 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
         },
       ]}
     >
-      <Image source={{ uri: posterPath }} style={styles.poster} />
+      <Image
+        source={{ uri: posterPath }}
+        style={[
+          styles.poster,
+          { width: screenWidth * 0.84, height: screenWidth * 0.84 * 1.5 },
+        ]}
+      />
       <Text style={[styles.title, { color: theme.colors.black }]}>
         {"title" in movie ? movie.title : movie.name}
       </Text>
@@ -88,8 +96,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   poster: {
-    width: "100%",
-    height: "82%",
     borderRadius: 10,
   },
   title: {

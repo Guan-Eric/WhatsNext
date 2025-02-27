@@ -20,7 +20,7 @@ function TabLayout() {
       <Tabs.Screen
         name="(home)"
         options={{
-          title: "Trending",
+          title: "Home",
           tabBarIcon: ({ size, color }) => (
             <MaterialCommunityIcons name="home" size={size} color={color} />
           ),

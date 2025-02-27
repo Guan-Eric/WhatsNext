@@ -5,7 +5,7 @@ function ListStackLayout() {
   return (
     <Stack>
       <Stack.Screen
-        name="TrendingScreen"
+        name="MyListScreen"
         options={{ headerShown: false, gestureEnabled: false }}
       />
     </Stack>

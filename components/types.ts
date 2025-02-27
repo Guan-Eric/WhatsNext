@@ -140,3 +140,10 @@ interface TVShow {
   vote_average: number;
   vote_count: number;
 }
+
+interface ModalOptions {
+  title?: string;
+  containerStyle: object;
+  titleStyle?: object;
+  onPress?: () => void;
+}

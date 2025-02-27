@@ -20,32 +20,45 @@ const PasswordErrorModal: React.FC<StreakModalProps> = ({
       visible={modalVisible}
       onRequestClose={onClose}
     >
-      <View style={styles.modalOverlay}>
-        <View style={[styles.modalContent, { backgroundColor: "#1f1f1f" }]}>
-          <Text style={[styles.modalText, { color: "#f8f9fa" }]}>
-            Password must:
-          </Text>
-          <Text style={[styles.modalSubText, { color: "#f8f9fa" }]}>
-            {"\n"}- Be at least {minLength} characters long.
-            {"\n"}- Contain at least one uppercase letter.
-            {"\n"}- Contain at least one lowercase letter.
-            {"\n"}- Contain at least one number.
-            {"\n"}- Contain at least one special character.
-            {"\n"}- Match the confirmation password.
-          </Text>
-          <View style={styles.buttonContainer}>
-            <Button
-              onPress={onClose}
-              buttonStyle={[
-                styles.newStreakButton,
-                { backgroundColor: "#3490de" },
-              ]}
-            >
-              <Text style={[styles.buttonText, { color: "#f8f9fa" }]}>Ok</Text>
-            </Button>
+      <TouchableOpacity
+        style={{
+          flex: 1,
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        activeOpacity={1}
+        onPress={onClose}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, { backgroundColor: "#1f1f1f" }]}>
+            <Text style={[styles.modalText, { color: "#f8f9fa" }]}>
+              Password must:
+            </Text>
+            <Text style={[styles.modalSubText, { color: "#f8f9fa" }]}>
+              {"\n"}- Be at least {minLength} characters long.
+              {"\n"}- Contain at least one uppercase letter.
+              {"\n"}- Contain at least one lowercase letter.
+              {"\n"}- Contain at least one number.
+              {"\n"}- Contain at least one special character.
+              {"\n"}- Match the confirmation password.
+            </Text>
+            <View style={styles.buttonContainer}>
+              <Button
+                onPress={onClose}
+                buttonStyle={[
+                  styles.newStreakButton,
+                  { backgroundColor: "#3490de" },
+                ]}
+              >
+                <Text style={[styles.buttonText, { color: "#f8f9fa" }]}>
+                  Ok
+                </Text>
+              </Button>
+            </View>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     </Modal>
   );
 };

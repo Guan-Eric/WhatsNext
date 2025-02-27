@@ -63,7 +63,7 @@ export default function GenerateScreen() {
           data={
             type == "movie" ? (movieList as Movie[]) : (movieList as TVShow[])
           }
-          height={screenHeight * 0.8}
+          height={screenHeight}
           loop={false}
           pagingEnabled={true}
           snapEnabled={true}

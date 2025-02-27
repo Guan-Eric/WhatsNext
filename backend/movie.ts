@@ -1,6 +1,14 @@
 import { FIRESTORE_DB, FIREBASE_AUTH } from "@/firebaseConfig";
 import Constants from "expo-constants";
-import { doc, setDoc, deleteDoc } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  deleteDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 
 const API_KEY = Constants.expoConfig?.extra?.tmdbApiKey;
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -96,5 +104,44 @@ export async function saveToWatchlist(id: string, type: "movie" | "tv") {
   } catch (error) {
     console.error("Error adding document: ", error);
     return false;
+  }
+}
+
+export async function fetchMoviesFromMyList(
+  type: "movie" | "tv"
+): Promise<Movie[] | TVShow[]> {
+  try {
+    const myListCollectionRef = collection(
+      FIRESTORE_DB,
+      `Users/${FIREBASE_AUTH.currentUser?.uid}/MyList`
+    );
+    if (type == "movie") {
+      const movieListSnapshot = await getDocs(
+        query(myListCollectionRef, where("type", "==", "movie"))
+      );
+      const list: Movie[] = [];
+      for (const movieSnapshot of movieListSnapshot.docs) {
+        const movie = (await fetchDetails(
+          Number(movieSnapshot.id),
+          type
+        )) as Movie;
+        console.log(movie?.title);
+        list.push(movie);
+      }
+      return list;
+    } else {
+      const tvListSnapshot = await getDocs(
+        query(myListCollectionRef, where(type, "==", "tv"))
+      );
+      const list: TVShow[] = [];
+      for (const tvSnapshot of tvListSnapshot.docs) {
+        const tv = tvSnapshot.data() as TVShow;
+        list.push(tv);
+      }
+      return list;
+    }
+  } catch (error) {
+    console.error("Error fetching My List", error);
+    return [];
   }
 }

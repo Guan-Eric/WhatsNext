@@ -36,6 +36,15 @@ function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="(watchlist)"
+        options={{
+          title: "Watchlist",
+          tabBarIcon: ({ size, color }) => (
+            <MaterialCommunityIcons name="dumbbell" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="(list)"
         options={{
           title: "My List",

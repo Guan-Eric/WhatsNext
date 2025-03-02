@@ -125,17 +125,54 @@ export async function fetchMoviesFromMyList(
           Number(movieSnapshot.id),
           type
         )) as Movie;
-        console.log(movie?.title);
         list.push(movie);
       }
       return list;
     } else {
       const tvListSnapshot = await getDocs(
-        query(myListCollectionRef, where(type, "==", "tv"))
+        query(myListCollectionRef, where("type", "==", "tv"))
       );
       const list: TVShow[] = [];
       for (const tvSnapshot of tvListSnapshot.docs) {
-        const tv = tvSnapshot.data() as TVShow;
+        const tv = (await fetchDetails(Number(tvSnapshot.id), type)) as TVShow;
+        list.push(tv);
+      }
+      return list;
+    }
+  } catch (error) {
+    console.error("Error fetching My List", error);
+    return [];
+  }
+}
+
+export async function fetchMoviesFromWatchlist(
+  type: "movie" | "tv"
+): Promise<Movie[] | TVShow[]> {
+  try {
+    const myListCollectionRef = collection(
+      FIRESTORE_DB,
+      `Users/${FIREBASE_AUTH.currentUser?.uid}/Watchlist`
+    );
+    if (type == "movie") {
+      const movieListSnapshot = await getDocs(
+        query(myListCollectionRef, where("type", "==", "movie"))
+      );
+      const list: Movie[] = [];
+      for (const movieSnapshot of movieListSnapshot.docs) {
+        const movie = (await fetchDetails(
+          Number(movieSnapshot.id),
+          type
+        )) as Movie;
+        list.push(movie);
+      }
+      return list;
+    } else {
+      const tvListSnapshot = await getDocs(
+        query(myListCollectionRef, where("type", "==", "tv"))
+      );
+      const list: TVShow[] = [];
+      for (const tvSnapshot of tvListSnapshot.docs) {
+        const tv = (await fetchDetails(Number(tvSnapshot.id), type)) as TVShow;
         list.push(tv);
       }
       return list;

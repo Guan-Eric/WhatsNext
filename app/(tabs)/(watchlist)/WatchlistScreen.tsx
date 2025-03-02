@@ -1,4 +1,8 @@
-import { fetchMoviePoster, fetchMoviesFromMyList } from "@/backend/movie";
+import {
+  fetchMoviePoster,
+  fetchMoviesFromMyList,
+  fetchMoviesFromWatchlist,
+} from "@/backend/movie";
 import MovieCard from "@/components/cards/MovieCard";
 import TVShowCard from "@/components/cards/TVShowCard";
 import { ButtonGroup, Tab, useTheme } from "@rneui/themed";
@@ -6,15 +10,15 @@ import { useFocusEffect } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, View, Text } from "react-native";
 
-const MyListScreen = () => {
+const WatchlistScreen = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [tvShows, setTVShows] = useState<TVShow[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { theme } = useTheme();
 
   const fetchMoviesAndTVShows = async () => {
-    setMovies((await fetchMoviesFromMyList("movie")) as Movie[]);
-    setTVShows((await fetchMoviesFromMyList("tv")) as TVShow[]);
+    setMovies((await fetchMoviesFromWatchlist("movie")) as Movie[]);
+    setTVShows((await fetchMoviesFromWatchlist("tv")) as TVShow[]);
   };
 
   useEffect(() => {
@@ -31,7 +35,7 @@ const MyListScreen = () => {
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <SafeAreaView>
         <Text style={[styles.title, { color: theme.colors.black }]}>
-          My List
+          Watchlist
         </Text>
         <ScrollView style={{ marginBottom: 40 }}>
           <ButtonGroup
@@ -84,4 +88,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyListScreen;
+export default WatchlistScreen;

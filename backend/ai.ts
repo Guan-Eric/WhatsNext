@@ -9,6 +9,7 @@ const openai = new OpenAI({
   organization: Constants.expoConfig?.extra?.openaiOrganizationId,
   project: Constants.expoConfig?.extra?.openaiProjectId,
   apiKey: Constants.expoConfig?.extra?.openaiApiKey,
+  dangerouslyAllowBrowser: true,
 });
 
 export async function GenerateStringList(
@@ -79,10 +80,10 @@ export async function GenerateStringList(
           "Failed to generate list after multiple attempts. Please try again later."
         );
       }
-      return [];
+      throw error;
     }
   }
-  return [];
+  throw Error;
 }
 
 export async function FetchMovieList(
@@ -107,12 +108,10 @@ export async function FetchMovieList(
           const id = data.results[0].id;
           const details = await fetchDetails(id, type);
           if (details) {
-            console.log(details);
             result.push(details as Movie);
           }
         }
       }
-      console.log("movie", result);
       return result;
     } else {
       const result: TVShow[] = [];
@@ -132,6 +131,6 @@ export async function FetchMovieList(
     }
   } catch (error) {
     console.error("Error Creating Movie/TV Show List", error);
-    return [];
+    throw error;
   }
 }

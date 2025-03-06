@@ -44,15 +44,6 @@ function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="(list)"
-        options={{
-          title: "My List",
-          tabBarIcon: ({ size, color }) => (
-            <MaterialCommunityIcons name="dumbbell" size={size} color={color} />
-          ),
-        }}
-      />
     </Tabs>
   );
 }

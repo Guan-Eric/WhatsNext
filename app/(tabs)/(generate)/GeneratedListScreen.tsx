@@ -1,16 +1,8 @@
-import React, { Ref, useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  Dimensions,
-} from "react-native";
-import { Button, CheckBox, Input, Slider, useTheme } from "@rneui/themed";
-import { ScrollView } from "react-native-gesture-handler";
-import { router, useLocalSearchParams } from "expo-router";
-import { FetchMovieList, GenerateStringList } from "@/backend/ai";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, SafeAreaView, Dimensions } from "react-native";
+import { useTheme } from "@rneui/themed";
+import { useLocalSearchParams } from "expo-router";
+import { FetchMovieList } from "@/backend/ai";
 import BackButton from "@/components/BackButton";
 import Carousel from "react-native-reanimated-carousel";
 import GeneratedMovieCard from "@/components/cards/GeneratedMovieCard";
@@ -30,6 +22,7 @@ export default function GenerateScreen() {
       posterPath={fetchMoviePoster(item.poster_path as string)}
       theme={theme}
       type={type as "movie" | "tv"}
+      tab={"(generate)"}
     />
   );
   useEffect(() => {

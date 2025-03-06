@@ -6,7 +6,7 @@ import {
   Image,
   KeyboardAvoidingView,
 } from "react-native";
-import { StyleSheet, Keyboard, TouchableWithoutFeedback } from "react-native";
+import { StyleSheet, Keyboard, Pressable } from "react-native";
 import { Button, Input } from "@rneui/themed";
 import { router, useLocalSearchParams } from "expo-router";
 import { register } from "../../backend/auth";
@@ -82,99 +82,98 @@ function SignUpScreen() {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-          <SafeAreaView style={{ flex: 1 }}>
-            <BackButton />
-            <View style={styles.content}>
-              <View style={{ alignItems: "center", paddingBottom: 60 }}>
-                <Image
-                  style={styles.logo}
-                  source={require("../../assets/images/icon.png")}
-                />
-                <Text style={styles.titleText}>Sign Up</Text>
-              </View>
-              <View style={{ paddingBottom: 90 }}>
+    <View style={styles.container}>
+      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1 }}>
+          <BackButton />
+          <View style={styles.content}>
+            <View style={{ alignItems: "center", paddingBottom: 60 }}>
+              <Image
+                style={styles.logo}
+                resizeMode="contain"
+                source={require("../../assets/images/icon.png")}
+              />
+              <Text style={styles.titleText}>Sign Up</Text>
+            </View>
+            <View style={{ paddingBottom: 90 }}>
+              <Input
+                inputContainerStyle={styles.inputRoundedContainer}
+                containerStyle={styles.inputContainer}
+                style={styles.input}
+                label="E-mail"
+                placeholder="e.g. johnsmith@email.com"
+                value={email}
+                onChangeText={(email) => onChangeEmail(email)}
+                autoCapitalize="none"
+                placeholderTextColor="gray"
+                inputStyle={styles.inputText}
+                errorMessage={emailError}
+              />
+              <View style={{ paddingTop: 40 }}>
                 <Input
                   inputContainerStyle={styles.inputRoundedContainer}
                   containerStyle={styles.inputContainer}
                   style={styles.input}
-                  label="E-mail"
-                  placeholder="e.g. johnsmith@email.com"
-                  value={email}
-                  onChangeText={(email) => onChangeEmail(email)}
+                  label="Password"
+                  value={password}
+                  onChangeText={(password) => setPassword(password)}
+                  secureTextEntry={true}
+                  autoCapitalize="none"
+                  inputStyle={styles.inputText}
+                />
+              </View>
+              <View style={{ paddingTop: 40 }}>
+                <Input
+                  inputContainerStyle={styles.inputRoundedContainer}
+                  containerStyle={styles.inputContainer}
+                  style={styles.input}
+                  label="Confirm Password"
+                  value={confirmPassword}
+                  onChangeText={(confirmPassword) =>
+                    setConfirmPassword(confirmPassword)
+                  }
+                  secureTextEntry={true}
                   autoCapitalize="none"
                   placeholderTextColor="gray"
                   inputStyle={styles.inputText}
-                  errorMessage={emailError}
-                />
-                <View style={{ paddingTop: 40 }}>
-                  <Input
-                    inputContainerStyle={styles.inputRoundedContainer}
-                    containerStyle={styles.inputContainer}
-                    style={styles.input}
-                    label="Password"
-                    value={password}
-                    onChangeText={(password) => setPassword(password)}
-                    secureTextEntry={true}
-                    autoCapitalize="none"
-                    inputStyle={styles.inputText}
-                  />
-                </View>
-                <View style={{ paddingTop: 40 }}>
-                  <Input
-                    inputContainerStyle={styles.inputRoundedContainer}
-                    containerStyle={styles.inputContainer}
-                    style={styles.input}
-                    label="Confirm Password"
-                    value={confirmPassword}
-                    onChangeText={(confirmPassword) =>
-                      setConfirmPassword(confirmPassword)
-                    }
-                    secureTextEntry={true}
-                    autoCapitalize="none"
-                    placeholderTextColor="gray"
-                    inputStyle={styles.inputText}
-                  />
-                </View>
-              </View>
-              {loading ? (
-                <Button buttonStyle={styles.signUpButton} loading />
-              ) : (
-                <Button
-                  buttonStyle={styles.signUpButton}
-                  title="Sign Up"
-                  onPress={signUp}
-                />
-              )}
-              <View style={{ alignItems: "center", paddingTop: 20 }}>
-                <Text style={styles.baseText}>Already have an account?</Text>
-                <Button
-                  type="clear"
-                  titleStyle={styles.signIn}
-                  buttonStyle={styles.signInButton}
-                  title="Sign In"
-                  onPress={() => router.push("/(auth)/signin")}
                 />
               </View>
             </View>
-            <PasswordErrorModal
-              modalVisible={passwordErrorModalVisible}
-              onClose={() => setPasswordErrorModalVisible(false)}
-              minLength={8}
-            />
-            <AuthErrorModal
-              modalVisible={isModalOpen}
-              onClose={() => setIsModalOpen(false)}
-              errorMessage={
-                "An account with this email address already exists. Please use a different email or log in."
-              }
-            />
-          </SafeAreaView>
-        </KeyboardAvoidingView>
-      </View>
-    </TouchableWithoutFeedback>
+            {loading ? (
+              <Button buttonStyle={styles.signUpButton} loading />
+            ) : (
+              <Button
+                buttonStyle={styles.signUpButton}
+                title="Sign Up"
+                onPress={signUp}
+              />
+            )}
+            <View style={{ alignItems: "center", paddingTop: 20 }}>
+              <Text style={styles.baseText}>Already have an account?</Text>
+              <Button
+                type="clear"
+                titleStyle={styles.signIn}
+                buttonStyle={styles.signInButton}
+                title="Sign In"
+                onPress={() => router.push("/(auth)/signin")}
+              />
+            </View>
+          </View>
+          <PasswordErrorModal
+            modalVisible={passwordErrorModalVisible}
+            onClose={() => setPasswordErrorModalVisible(false)}
+            minLength={8}
+          />
+          <AuthErrorModal
+            modalVisible={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            errorMessage={
+              "An account with this email address already exists. Please use a different email or log in."
+            }
+          />
+        </SafeAreaView>
+      </KeyboardAvoidingView>
+    </View>
   );
 }
 
@@ -189,7 +188,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   logo: {
-    resizeMode: "contain",
     height: 100,
     width: 250,
     alignSelf: "center",

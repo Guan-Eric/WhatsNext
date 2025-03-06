@@ -1,7 +1,7 @@
 import { fetchMoviePoster, fetchMoviesFromMyList } from "@/backend/movie";
+import BackButton from "@/components/BackButton";
 import MovieCard from "@/components/cards/MovieCard";
-import TVShowCard from "@/components/cards/TVShowCard";
-import { ButtonGroup, Tab, useTheme } from "@rneui/themed";
+import { ButtonGroup, useTheme } from "@rneui/themed";
 import { useFocusEffect } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, View, Text } from "react-native";
@@ -30,9 +30,12 @@ const MyListScreen = () => {
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <SafeAreaView>
-        <Text style={[styles.title, { color: theme.colors.black }]}>
-          My List
-        </Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <BackButton />
+          <Text style={[styles.title, { color: theme.colors.black }]}>
+            My List
+          </Text>
+        </View>
         <ScrollView style={{ marginBottom: 40 }}>
           <ButtonGroup
             containerStyle={{
@@ -56,15 +59,17 @@ const MyListScreen = () => {
                   posterPath={fetchMoviePoster(movie?.poster_path as string)}
                   theme={theme}
                   options={[]}
+                  tab="(watchlist)"
                 />
               ))
             : tvShows.map((tvShow) => (
-                <TVShowCard
+                <MovieCard
                   key={-tvShow.id}
-                  tvShow={tvShow}
+                  movie={tvShow}
                   posterPath={fetchMoviePoster(tvShow?.poster_path as string)}
                   theme={theme}
                   options={[]}
+                  tab="(watchlist)"
                 />
               ))}
         </ScrollView>
@@ -80,7 +85,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    paddingLeft: 20,
   },
 });
 

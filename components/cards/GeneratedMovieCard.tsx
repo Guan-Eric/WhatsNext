@@ -9,6 +9,7 @@ interface MovieCardProps {
   posterPath: string;
   theme: any;
   type: "movie" | "tv";
+  tab: "(generate)" | "(home)" | "(list)" | "(watchlist)";
 }
 
 const GeneratedMovieCard: React.FC<MovieCardProps> = ({

@@ -10,10 +10,10 @@ function WelcomeScreen() {
         <View style={{ alignItems: "center" }}>
           <Image
             style={{
-              resizeMode: "contain",
               height: 100,
               width: 250,
             }}
+            resizeMode="contain"
             source={require("../../assets/images/icon.png")}
           />
           <Text style={styles.logoText}>GymPulse</Text>

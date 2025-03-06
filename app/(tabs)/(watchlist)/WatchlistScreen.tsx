@@ -4,9 +4,8 @@ import {
   fetchMoviesFromWatchlist,
 } from "@/backend/movie";
 import MovieCard from "@/components/cards/MovieCard";
-import TVShowCard from "@/components/cards/TVShowCard";
-import { ButtonGroup, Tab, useTheme } from "@rneui/themed";
-import { useFocusEffect } from "expo-router";
+import { Button, ButtonGroup, Icon, useTheme } from "@rneui/themed";
+import { router, useFocusEffect } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import { SafeAreaView, ScrollView, StyleSheet, View, Text } from "react-native";
 
@@ -34,9 +33,25 @@ const WatchlistScreen = () => {
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <SafeAreaView>
-        <Text style={[styles.title, { color: theme.colors.black }]}>
-          Watchlist
-        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={[styles.title, { color: theme.colors.black }]}>
+            Watchlist
+          </Text>
+          <Button
+            onPress={() => {
+              router.push({ pathname: "/(tabs)/(watchlist)/ProfileScreen" });
+            }}
+            buttonStyle={{ paddingRight: 20 }}
+            type="clear"
+            icon={<Icon name="person" size={28} />}
+          />
+        </View>
         <ScrollView style={{ marginBottom: 40 }}>
           <ButtonGroup
             containerStyle={{
@@ -60,15 +75,17 @@ const WatchlistScreen = () => {
                   posterPath={fetchMoviePoster(movie?.poster_path as string)}
                   theme={theme}
                   options={[]}
+                  tab="(watchlist)"
                 />
               ))
             : tvShows.map((tvShow) => (
-                <TVShowCard
+                <MovieCard
                   key={-tvShow.id}
-                  tvShow={tvShow}
+                  movie={tvShow}
                   posterPath={fetchMoviePoster(tvShow?.poster_path as string)}
                   theme={theme}
                   options={[]}
+                  tab="(watchlist)"
                 />
               ))}
         </ScrollView>

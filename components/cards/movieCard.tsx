@@ -1,13 +1,15 @@
 import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
-import { Card } from "@rneui/themed";
+import { Card, Button } from "@rneui/themed";
 import ThreeDotsModal from "../modal/ThreeDotsModal";
+import { router } from "expo-router";
 
 interface MovieCardProps {
-  movie: Movie;
+  movie: Movie | TVShow;
   posterPath: string;
   theme: any;
   options: ModalOptions[];
+  tab: "(generate)" | "(home)" | "(watchlist)";
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({
@@ -15,60 +17,78 @@ const MovieCard: React.FC<MovieCardProps> = ({
   posterPath,
   theme,
   options,
+  tab,
 }) => {
   return (
-    <Card
-      containerStyle={[
-        styles.card,
-        {
-          backgroundColor: theme.colors.grey0,
-          borderColor: theme.colors.grey0,
-        },
-      ]}
+    <Button
+      buttonStyle={{ paddingVertical: 0 }}
+      type="clear"
+      onPress={() =>
+        router.push({
+          pathname: `/(tabs)/${tab}/MovieDetailsScreen`,
+          params: {
+            movieId: movie.id,
+            posterPath: posterPath,
+            type: movie.hasOwnProperty("title") ? "movie" : "tv",
+          },
+        })
+      }
     >
-      <View style={{ flexDirection: "row" }}>
-        <Image source={{ uri: posterPath }} style={styles.poster} />
-        <View style={{ marginLeft: 10, justifyContent: "space-between" }}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginBottom: 20,
-              width: "86%",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={[styles.title, { color: theme.colors.black }]}>
-              {movie.title}
-            </Text>
-            <ThreeDotsModal options={options} theme={theme} />
-          </View>
-          <View style={styles.genresContainer}>
-            {movie.genres?.map((genre, index) => (
-              <Text
-                key={index}
-                style={[
-                  styles.genre,
-                  {
-                    backgroundColor: theme.colors.grey1,
-                    color: theme.colors.grey4,
-                  },
-                ]}
-              >
-                {genre.name}
+      <Card
+        containerStyle={[
+          styles.card,
+          {
+            backgroundColor: theme.colors.grey0,
+            borderColor: theme.colors.grey0,
+          },
+        ]}
+      >
+        <View style={{ flexDirection: "row" }}>
+          <Image source={{ uri: posterPath }} style={styles.poster} />
+          <View style={{ marginLeft: 10, justifyContent: "space-between" }}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginBottom: 20,
+                width: "86%",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={[styles.title, { color: theme.colors.black }]}>
+                {movie?.hasOwnProperty("title")
+                  ? (movie as Movie)?.title
+                  : (movie as TVShow)?.name}
               </Text>
-            ))}
+              <ThreeDotsModal options={options} theme={theme} />
+            </View>
+            <View style={styles.genresContainer}>
+              {movie.genres?.map((genre, index) => (
+                <Text
+                  key={index}
+                  style={[
+                    styles.genre,
+                    {
+                      backgroundColor: theme.colors.grey1,
+                      color: theme.colors.grey4,
+                    },
+                  ]}
+                >
+                  {genre.name}
+                </Text>
+              ))}
+            </View>
           </View>
         </View>
-      </View>
-    </Card>
+      </Card>
+    </Button>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    marginHorizontal: 10,
     borderRadius: 20,
+    width: "100%",
   },
   poster: {
     width: 100,

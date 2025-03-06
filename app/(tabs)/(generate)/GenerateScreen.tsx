@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
 } from "react-native";
-import { Button, CheckBox, Input, Slider, useTheme } from "@rneui/themed";
+import { Button, CheckBox, Input, useTheme } from "@rneui/themed";
 import { ScrollView } from "react-native-gesture-handler";
 import { router } from "expo-router";
 import { GenerateStringList } from "@/backend/ai";

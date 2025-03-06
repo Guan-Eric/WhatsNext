@@ -8,6 +8,12 @@ function ListStackLayout() {
         name="WatchlistScreen"
         options={{ headerShown: false, gestureEnabled: false }}
       />
+      <Stack.Screen
+        name="MovieDetailsScreen"
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="MyListScreen" options={{ headerShown: false }} />
+      <Stack.Screen name="ProfileScreen" options={{ headerShown: false }} />
     </Stack>
   );
 }

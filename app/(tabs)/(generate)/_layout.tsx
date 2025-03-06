@@ -12,6 +12,10 @@ function GenerateStackLayout() {
         name="GeneratedListScreen"
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="MovieDetailsScreen"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 }

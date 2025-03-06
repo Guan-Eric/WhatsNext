@@ -51,7 +51,6 @@ export default function GenerateScreen() {
           </Text>
         </View>
         <Carousel
-          containerStyle={{ marginTop: -30 }}
           autoPlayInterval={2000}
           data={
             type == "movie" ? (movieList as Movie[]) : (movieList as TVShow[])

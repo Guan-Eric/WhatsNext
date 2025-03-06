@@ -56,12 +56,12 @@ export async function GenerateStringList(
                 ? " and other preferences: " + preference + "."
                 : ". " +
                   `The user's list of watched ${
-                    type === "movie" ? "movies: " : "TV shows: "
-                  } ${myList
+                    type === "movie" ? "movies" : "TV shows"
+                  } and their personal ratings: ${myList
                     .map((item) => {
                       return type === "movie"
-                        ? (item as Movie).title
-                        : (item as TVShow).name;
+                        ? (item as Movie).title + ": " + item.rating + "/5"
+                        : (item as TVShow).name + ": " + item.rating + "/5";
                     })
                     .join(", ")} and they're list of ${
                     type === "movie" ? "movies" : "TV shows"

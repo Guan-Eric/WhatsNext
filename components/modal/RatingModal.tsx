@@ -25,63 +25,49 @@ const RatingModal: React.FC<StreakModalProps> = ({
       visible={modalVisible}
       onRequestClose={onClose}
     >
-      <TouchableOpacity
-        style={{
-          flex: 1,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        activeOpacity={1}
-        onPress={onClose}
-      >
-        <View style={styles.modalOverlay}>
-          <View
-            style={[
-              styles.modalContent,
-              { backgroundColor: theme.colors.grey1 },
-            ]}
-          >
-            <Rating
-              type="custom"
-              style={{
-                paddingVertical: 10,
-                backgroundColor: theme.colors.grey1,
-              }}
-              imageSize={40}
-              ratingBackgroundColor={theme.colors.grey1}
-              onFinishRating={(value: number) => {
-                setRating(value);
-              }}
-              ratingCount={5}
-              showRating
-              fractions={1}
-              jumpValue={0.5}
-            />
-            <View style={styles.buttonContainer}>
-              <Button
-                onPress={() => save(rating)}
-                buttonStyle={[styles.newStreakButton]}
-              >
-                <Text style={[styles.buttonText, { color: "#f8f9fa" }]}>
-                  Save
-                </Text>
-              </Button>
-              <Button
-                onPress={() => onClose()}
-                buttonStyle={[
-                  styles.newStreakButton,
-                  { backgroundColor: theme.colors.grey2 },
-                ]}
-              >
-                <Text style={[styles.buttonText, { color: "#f8f9fa" }]}>
-                  Close
-                </Text>
-              </Button>
-            </View>
+      <View style={styles.modalOverlay}>
+        <View
+          style={[styles.modalContent, { backgroundColor: theme.colors.grey1 }]}
+        >
+          <Rating
+            tintColor={theme.colors.grey1}
+            type="custom"
+            style={{
+              paddingVertical: 10,
+            }}
+            imageSize={40}
+            ratingBackgroundColor={theme.colors.black}
+            onFinishRating={(value: number) => {
+              setRating(value);
+            }}
+            ratingCount={5}
+            showRating
+            fractions={1}
+            jumpValue={0.5}
+          />
+          <View style={styles.buttonContainer}>
+            <Button
+              onPress={() => save(rating)}
+              buttonStyle={[styles.newStreakButton]}
+            >
+              <Text style={[styles.buttonText, { color: "#f8f9fa" }]}>
+                Save
+              </Text>
+            </Button>
+            <Button
+              onPress={() => onClose()}
+              buttonStyle={[
+                styles.newStreakButton,
+                { backgroundColor: theme.colors.grey2 },
+              ]}
+            >
+              <Text style={[styles.buttonText, { color: "#f8f9fa" }]}>
+                Close
+              </Text>
+            </Button>
           </View>
         </View>
-      </TouchableOpacity>
+      </View>
     </Modal>
   );
 };

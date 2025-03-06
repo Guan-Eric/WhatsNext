@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
-import { Button, Card } from "@rneui/themed";
+import { Button, Card, CheckBox, Icon } from "@rneui/themed";
 import { saveToMyList, saveToWatchlist } from "@/backend/movie";
 import RatingModal from "../modal/RatingModal";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 interface MovieCardProps {
   movie: Movie | TVShow;
@@ -53,29 +54,32 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
       </View>
       <View
         style={{
-          marginTop: 10,
-          width: "100%",
+          paddingTop: 10,
           flexDirection: "row",
           alignItems: "center",
-          alignContent: "space-between",
+          justifyContent: "space-between",
         }}
       >
-        <Button
-          disabled={watchDisabled}
-          title={"Add to Watchlist"}
-          buttonStyle={{ borderRadius: 30 }}
+        <CheckBox
+          containerStyle={{ backgroundColor: theme.colors.grey1 }}
+          checked={listDisabled}
+          onPress={() => setIsModalVisible(true)}
+          title={"Already Seen?"}
+          textStyle={{ color: theme.colors.grey3 }}
+          uncheckedIcon={<Icon name="eye-outline" type="material-community" />}
+          checkedIcon={<Icon name="eye" type="material-community" />}
+        ></CheckBox>
+        <CheckBox
           onPress={() => {
             saveToWatchlist(movie.id.toString(), type);
             setListDisabled(false);
             setWatchDisabled(true);
           }}
-        />
-        <Button
-          disabled={listDisabled}
-          title={"Already seen?"}
-          buttonStyle={{ borderRadius: 30 }}
-          onPress={() => setIsModalVisible(true)}
-        />
+          containerStyle={{ backgroundColor: theme.colors.grey1 }}
+          checked={watchDisabled}
+          uncheckedIcon={<Icon name="bookmark-outline" />}
+          checkedIcon={<Icon name="bookmark" />}
+        ></CheckBox>
       </View>
       <RatingModal
         modalVisible={isModelVisible}
@@ -97,6 +101,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   poster: {
+    alignSelf: "center",
     borderRadius: 10,
   },
   title: {

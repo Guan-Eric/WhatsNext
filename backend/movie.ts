@@ -177,6 +177,7 @@ export async function fetchMoviesFromMyList(
       const list: Movie[] = [];
       for (const movieSnapshot of movieListSnapshot.docs) {
         const movie = (await fetchDetails(movieSnapshot.id, type)) as Movie;
+        movie.rating = movieSnapshot.data().rating;
         list.push(movie);
       }
       return list;
@@ -187,6 +188,7 @@ export async function fetchMoviesFromMyList(
       const list: TVShow[] = [];
       for (const tvSnapshot of tvListSnapshot.docs) {
         const tv = (await fetchDetails(tvSnapshot.id, type)) as TVShow;
+        tv.rating = tvSnapshot.data().rating;
         list.push(tv);
       }
       return list;

@@ -2,7 +2,11 @@ import { FIRESTORE_DB } from "@/firebaseConfig";
 import Constants from "expo-constants";
 import { collection, getDocs } from "firebase/firestore";
 import OpenAI from "openai";
-import { fetchDetails } from "./movie";
+import {
+  fetchDetails,
+  fetchMoviesFromMyList,
+  fetchMoviesFromWatchlist,
+} from "./movie";
 
 const API_KEY = Constants.expoConfig?.extra?.tmdbApiKey;
 const openai = new OpenAI({
@@ -22,6 +26,8 @@ export async function GenerateStringList(
 ): Promise<string[]> {
   const maxRetries = 3;
   let attempts = 0;
+  let watchlist = await fetchMoviesFromWatchlist(type);
+  let myList = await fetchMoviesFromMyList(type);
 
   while (attempts < maxRetries) {
     try {
@@ -40,7 +46,7 @@ export async function GenerateStringList(
             role: "user",
             content: `
                 Create a list of ${
-                  type === "movie" ? "movies" : "TV Shows"
+                  type === "movie" ? "movies" : "TV shows"
                 } for a user interested in ${genre || "any genre"} and ${
               mood || "any mood"
             } from the ${releaseYear || "any release year"} era, speaking ${
@@ -48,7 +54,24 @@ export async function GenerateStringList(
             }, who prefers ${type === "movie" ? "movies" : "TV Shows"}${
               preference.length > 0
                 ? " and other preferences: " + preference + "."
-                : "."
+                : ". " +
+                  `The user's list of watched ${
+                    type === "movie" ? "movies: " : "TV shows: "
+                  } ${myList
+                    .map((item) => {
+                      return type === "movie"
+                        ? (item as Movie).title
+                        : (item as TVShow).name;
+                    })
+                    .join(", ")} and they're list of ${
+                    type === "movie" ? "movies" : "TV shows"
+                  } they want to watch: ${watchlist
+                    .map((item) => {
+                      return type === "movie"
+                        ? (item as Movie).title
+                        : (item as TVShow).name;
+                    })
+                    .join(", ")}`
             }
                 
                 Respond in a string array of ${

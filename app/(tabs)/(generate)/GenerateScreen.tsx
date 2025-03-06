@@ -79,7 +79,7 @@ export default function GenerateScreen() {
               onChangeText={setGenre}
             />
             <Text style={[styles.sectionTitle, { color: theme.colors.black }]}>
-              Release Year
+              Type
             </Text>
             <View style={styles.checkboxRow}>
               <CheckBox

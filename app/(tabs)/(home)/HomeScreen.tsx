@@ -7,7 +7,7 @@ import {
   fetchTrending,
 } from "@/backend/movie";
 import PosterCard from "@/components/cards/PosterCard";
-import { ButtonGroup, useTheme, Button } from "@rneui/themed";
+import { ButtonGroup, useTheme, Button, Icon } from "@rneui/themed";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -62,7 +62,7 @@ const HomeScreen = () => {
               justifyContent: "space-between",
             }}
           >
-            <Text style={[styles.subtitle, { color: theme.colors.black }]}>
+            <Text style={[styles.genreTitle, { color: theme.colors.black }]}>
               Genres
             </Text>
             <ButtonGroup
@@ -149,11 +149,12 @@ const HomeScreen = () => {
                 params: { category: "Most Popular" },
               })
             }
-          >
-            <Text style={[styles.subtitle, { color: theme.colors.black }]}>
-              Most Popular
-            </Text>
-          </Button>
+            buttonStyle={{ alignSelf: "flex-start" }}
+            title="Most Popular"
+            titleStyle={[styles.subtitle, { color: theme.colors.black }]}
+            iconRight
+            icon={<Icon name="chevron-right" />}
+          />
           {selectedIndex == 0 ? (
             <FlatList
               data={popularMovies}
@@ -195,11 +196,12 @@ const HomeScreen = () => {
                 params: { category: "Trending" },
               })
             }
-          >
-            <Text style={[styles.subtitle, { color: theme.colors.black }]}>
-              Trending
-            </Text>
-          </Button>
+            buttonStyle={{ alignSelf: "flex-start" }}
+            title="Trending"
+            titleStyle={[styles.subtitle, { color: theme.colors.black }]}
+            iconRight
+            icon={<Icon name="chevron-right" />}
+          />
           {selectedIndex == 0 ? (
             <FlatList
               data={trendingMovies}
@@ -243,11 +245,15 @@ const HomeScreen = () => {
                     params: { category: "Now" },
                   })
                 }
-              >
-                <Text style={[styles.subtitle, { color: theme.colors.black }]}>
-                  Now Playing
-                </Text>
-              </Button>
+                buttonStyle={{ alignSelf: "flex-start" }}
+                title="Now Playing"
+                titleStyle={[
+                  styles.subtitle,
+                  { color: theme.colors.black, paddingLeft: 0 },
+                ]}
+                iconRight
+                icon={<Icon name="chevron-right" />}
+              />
               <FlatList
                 data={nowPlayingMovies}
                 showsHorizontalScrollIndicator={false}
@@ -274,11 +280,12 @@ const HomeScreen = () => {
                     params: { category: "Now" },
                   })
                 }
-              >
-                <Text style={[styles.subtitle, { color: theme.colors.black }]}>
-                  On The Air
-                </Text>
-              </Button>
+                buttonStyle={{ alignSelf: "flex-start" }}
+                title="On The Air"
+                titleStyle={[styles.subtitle, { color: theme.colors.black }]}
+                iconRight
+                icon={<Icon name="chevron-right" />}
+              />
               <FlatList
                 data={onTheAirTVShows}
                 showsHorizontalScrollIndicator={false}
@@ -314,8 +321,8 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 24,
     fontWeight: "bold",
-    paddingLeft: 20,
   },
+  genreTitle: { fontSize: 24, fontWeight: "bold", paddingLeft: 10 },
 });
 
 export default HomeScreen;

@@ -10,13 +10,18 @@ export default {
     userInterfaceStyle: "dark",
     newArchEnabled: true,
     ios: {
+      bundleIdentifier: "com.eronkgonk.whatsnext",
       supportsTablet: true,
+      infoPlist: {
+        ITSAppUsesNonExemptEncryption: false,
+      },
     },
     android: {
       adaptiveIcon: {
         foregroundImage: "./assets/images/adaptive-icon.png",
         backgroundColor: "#ffffff",
       },
+      package: "com.eronkgonk.whatsnext",
     },
     web: {
       bundler: "metro",
@@ -55,5 +60,11 @@ export default {
       typedRoutes: true,
     },
     owner: "guan-eric",
+    updates: {
+      url: "https://u.expo.dev/50c62fe8-3b84-489d-9a13-b10c14dcad5f",
+    },
+    runtimeVersion: {
+      policy: "appVersion",
+    },
   },
 };

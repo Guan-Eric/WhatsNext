@@ -10,14 +10,14 @@ function WelcomeScreen() {
         <View style={{ alignItems: "center" }}>
           <Image
             style={{
-              height: 100,
+              height: 150,
               width: 250,
             }}
             resizeMode="contain"
-            source={require("../../assets/images/icon.png")}
+            source={require("../../assets/logo.png")}
           />
-          <Text style={styles.logoText}>GymPulse</Text>
-          <Text style={styles.sloganText}>Power Up Your Fitness</Text>
+          <Text style={styles.logoText}>What's Next?</Text>
+          <Text style={styles.sloganText}>Your Personal Movie Generator</Text>
         </View>
         <View>
           <Button
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   logoText: {
     fontSize: 64,
     fontFamily: "Roboto_700Bold",
-    color: "#3490de",
+    color: "white",
   },
   baseText: {
     fontFamily: "Lato_400Regular",

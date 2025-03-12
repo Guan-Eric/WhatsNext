@@ -25,11 +25,17 @@ export default function App() {
     // return () => unsubscribe(); // Comment this out to keep the listener active
   }, []);
 
-  // Show a loading indicator while checking auth state
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#181818",
+        }}
+      >
+        <ActivityIndicator size="large" color="#e5e5e5" />
       </View>
     );
   }

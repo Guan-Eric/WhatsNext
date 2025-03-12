@@ -91,7 +91,7 @@ function SignUpScreen() {
               <Image
                 style={styles.logo}
                 resizeMode="contain"
-                source={require("../../assets/images/icon.png")}
+                source={require("../../assets/logo.png")}
               />
               <Text style={styles.titleText}>Sign Up</Text>
             </View>

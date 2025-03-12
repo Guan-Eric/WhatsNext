@@ -40,7 +40,7 @@ function SignInScreen() {
               <Image
                 resizeMode="contain"
                 style={styles.logo}
-                source={require("../../assets/images/icon.png")}
+                source={require("../../assets/logo.png")}
               />
               <Text style={styles.titleText}>Sign In</Text>
             </View>

@@ -53,32 +53,32 @@ const HomeScreen = () => {
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <SafeAreaView>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={[styles.title, { color: theme.colors.black }]}>
-            Home
-          </Text>
-          <ButtonGroup
-            containerStyle={{
-              width: 200,
-              height: 30,
-              backgroundColor: theme.colors.grey0,
-              borderWidth: 0,
-              borderRadius: 10,
+        <ScrollView>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
-            buttons={["Movie", "TV Show"]}
-            selectedIndex={selectedIndex}
-            onPress={(value) => {
-              setSelectedIndex(value);
-            }}
-          />
-        </View>
-        <ScrollView style={{ marginBottom: 40 }}>
+          >
+            <Text style={[styles.title, { color: theme.colors.black }]}>
+              Home
+            </Text>
+            <ButtonGroup
+              containerStyle={{
+                width: 200,
+                height: 30,
+                backgroundColor: theme.colors.grey0,
+                borderWidth: 0,
+                borderRadius: 10,
+              }}
+              buttons={["Movie", "TV Show"]}
+              selectedIndex={selectedIndex}
+              onPress={(value) => {
+                setSelectedIndex(value);
+              }}
+            />
+          </View>
           <Text style={[styles.genreTitle, { color: theme.colors.black }]}>
             Genres
           </Text>

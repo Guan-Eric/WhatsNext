@@ -9,7 +9,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const theme = createTheme({
   darkColors: {
-    primary: "#3490de", // Same primary blue
+    primary: "#ffb400", // Primary yellow
     secondary: "#f5a623", // Complementary orange
     background: "#181818", // Deep dark grey background
     white: "#e5e5e5", // Soft greyish-white

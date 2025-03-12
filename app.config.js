@@ -5,7 +5,11 @@ export default {
     slug: "whats-next",
     version: "1.0.0",
     orientation: "portrait",
-    icon: "./assets/images/icon.png",
+    icon: "./assets/icon.png",
+    splash: {
+      image: "./assets/icon.png",
+      backgroundColor: "#181818",
+    },
     scheme: "myapp",
     userInterfaceStyle: "dark",
     newArchEnabled: true,
@@ -18,8 +22,8 @@ export default {
     },
     android: {
       adaptiveIcon: {
-        foregroundImage: "./assets/images/adaptive-icon.png",
-        backgroundColor: "#ffffff",
+        foregroundImage: "./assets/icon.png",
+        backgroundColor: "#181818",
       },
       package: "com.eronkgonk.whatsnext",
     },

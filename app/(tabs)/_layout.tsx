@@ -31,7 +31,7 @@ function TabLayout() {
         options={{
           title: "What's Next?",
           tabBarIcon: ({ size, color }) => (
-            <MaterialCommunityIcons name="robot" size={size} color={color} />
+            <MaterialCommunityIcons name="movie" size={size} color={color} />
           ),
         }}
       />
@@ -40,7 +40,7 @@ function TabLayout() {
         options={{
           title: "Watchlist",
           tabBarIcon: ({ size, color }) => (
-            <MaterialCommunityIcons name="dumbbell" size={size} color={color} />
+            <MaterialCommunityIcons name="bookmark" size={size} color={color} />
           ),
         }}
       />

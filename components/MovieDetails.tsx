@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
-import { Button } from "@rneui/themed";
-import { fetchDetails } from "@/backend/movie";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Dimensions,
+  Platform,
+  StatusBar,
+} from "react-native";
+import { Button, CheckBox, Icon } from "@rneui/themed";
+import { fetchDetails, saveToMyList, saveToWatchlist } from "@/backend/movie";
 import { fetchGenres } from "@/backend/genre";
 import BackButton from "./BackButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView } from "react-native-gesture-handler";
+import RatingModal from "./modal/RatingModal";
 
 interface MovieDetailsProps {
   movieId: string;
@@ -23,6 +32,9 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
   const screenWidth = Dimensions.get("screen").width;
   const [movie, setMovie] = useState<Movie | TVShow>();
   const [genres, setGenres] = useState<Genre[]>([]);
+  const [isModelVisible, setIsModalVisible] = useState(false);
+  const [listDisabled, setListDisabled] = useState(false);
+  const [watchDisabled, setWatchDisabled] = useState(false);
 
   const fetchMovieDetails = async () => {
     setMovie(await fetchDetails(movieId, type));
@@ -44,7 +56,6 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <ScrollView>
         <View>
-          {/* Image Container */}
           <View
             style={[
               styles.imageContainer,
@@ -56,7 +67,6 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
               },
             ]}
           >
-            {/* Image */}
             <Image
               source={{ uri: posterPath }}
               style={[
@@ -96,13 +106,37 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
           <View style={styles.backButtonContainer}>
             <BackButton />
           </View>
+          <View style={styles.buttonsContainer}>
+            <CheckBox
+              onPress={() => {
+                if (movie) {
+                  saveToWatchlist(movie.id.toString(), type);
+                }
+                setListDisabled(false);
+                setWatchDisabled(true);
+              }}
+              containerStyle={{
+                backgroundColor: `${theme.colors.grey1}80`,
+                borderRadius: 50,
+              }}
+              checked={watchDisabled}
+              uncheckedIcon={<Icon name="bookmark-outline" />}
+              checkedIcon={<Icon name="bookmark" />}
+            />
+          </View>
         </View>
         {movie?.hasOwnProperty("title") ? (
           <>
-            <Text style={{ color: theme.colors.black }}>
+            <Text style={[styles.title, { color: theme.colors.black }]}>
               {(movie as Movie)?.title}
             </Text>
-            <Text style={{ color: theme.colors.black }}>
+            <Text
+              style={{
+                color: theme.colors.black,
+                textAlign: "center",
+                flexWrap: "wrap",
+              }}
+            >
               {(movie as Movie)?.release_date.slice(0, 4) +
                 " • " +
                 getGenreNames(
@@ -117,21 +151,72 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
           </>
         ) : movie?.hasOwnProperty("name") ? (
           <>
-            <Text style={{ color: theme.colors.black }}>
+            <Text style={[styles.title, { color: theme.colors.black }]}>
               {(movie as TVShow)?.name}
             </Text>
-            <Text style={{ color: theme.colors.black }}>
+            <Text
+              style={{
+                color: theme.colors.black,
+                textAlign: "center",
+                flexWrap: "wrap",
+              }}
+            >
               {getGenreNames(
                 (movie as TVShow)?.genres.map((genre) => genre.id)
               ) +
                 " • " +
                 (movie as TVShow)?.number_of_seasons +
-                " seasons"}
+                " season" +
+                ((movie as TVShow)?.number_of_seasons > 1 ? "s" : "")}
             </Text>
           </>
         ) : null}
-        <Text style={{ color: theme.colors.black }}>{movie?.overview}</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignSelf: "center",
+          }}
+        >
+          <Button
+            title="Watch Now"
+            buttonStyle={{
+              width: 150,
+              alignSelf: "center",
+              marginTop: 10,
+              borderRadius: 20,
+              marginHorizontal: 10,
+            }}
+          />
+          <Button
+            title="Already Seen"
+            buttonStyle={{
+              width: 150,
+              alignSelf: "center",
+              marginTop: 10,
+              borderRadius: 20,
+              marginHorizontal: 10,
+              backgroundColor: theme.colors.grey1,
+            }}
+            onPress={() => setIsModalVisible(true)}
+          />
+        </View>
+        <Text style={[styles.description, { color: theme.colors.black }]}>
+          {movie?.overview}
+        </Text>
       </ScrollView>
+      <RatingModal
+        modalVisible={isModelVisible}
+        onClose={() => setIsModalVisible(false)}
+        save={(rating: number) => {
+          if (movie) {
+            saveToMyList(movie.id.toString(), rating, type);
+          }
+          setIsModalVisible(false);
+          setListDisabled(true);
+          setWatchDisabled(false);
+        }}
+        theme={theme}
+      />
     </View>
   );
 };
@@ -139,9 +224,26 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
 const styles = StyleSheet.create({
   backButtonContainer: {
     position: "absolute",
-    top: 40,
+    top:
+      Platform.OS === "ios"
+        ? 42
+        : StatusBar.currentHeight !== undefined
+        ? StatusBar.currentHeight + 12
+        : 12,
     left: 0,
     zIndex: 1,
+  },
+  buttonsContainer: {
+    position: "absolute",
+    top:
+      Platform.OS === "ios"
+        ? 40
+        : StatusBar.currentHeight !== undefined
+        ? StatusBar.currentHeight + 10
+        : 10,
+    right: 0,
+    zIndex: 1,
+    flexDirection: "row",
   },
   imageContainer: {
     position: "relative",
@@ -178,6 +280,19 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     width: 50, // Adjust width for the blur effect
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: "bold",
+    marginVertical: 10,
+    textAlign: "center",
+    flexWrap: "wrap",
+  },
+  description: {
+    fontSize: 16,
+    marginHorizontal: 20,
+    marginVertical: 10,
+    textAlign: "center",
   },
 });
 

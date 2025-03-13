@@ -149,3 +149,20 @@ interface ModalOptions {
   titleStyle?: object;
   onPress?: () => void;
 }
+
+interface Person {
+  id: number;
+  name: string;
+  profile_path: string | null;
+  known_for_department: string;
+  popularity: number;
+  character?: string;
+  job?: string;
+}
+
+interface WatchProvider {
+  provider_id: number;
+  provider_name: string;
+  logo_path: string | null;
+  display_priority: number;
+}

@@ -249,10 +249,7 @@ const HomeScreen = () => {
                 }
                 buttonStyle={{ alignSelf: "flex-start" }}
                 title="Now Playing"
-                titleStyle={[
-                  styles.subtitle,
-                  { color: theme.colors.black, paddingLeft: 0 },
-                ]}
+                titleStyle={[styles.subtitle, { color: theme.colors.black }]}
                 iconRight
                 icon={<Icon name="chevron-right" />}
               />
@@ -323,8 +320,9 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 24,
     fontWeight: "bold",
+    paddingLeft: 10,
   },
-  genreTitle: { fontSize: 24, fontWeight: "bold", paddingLeft: 10 },
+  genreTitle: { fontSize: 24, fontWeight: "bold", paddingLeft: 20 },
 });
 
 export default HomeScreen;

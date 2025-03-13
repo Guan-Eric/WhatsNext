@@ -60,6 +60,7 @@ const WatchlistScreen = () => {
               backgroundColor: theme.colors.grey0,
               borderWidth: 0,
               borderRadius: 10,
+              marginLeft: 20,
             }}
             buttons={["Movie", "TV Show"]}
             selectedIndex={selectedIndex}

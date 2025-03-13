@@ -68,7 +68,7 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
           textStyle={{ color: theme.colors.grey3 }}
           uncheckedIcon={<Icon name="eye-outline" type="material-community" />}
           checkedIcon={<Icon name="eye" type="material-community" />}
-        ></CheckBox>
+        />
         <CheckBox
           onPress={() => {
             saveToWatchlist(movie.id.toString(), type);
@@ -79,7 +79,7 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
           checked={watchDisabled}
           uncheckedIcon={<Icon name="bookmark-outline" />}
           checkedIcon={<Icon name="bookmark" />}
-        ></CheckBox>
+        />
       </View>
       <RatingModal
         modalVisible={isModelVisible}

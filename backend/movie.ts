@@ -185,7 +185,6 @@ export async function fetchMoviesFromMyList(
   type: "movie" | "tv"
 ): Promise<Movie[] | TVShow[]> {
   try {
-    console.log("here");
     const myListCollectionRef = collection(
       FIRESTORE_DB,
       `Users/${FIREBASE_AUTH.currentUser?.uid}/MyList`

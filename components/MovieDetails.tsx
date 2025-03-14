@@ -9,7 +9,15 @@ import {
   StatusBar,
 } from "react-native";
 import { Button, CheckBox, Icon } from "@rneui/themed";
-import { fetchDetails, saveToMyList, saveToWatchlist } from "@/backend/movie";
+import {
+  deleteFromMyList,
+  deleteFromWatchlist,
+  fetchDetails,
+  isAlreadySeen,
+  isWatchlist,
+  saveToMyList,
+  saveToWatchlist,
+} from "@/backend/movie";
 import { fetchGenres } from "@/backend/genre";
 import BackButton from "./BackButton";
 import { LinearGradient } from "expo-linear-gradient";
@@ -33,12 +41,14 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
   const [movie, setMovie] = useState<Movie | TVShow>();
   const [genres, setGenres] = useState<Genre[]>([]);
   const [isModelVisible, setIsModalVisible] = useState(false);
-  const [listDisabled, setListDisabled] = useState(false);
-  const [watchDisabled, setWatchDisabled] = useState(false);
+  const [watchlist, setWatchlist] = useState(false);
+  const [myList, setMyList] = useState(false);
 
   const fetchMovieDetails = async () => {
     setMovie(await fetchDetails(movieId, type));
     setGenres(await fetchGenres(type));
+    setWatchlist(await isWatchlist(movieId));
+    setMyList(await isAlreadySeen(movieId));
   };
 
   useEffect(() => {
@@ -110,16 +120,20 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
             <CheckBox
               onPress={() => {
                 if (movie) {
-                  saveToWatchlist(movie.id.toString(), type);
+                  if (watchlist) {
+                    deleteFromWatchlist(movie.id.toString());
+                    setWatchlist(false);
+                  } else {
+                    saveToWatchlist(movie.id.toString(), type);
+                    setWatchlist(true);
+                  }
                 }
-                setListDisabled(false);
-                setWatchDisabled(true);
               }}
               containerStyle={{
                 backgroundColor: `${theme.colors.grey1}80`,
                 borderRadius: 50,
               }}
-              checked={watchDisabled}
+              checked={watchlist}
               uncheckedIcon={<Icon name="bookmark-outline" />}
               checkedIcon={<Icon name="bookmark" />}
             />
@@ -188,7 +202,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
             }}
           />
           <Button
-            title="Already Seen"
+            title={myList ? "" : "Already Seen?"}
             buttonStyle={{
               width: 150,
               alignSelf: "center",
@@ -196,8 +210,22 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
               borderRadius: 20,
               marginHorizontal: 10,
               backgroundColor: theme.colors.grey1,
+
+              alignItems: "center", // Center the content
             }}
-            onPress={() => setIsModalVisible(true)}
+            onPress={() => {
+              if (myList) {
+                deleteFromMyList(movieId);
+                setMyList(false);
+              } else {
+                setIsModalVisible(true);
+              }
+            }}
+            icon={
+              myList ? (
+                <Icon name={"check"} color={theme.colors.success} />
+              ) : undefined
+            }
           />
         </View>
         <Text style={[styles.description, { color: theme.colors.black }]}>
@@ -212,8 +240,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
             saveToMyList(movie.id.toString(), rating, type);
           }
           setIsModalVisible(false);
-          setListDisabled(true);
-          setWatchDisabled(false);
+          setMyList(true);
         }}
         theme={theme}
       />

@@ -8,6 +8,7 @@ import {
   query,
   where,
   getDocs,
+  getDoc,
 } from "firebase/firestore";
 
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -130,12 +131,6 @@ export async function saveToMyList(
       ),
       { rating: rating, type: type }
     );
-    await deleteDoc(
-      doc(
-        FIRESTORE_DB,
-        `Users/${FIREBASE_AUTH?.currentUser?.uid}/Watchlist/${id}`
-      )
-    );
     return true;
   } catch (error) {
     console.error("Error adding document: ", error);
@@ -152,12 +147,36 @@ export async function saveToWatchlist(id: string, type: "movie" | "tv") {
       ),
       { type: type }
     );
+    return true;
+  } catch (error) {
+    console.error("Error adding document: ", error);
+    return false;
+  }
+}
+
+export async function deleteFromMyList(id: string): Promise<boolean> {
+  try {
     await deleteDoc(
       doc(FIRESTORE_DB, `Users/${FIREBASE_AUTH?.currentUser?.uid}/MyList/${id}`)
     );
     return true;
   } catch (error) {
-    console.error("Error adding document: ", error);
+    console.error("Error deleting document: ", error);
+    return false;
+  }
+}
+
+export async function deleteFromWatchlist(id: string) {
+  try {
+    await deleteDoc(
+      doc(
+        FIRESTORE_DB,
+        `Users/${FIREBASE_AUTH?.currentUser?.uid}/Watchlist/${id}`
+      )
+    );
+    return true;
+  } catch (error) {
+    console.error("Error deleting document: ", error);
     return false;
   }
 }
@@ -166,6 +185,7 @@ export async function fetchMoviesFromMyList(
   type: "movie" | "tv"
 ): Promise<Movie[] | TVShow[]> {
   try {
+    console.log("here");
     const myListCollectionRef = collection(
       FIRESTORE_DB,
       `Users/${FIREBASE_AUTH.currentUser?.uid}/MyList`
@@ -230,6 +250,34 @@ export async function fetchMoviesFromWatchlist(
     }
   } catch (error) {
     console.error("Error fetching My List", error);
+    throw error;
+  }
+}
+
+export async function isAlreadySeen(id: string): Promise<boolean> {
+  try {
+    const myListDocRef = doc(
+      FIRESTORE_DB,
+      `Users/${FIREBASE_AUTH.currentUser?.uid}/MyList/${id}`
+    );
+    const docSnapshot = await getDoc(myListDocRef);
+    return docSnapshot.exists();
+  } catch (error) {
+    console.error("Error checking if already seen", error);
+    throw error;
+  }
+}
+
+export async function isWatchlist(id: string): Promise<boolean> {
+  try {
+    const watchlistDocRef = doc(
+      FIRESTORE_DB,
+      `Users/${FIREBASE_AUTH.currentUser?.uid}/Watchlist/${id}`
+    );
+    const docSnapshot = await getDoc(watchlistDocRef);
+    return docSnapshot.exists();
+  } catch (error) {
+    console.error("Error checking if in watchlist", error);
     throw error;
   }
 }

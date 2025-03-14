@@ -1,4 +1,8 @@
-import { fetchMoviePoster, fetchMoviesFromMyList } from "@/backend/movie";
+import {
+  deleteFromMyList,
+  fetchMoviePoster,
+  fetchMoviesFromMyList,
+} from "@/backend/movie";
 import BackButton from "@/components/BackButton";
 import MovieCard from "@/components/cards/MovieCard";
 import { ButtonGroup, useTheme } from "@rneui/themed";
@@ -26,7 +30,16 @@ const MyListScreen = () => {
       fetchMoviesAndTVShows();
     }, [])
   );
-
+  const options = (id: number) => [
+    {
+      title: "Remove from list",
+      onPress: async () => {
+        await deleteFromMyList(id.toString());
+        await fetchMoviesAndTVShows();
+      },
+      containerStyle: { backgroundColor: theme.colors.error },
+    },
+  ];
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <SafeAreaView>
@@ -58,17 +71,17 @@ const MyListScreen = () => {
                   movie={movie}
                   posterPath={fetchMoviePoster(movie?.poster_path as string)}
                   theme={theme}
-                  options={[]}
+                  options={options(movie.id)}
                   tab="(watchlist)"
                 />
               ))
             : tvShows.map((tvShow) => (
                 <MovieCard
-                  key={-tvShow.id}
+                  key={tvShow.id}
                   movie={tvShow}
                   posterPath={fetchMoviePoster(tvShow?.poster_path as string)}
                   theme={theme}
-                  options={[]}
+                  options={options(tvShow.id)}
                   tab="(watchlist)"
                 />
               ))}

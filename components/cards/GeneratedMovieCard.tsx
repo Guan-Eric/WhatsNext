@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
 import { Button, Card, CheckBox, Icon } from "@rneui/themed";
-import { saveToMyList, saveToWatchlist } from "@/backend/movie";
+import {
+  deleteFromMyList,
+  deleteFromWatchlist,
+  saveToMyList,
+  saveToWatchlist,
+} from "@/backend/movie";
 import RatingModal from "../modal/RatingModal";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -20,8 +25,8 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
   type,
 }) => {
   const [isModelVisible, setIsModalVisible] = useState(false);
-  const [listDisabled, setListDisabled] = useState(false);
-  const [watchDisabled, setWatchDisabled] = useState(false);
+  const [watchlist, setWatchlist] = useState(false);
+  const [myList, setMyList] = useState(false);
   const screenWidth = Dimensions.get("screen").width;
   const screenHeight = Dimensions.get("screen").height;
 
@@ -60,23 +65,42 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
           justifyContent: "space-between",
         }}
       >
-        <CheckBox
-          containerStyle={{ backgroundColor: theme.colors.grey1 }}
-          checked={listDisabled}
-          onPress={() => setIsModalVisible(true)}
-          title={"Already Seen?"}
-          textStyle={{ color: theme.colors.grey3 }}
-          uncheckedIcon={<Icon name="eye-outline" type="material-community" />}
-          checkedIcon={<Icon name="eye" type="material-community" />}
+        <Button
+          title={myList ? "" : "Already Seen?"}
+          type="clear"
+          titleStyle={{ color: theme.colors.black }}
+          buttonStyle={{
+            width: 150,
+            alignSelf: "center",
+            borderRadius: 20,
+            backgroundColor: theme.colors.grey1,
+          }}
+          onPress={() => {
+            if (myList) {
+              deleteFromMyList(movie.id.toString());
+              setMyList(false);
+            } else {
+              setIsModalVisible(true);
+            }
+          }}
+          icon={
+            myList ? (
+              <Icon name={"check"} color={theme.colors.success} />
+            ) : undefined
+          }
         />
         <CheckBox
           onPress={() => {
-            saveToWatchlist(movie.id.toString(), type);
-            setListDisabled(false);
-            setWatchDisabled(true);
+            if (watchlist) {
+              deleteFromWatchlist(movie.id.toString());
+              setWatchlist(false);
+            } else {
+              saveToWatchlist(movie.id.toString(), type);
+              setWatchlist(true);
+            }
           }}
           containerStyle={{ backgroundColor: theme.colors.grey1 }}
-          checked={watchDisabled}
+          checked={watchlist}
           uncheckedIcon={<Icon name="bookmark-outline" />}
           checkedIcon={<Icon name="bookmark" />}
         />
@@ -87,8 +111,7 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
         save={(rating: number) => {
           saveToMyList(movie.id.toString(), rating, type);
           setIsModalVisible(false);
-          setListDisabled(true);
-          setWatchDisabled(false);
+          setMyList(true);
         }}
         theme={theme}
       />

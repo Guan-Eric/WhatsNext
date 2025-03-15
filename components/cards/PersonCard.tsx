@@ -4,16 +4,16 @@ import { Button } from "@rneui/themed";
 import { router } from "expo-router";
 
 interface MovieCardProps {
-  person: Person;
-  posterPath: string;
+  personId: number;
+  profilePath: string;
   width: number;
   height: number;
   tab: "(generate)" | "(home)" | "(watchlist)";
 }
 
 const PersonCard: React.FC<MovieCardProps> = ({
-  person,
-  posterPath,
+  personId,
+  profilePath,
   width,
   height,
   tab,
@@ -25,14 +25,14 @@ const PersonCard: React.FC<MovieCardProps> = ({
         router.push({
           pathname: `/(tabs)/${tab}/MovieDetailsScreen`,
           params: {
-            personId: person.id,
-            posterPath: posterPath,
+            personId: personId,
+            posterPath: profilePath,
           },
         })
       }
     >
       <Image
-        source={{ uri: posterPath }}
+        source={{ uri: profilePath }}
         style={[styles.poster, { width: width, height: height }]}
       />
     </Button>

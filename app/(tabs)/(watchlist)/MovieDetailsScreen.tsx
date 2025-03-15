@@ -13,6 +13,7 @@ function MovieDetailsScreen() {
       movieId={movieId as string}
       posterPath={posterPath as string}
       type={type as "movie" | "tv"}
+      tab={"(watchlist)"}
     />
   );
 }

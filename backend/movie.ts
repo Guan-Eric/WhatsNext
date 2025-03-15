@@ -31,6 +31,7 @@ export async function fetchDetails(
   try {
     const response = await fetch(url, options);
     const data = await response.json();
+    data.cast = (await fetchCast(Number(movieId), mediaType)) as Person[];
     return data as Movie | TVShow;
   } catch (error) {
     console.error("Error fetching movie details:", error);

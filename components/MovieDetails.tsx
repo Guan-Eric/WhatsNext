@@ -47,15 +47,17 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
   const screenWidth = Dimensions.get("screen").width;
   const [movie, setMovie] = useState<Movie | TVShow>();
   const [genres, setGenres] = useState<Genre[]>([]);
-  const [isModelVisible, setIsModalVisible] = useState(false);
-  const [watchlist, setWatchlist] = useState(false);
-  const [myList, setMyList] = useState(false);
+  const [cast, setCast] = useState<Person[]>([]);
+  const [isModelVisible, setIsModalVisible] = useState<boolean>(false);
+  const [watchlist, setWatchlist] = useState<boolean>(false);
+  const [myList, setMyList] = useState<boolean>(false);
 
   const fetchMovieDetails = async () => {
     setMovie(await fetchDetails(movieId, type));
     setGenres(await fetchGenres(type));
     setWatchlist(await isWatchlist(movieId));
     setMyList(await isAlreadySeen(movieId));
+    setCast(await fetchCast(Number(movieId), type));
   };
 
   useEffect(() => {
@@ -238,20 +240,39 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
         <Text style={[styles.description, { color: theme.colors.black }]}>
           {movie?.overview}
         </Text>
+        {cast?.length > 0 ? (
+          <Text style={[styles.subtitle, { color: theme.colors.black }]}>
+            Cast
+          </Text>
+        ) : null}
         <FlatList
-          data={movie?.cast}
+          data={cast}
           horizontal
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <PersonCard
-              person={item}
-              posterPath={item?.profile_path as string}
-              width={140}
-              height={210}
-              tab={tab}
-            />
-          )}
+          renderItem={({ item }) =>
+            item.profile_path != null ? (
+              <View style={{ flexDirection: "column" }}>
+                <PersonCard
+                  personId={item?.id}
+                  profilePath={item?.profile_path as string}
+                  width={140}
+                  height={210}
+                  tab={tab}
+                />
+                <Text
+                  style={{
+                    color: theme.colors.black,
+                    textAlign: "center",
+                    flexWrap: "wrap",
+                    paddingBottom: 10,
+                  }}
+                >
+                  {item.name}
+                </Text>
+              </View>
+            ) : null
+          }
         />
       </ScrollView>
       <RatingModal
@@ -336,6 +357,11 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     textAlign: "center",
     flexWrap: "wrap",
+  },
+  subtitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    paddingLeft: 10,
   },
   description: {
     fontSize: 16,

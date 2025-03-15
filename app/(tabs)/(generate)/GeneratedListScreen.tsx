@@ -7,6 +7,7 @@ import BackButton from "@/components/BackButton";
 import Carousel from "react-native-reanimated-carousel";
 import GeneratedMovieCard from "@/components/cards/GeneratedMovieCard";
 import { fetchMoviePoster } from "@/backend/movie";
+import { fetchCast } from "@/backend/person";
 
 export default function GenerateScreen() {
   const [loading, setLoading] = useState<boolean>(false);

@@ -7,12 +7,14 @@ import {
   Dimensions,
   Platform,
   StatusBar,
+  FlatList,
 } from "react-native";
 import { Button, CheckBox, Icon } from "@rneui/themed";
 import {
   deleteFromMyList,
   deleteFromWatchlist,
   fetchDetails,
+  fetchMoviePoster,
   isAlreadySeen,
   isWatchlist,
   saveToMyList,
@@ -23,12 +25,16 @@ import BackButton from "./BackButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView } from "react-native-gesture-handler";
 import RatingModal from "./modal/RatingModal";
+import { fetchCast } from "@/backend/person";
+import { router } from "expo-router";
+import PersonCard from "./cards/PersonCard";
 
 interface MovieDetailsProps {
   movieId: string;
   type: "movie" | "tv";
   posterPath: string;
   theme: any;
+  tab: "(generate)" | "(home)" | "(watchlist)";
 }
 
 const MovieDetails: React.FC<MovieDetailsProps> = ({
@@ -36,6 +42,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
   type,
   posterPath,
   theme,
+  tab,
 }) => {
   const screenWidth = Dimensions.get("screen").width;
   const [movie, setMovie] = useState<Movie | TVShow>();
@@ -231,6 +238,21 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
         <Text style={[styles.description, { color: theme.colors.black }]}>
           {movie?.overview}
         </Text>
+        <FlatList
+          data={movie?.cast}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <PersonCard
+              person={item}
+              posterPath={item?.profile_path as string}
+              width={140}
+              height={210}
+              tab={tab}
+            />
+          )}
+        />
       </ScrollView>
       <RatingModal
         modalVisible={isModelVisible}

@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Dimensions,
+  Pressable,
+} from "react-native";
 import { Button, Card, CheckBox, Icon } from "@rneui/themed";
 import {
   deleteFromMyList,
@@ -9,6 +16,7 @@ import {
 } from "@/backend/movie";
 import RatingModal from "../modal/RatingModal";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 interface MovieCardProps {
   movie: Movie | TVShow;
@@ -40,81 +48,94 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
         },
       ]}
     >
-      <Image
-        source={{ uri: posterPath }}
-        style={[
-          styles.poster,
-          { width: screenWidth * 0.84, height: screenWidth * 0.84 * 1.5 },
-        ]}
-      />
-      <Text style={[styles.title, { color: theme.colors.black }]}>
-        {"title" in movie ? movie.title : movie.name}
-      </Text>
-      <View style={styles.genresContainer}>
-        {movie.genres?.map((genre, index) => (
-          <Text key={index} style={styles.genre}>
-            {genre.name}
-          </Text>
-        ))}
-      </View>
-      <View
-        style={{
-          paddingTop: 10,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
+      <Pressable
+        onPress={() => {
+          router.push({
+            pathname: `/(tabs)/(generate)/MovieDetailsScreen`,
+            params: {
+              movieId: movie.id,
+              posterPath: posterPath,
+              type: movie.hasOwnProperty("title") ? "movie" : "tv",
+            },
+          });
         }}
       >
-        <Button
-          title={myList ? "" : "Already Seen?"}
-          type="clear"
-          titleStyle={{ color: theme.colors.black }}
-          buttonStyle={{
-            width: 150,
-            alignSelf: "center",
-            borderRadius: 20,
-            backgroundColor: theme.colors.grey1,
-          }}
-          onPress={() => {
-            if (myList) {
-              deleteFromMyList(movie.id.toString());
-              setMyList(false);
-            } else {
-              setIsModalVisible(true);
-            }
-          }}
-          icon={
-            myList ? (
-              <Icon name={"check"} color={theme.colors.success} />
-            ) : undefined
-          }
+        <Image
+          source={{ uri: posterPath }}
+          style={[
+            styles.poster,
+            { width: screenWidth * 0.84, height: screenWidth * 0.84 * 1.5 },
+          ]}
         />
-        <CheckBox
-          onPress={() => {
-            if (watchlist) {
-              deleteFromWatchlist(movie.id.toString());
-              setWatchlist(false);
-            } else {
-              saveToWatchlist(movie.id.toString(), type);
-              setWatchlist(true);
-            }
+        <Text style={[styles.title, { color: theme.colors.black }]}>
+          {"title" in movie ? movie.title : movie.name}
+        </Text>
+        <View style={styles.genresContainer}>
+          {movie.genres?.map((genre, index) => (
+            <Text key={index} style={styles.genre}>
+              {genre.name}
+            </Text>
+          ))}
+        </View>
+        <View
+          style={{
+            paddingTop: 10,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
           }}
-          containerStyle={{ backgroundColor: theme.colors.grey1 }}
-          checked={watchlist}
-          uncheckedIcon={<Icon name="bookmark-outline" />}
-          checkedIcon={<Icon name="bookmark" />}
+        >
+          <Button
+            title={myList ? "" : "Already Seen?"}
+            type="clear"
+            titleStyle={{ color: theme.colors.black }}
+            buttonStyle={{
+              width: 150,
+              alignSelf: "center",
+              borderRadius: 20,
+              backgroundColor: theme.colors.grey1,
+            }}
+            onPress={() => {
+              if (myList) {
+                deleteFromMyList(movie.id.toString());
+                setMyList(false);
+              } else {
+                setIsModalVisible(true);
+              }
+            }}
+            icon={
+              myList ? (
+                <Icon name={"check"} color={theme.colors.success} />
+              ) : undefined
+            }
+          />
+          <CheckBox
+            onPress={() => {
+              if (watchlist) {
+                deleteFromWatchlist(movie.id.toString());
+                setWatchlist(false);
+              } else {
+                saveToWatchlist(movie.id.toString(), type);
+                setWatchlist(true);
+              }
+            }}
+            containerStyle={{ backgroundColor: theme.colors.grey1 }}
+            checked={watchlist}
+            uncheckedIcon={<Icon name="bookmark-outline" />}
+            checkedIcon={<Icon name="bookmark" />}
+          />
+        </View>
+        <RatingModal
+          modalVisible={isModelVisible}
+          onClose={() => setIsModalVisible(false)}
+          save={(rating: number) => {
+            saveToMyList(movie.id.toString(), rating, type);
+            setIsModalVisible(false);
+            setMyList(true);
+          }}
+          theme={theme}
         />
-      </View>
-      <RatingModal
-        modalVisible={isModelVisible}
-        onClose={() => setIsModalVisible(false)}
-        save={(rating: number) => {
-          saveToMyList(movie.id.toString(), rating, type);
-          setIsModalVisible(false);
-          setMyList(true);
-        }}
-        theme={theme}
-      />
+      </Pressable>
     </Card>
   );
 };

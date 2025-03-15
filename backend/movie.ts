@@ -10,6 +10,7 @@ import {
   getDocs,
   getDoc,
 } from "firebase/firestore";
+import { fetchCast } from "./person";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 const POSTER_URL = "https://image.tmdb.org/t/p/original";
@@ -57,7 +58,16 @@ export async function fetchTrending(
 
       const response = await fetch(url, options);
       const data = await response.json();
-      trending.push(...data.results);
+      const castPromises = data.results.map(async (item: Movie | TVShow) => {
+        const details = await fetchDetails(item.id.toString(), mediaType);
+        if (details) {
+          details.cast = await fetchCast(details.id, mediaType);
+          return details;
+        }
+        return item;
+      });
+      const resultsWithCast = await Promise.all(castPromises);
+      trending.push(...resultsWithCast);
     }
     return trending;
   } catch (error) {
@@ -75,7 +85,16 @@ export async function fetchPopular(
       const url = `https://api.themoviedb.org/3/${mediaType}/popular?page=${page}`;
       const response = await fetch(url, options);
       const data = await response.json();
-      popular.push(...data.results);
+      const castPromises = data.results.map(async (item: Movie | TVShow) => {
+        const details = await fetchDetails(item.id.toString(), mediaType);
+        if (details) {
+          details.cast = await fetchCast(details.id, mediaType);
+          return details;
+        }
+        return item;
+      });
+      const resultsWithCast = await Promise.all(castPromises);
+      popular.push(...resultsWithCast);
     }
     return popular;
   } catch (error) {
@@ -92,7 +111,16 @@ export async function fetchNowPlaying(): Promise<Movie[]> {
 
       const response = await fetch(url, options);
       const data = await response.json();
-      nowPlaying.push(...(data.results as Movie[]));
+      const castPromises = data.results.map(async (item: Movie | TVShow) => {
+        const details = await fetchDetails(item.id.toString(), "movie");
+        if (details) {
+          details.cast = await fetchCast(details.id, "movie");
+          return details;
+        }
+        return item;
+      });
+      const resultsWithCast = await Promise.all(castPromises);
+      nowPlaying.push(...resultsWithCast);
     }
     return nowPlaying;
   } catch (error) {
@@ -102,16 +130,25 @@ export async function fetchNowPlaying(): Promise<Movie[]> {
 }
 
 export async function fetchOnTheAir(): Promise<TVShow[]> {
-  const OnTheAir: TVShow[] = [];
+  const onTheAir: TVShow[] = [];
   try {
     for (let page = 1; page <= 10; page++) {
       const url = `https://api.themoviedb.org/3/tv/on_the_air?page=${page}`;
 
       const response = await fetch(url, options);
       const data = await response.json();
-      OnTheAir.push(...(data.results as TVShow[]));
+      const castPromises = data.results.map(async (item: Movie | TVShow) => {
+        const details = await fetchDetails(item.id.toString(), "tv");
+        if (details) {
+          details.cast = await fetchCast(details.id, "tv");
+          return details;
+        }
+        return item;
+      });
+      const resultsWithCast = await Promise.all(castPromises);
+      onTheAir.push(...resultsWithCast);
     }
-    return OnTheAir;
+    return onTheAir;
   } catch (error) {
     console.error("Error fetching movie details:", error);
     throw error;
@@ -197,6 +234,7 @@ export async function fetchMoviesFromMyList(
       for (const movieSnapshot of movieListSnapshot.docs) {
         const movie = (await fetchDetails(movieSnapshot.id, type)) as Movie;
         movie.rating = movieSnapshot.data().rating;
+        movie.cast = await fetchCast(movie.id, "movie");
         list.push(movie);
       }
       return list;
@@ -208,6 +246,7 @@ export async function fetchMoviesFromMyList(
       for (const tvSnapshot of tvListSnapshot.docs) {
         const tv = (await fetchDetails(tvSnapshot.id, type)) as TVShow;
         tv.rating = tvSnapshot.data().rating;
+        tv.cast = await fetchCast(tv.id, "tv");
         list.push(tv);
       }
       return list;
@@ -233,6 +272,7 @@ export async function fetchMoviesFromWatchlist(
       const list: Movie[] = [];
       for (const movieSnapshot of movieListSnapshot.docs) {
         const movie = (await fetchDetails(movieSnapshot.id, type)) as Movie;
+        movie.cast = await fetchCast(movie.id, "movie");
         list.push(movie);
       }
       return list;
@@ -243,6 +283,7 @@ export async function fetchMoviesFromWatchlist(
       const list: TVShow[] = [];
       for (const tvSnapshot of tvListSnapshot.docs) {
         const tv = (await fetchDetails(tvSnapshot.id, type)) as TVShow;
+        tv.cast = await fetchCast(tv.id, "tv");
         list.push(tv);
       }
       return list;

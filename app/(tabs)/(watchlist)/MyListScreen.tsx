@@ -3,6 +3,7 @@ import {
   fetchMoviePoster,
   fetchMoviesFromMyList,
 } from "@/backend/movie";
+import { fetchCast } from "@/backend/person";
 import BackButton from "@/components/BackButton";
 import MovieCard from "@/components/cards/MovieCard";
 import { ButtonGroup, useTheme } from "@rneui/themed";

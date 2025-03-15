@@ -7,6 +7,7 @@ import {
   fetchMoviesFromMyList,
   fetchMoviesFromWatchlist,
 } from "./movie";
+import { fetchCast } from "./person";
 
 const API_KEY = Constants.expoConfig?.extra?.tmdbApiKey;
 const openai = new OpenAI({
@@ -131,6 +132,7 @@ export async function FetchMovieList(
           const id = data.results[0].id;
           const details = await fetchDetails(id, type);
           if (details) {
+            details.cast = await fetchCast(details.id, "movie");
             result.push(details as Movie);
           }
         }
@@ -146,6 +148,7 @@ export async function FetchMovieList(
           const id = data.results[0].id;
           const details = await fetchDetails(id, type);
           if (details) {
+            details.cast = await fetchCast(details.id, "tv");
             result.push(details as TVShow);
           }
         }

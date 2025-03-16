@@ -27,6 +27,15 @@ function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="(search)"
+        options={{
+          title: "Search",
+          tabBarIcon: ({ size, color }) => (
+            <MaterialCommunityIcons name="magnify" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="(generate)"
         options={{
           title: "What's Next?",

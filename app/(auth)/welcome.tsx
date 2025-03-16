@@ -16,8 +16,10 @@ function WelcomeScreen() {
             resizeMode="contain"
             source={require("../../assets/logo.png")}
           />
-          <Text style={styles.logoText}>What's Next?</Text>
-          <Text style={styles.sloganText}>Your Personal Movie Generator</Text>
+          <Text style={styles.logoText}>Watchfolio</Text>
+          <Text style={styles.sloganText}>
+            Never lose track of what's next.
+          </Text>
         </View>
         <View>
           <Button

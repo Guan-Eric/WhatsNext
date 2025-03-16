@@ -23,7 +23,7 @@ interface PersonDetailsProps {
   personId: number;
   profilePath: string;
   theme: any;
-  tab: "(generate)" | "(home)" | "(watchlist)";
+  tab: "(generate)" | "(home)" | "(watchlist)" | "(search)";
 }
 
 const PersonDetails: React.FC<PersonDetailsProps> = ({
@@ -65,17 +65,11 @@ const PersonDetails: React.FC<PersonDetailsProps> = ({
           <Text style={[styles.title, { color: theme.colors.black }]}>
             {person?.name}
           </Text>
-
-          <Text style={[styles.description, { color: theme.colors.black }]}>
-            {person?.biography}
-          </Text>
-
           {knownFor?.length > 0 ? (
             <Text style={[styles.subtitle, { color: theme.colors.black }]}>
               Known For
             </Text>
           ) : null}
-
           <FlatList
             data={knownFor}
             horizontal
@@ -99,12 +93,18 @@ const PersonDetails: React.FC<PersonDetailsProps> = ({
                       paddingBottom: 10,
                     }}
                   >
-                    {item.title || item.name}
+                    {"title" in item ? item.title : item.name}
                   </Text>
                 </View>
               ) : null
             }
           />
+          <Text style={[styles.subtitle, { color: theme.colors.black }]}>
+            Biography
+          </Text>
+          <Text style={[styles.description, { color: theme.colors.black }]}>
+            {person?.biography}
+          </Text>
         </ScrollView>
       </SafeAreaView>
     </View>
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 24,
     fontWeight: "bold",
-    paddingLeft: 10,
+    paddingLeft: 20,
   },
   description: {
     fontSize: 16,

@@ -34,7 +34,7 @@ interface MovieDetailsProps {
   type: "movie" | "tv";
   posterPath: string;
   theme: any;
-  tab: "(generate)" | "(home)" | "(watchlist)";
+  tab: "(generate)" | "(home)" | "(watchlist)" | "(search)";
 }
 
 const MovieDetails: React.FC<MovieDetailsProps> = ({
@@ -258,18 +258,10 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
                   profilePath={item?.profile_path as string}
                   width={140}
                   height={210}
+                  theme={theme}
                   tab={tab}
+                  name={item?.name}
                 />
-                <Text
-                  style={{
-                    color: theme.colors.black,
-                    textAlign: "center",
-                    flexWrap: "wrap",
-                    paddingBottom: 10,
-                  }}
-                >
-                  {item.name}
-                </Text>
               </View>
             ) : null
           }

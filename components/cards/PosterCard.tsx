@@ -8,7 +8,7 @@ interface MovieCardProps {
   posterPath: string;
   width: number;
   height: number;
-  tab: "(generate)" | "(home)" | "(watchlist)";
+  tab: "(generate)" | "(home)" | "(watchlist)" | "(search)";
 }
 
 const PosterCard: React.FC<MovieCardProps> = ({

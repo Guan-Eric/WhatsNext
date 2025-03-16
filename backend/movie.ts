@@ -58,10 +58,11 @@ export async function fetchTrending(
       const response = await fetch(url, options);
       const data = await response.json();
       const castPromises = data.results.map(async (item: Movie | TVShow) => {
-        return await fetchDetails(item.id.toString(), mediaType);
+        const details = await fetchDetails(item.id.toString(), mediaType);
+        return details && details.poster_path ? details : null;
       });
       const resultsWithCast = await Promise.all(castPromises);
-      trending.push(...resultsWithCast);
+      trending.push(...resultsWithCast.filter((item) => item !== null));
     }
     return trending;
   } catch (error) {
@@ -76,14 +77,15 @@ export async function fetchPopular(
   const popular: Movie[] | TVShow[] = [];
   try {
     for (let page = 1; page <= 10; page++) {
-      const url = `https://api.themoviedb.org/3/${mediaType}/popular?page=${page}`;
+      const url = `${BASE_URL}/${mediaType}/popular?page=${page}`;
       const response = await fetch(url, options);
       const data = await response.json();
       const castPromises = data.results.map(async (item: Movie | TVShow) => {
-        return await fetchDetails(item.id.toString(), mediaType);
+        const details = await fetchDetails(item.id.toString(), mediaType);
+        return details && details.poster_path ? details : null;
       });
       const resultsWithCast = await Promise.all(castPromises);
-      popular.push(...resultsWithCast);
+      popular.push(...resultsWithCast.filter((item) => item !== null));
     }
     return popular;
   } catch (error) {
@@ -96,15 +98,16 @@ export async function fetchNowPlaying(): Promise<Movie[]> {
   const nowPlaying: Movie[] = [];
   try {
     for (let page = 1; page <= 10; page++) {
-      const url = `https://api.themoviedb.org/3/movie/now_playing?page=${page}`;
+      const url = `${BASE_URL}/movie/now_playing?page=${page}`;
 
       const response = await fetch(url, options);
       const data = await response.json();
       const castPromises = data.results.map(async (item: Movie | TVShow) => {
-        return await fetchDetails(item.id.toString(), "movie");
+        const details = await fetchDetails(item.id.toString(), "movie");
+        return details && details.poster_path ? details : null;
       });
       const resultsWithCast = await Promise.all(castPromises);
-      nowPlaying.push(...resultsWithCast);
+      nowPlaying.push(...resultsWithCast.filter((item) => item !== null));
     }
     return nowPlaying;
   } catch (error) {
@@ -117,15 +120,16 @@ export async function fetchOnTheAir(): Promise<TVShow[]> {
   const onTheAir: TVShow[] = [];
   try {
     for (let page = 1; page <= 10; page++) {
-      const url = `https://api.themoviedb.org/3/tv/on_the_air?page=${page}`;
+      const url = `${BASE_URL}/tv/on_the_air?page=${page}`;
 
       const response = await fetch(url, options);
       const data = await response.json();
       const castPromises = data.results.map(async (item: Movie | TVShow) => {
-        return await fetchDetails(item.id.toString(), "tv");
+        const details = await fetchDetails(item.id.toString(), "tv");
+        return details && details.poster_path ? details : null;
       });
       const resultsWithCast = await Promise.all(castPromises);
-      onTheAir.push(...resultsWithCast);
+      onTheAir.push(...resultsWithCast.filter((item) => item !== null));
     }
     return onTheAir;
   } catch (error) {
@@ -325,7 +329,7 @@ export async function fetchMoviesFromGenre(genreId: string): Promise<Movie[]> {
   const movies: Movie[] = [];
   try {
     for (let page = 1; page <= 10; page++) {
-      const url = `https://api.themoviedb.org/3/discover/movie?page=${page}&with_genres=${genreId}`;
+      const url = `${BASE_URL}/discover/movie?page=${page}&with_genres=${genreId}`;
       const response = await fetch(url, options);
       const data = await response.json();
       movies.push(...data.results);
@@ -343,7 +347,7 @@ export async function fetchTVShowsFromGenre(
   const tvShows: TVShow[] = [];
   try {
     for (let page = 1; page <= 10; page++) {
-      const url = `https://api.themoviedb.org/3/discover/tv?page=${page}&with_genres=${genreId}`;
+      const url = `${BASE_URL}/discover/tv?page=${page}&with_genres=${genreId}`;
       const response = await fetch(url, options);
       const data = await response.json();
       tvShows.push(...data.results);
@@ -353,4 +357,20 @@ export async function fetchTVShowsFromGenre(
     console.error("Error discovering movies by genre:", error);
     throw error;
   }
+}
+
+export async function multiSearch(
+  search: string
+): Promise<(Movie | TVShow | Person)[]> {
+  const response = await fetch(
+    `${BASE_URL}/search/multi?query=${search}`,
+    options
+  );
+  const data = await response.json();
+  return data.results.filter(
+    (item: Movie | TVShow | Person) =>
+      (item as Movie).poster_path ||
+      (item as TVShow).poster_path ||
+      (item as Person).profile_path
+  ) as (Movie | TVShow | Person)[];
 }

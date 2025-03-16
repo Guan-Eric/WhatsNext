@@ -6,7 +6,10 @@ import {
   fetchPopular,
   fetchTrending,
 } from "@/backend/movie";
+import { getUser, updateTermsCondition } from "@/backend/user";
 import PosterCard from "@/components/cards/PosterCard";
+import TermsConditionModal from "@/components/modal/TermsConditionModal";
+import { FIREBASE_AUTH } from "@/firebaseConfig";
 import { ButtonGroup, useTheme, Button, Icon } from "@rneui/themed";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -27,6 +30,7 @@ const HomeScreen = () => {
   const [trendingTVShows, setTrendingTVShows] = useState<TVShow[]>([]);
   const [nowPlayingMovies, setNowPlayingMovies] = useState<Movie[]>([]);
   const [onTheAirTVShows, setOnTheAirTVShows] = useState<TVShow[]>([]);
+  const [termsCondition, setTermsCondition] = useState<boolean>(false);
   const [movieGenres, setMovieGenres] = useState<Genre[]>([]);
   const [tvGenres, setTVGenres] = useState<Genre[]>([]);
   const { theme } = useTheme();
@@ -45,8 +49,19 @@ const HomeScreen = () => {
     setTrendingTVShows((await fetchTrending("tv", "week")) as TVShow[]);
   };
 
+  const handleTermsCondition = () => {
+    updateTermsCondition();
+    setTermsCondition(false);
+  };
+
+  const getTermsCondition = async () => {
+    const user = await getUser(FIREBASE_AUTH.currentUser.uid);
+    setTermsCondition(user ? user.showTermsCondition : false);
+  };
+
   useEffect(() => {
     fetchMoviesAndTVShows();
+    getTermsCondition();
     fetchTrendingMoviesAndTVShows();
   }, []);
 
@@ -303,6 +318,11 @@ const HomeScreen = () => {
             </>
           )}
         </ScrollView>
+        <TermsConditionModal
+          modalVisible={termsCondition}
+          onClose={handleTermsCondition}
+          theme={theme}
+        />
       </SafeAreaView>
     </View>
   );

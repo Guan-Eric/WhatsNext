@@ -5,6 +5,8 @@ import {
   StyleSheet,
   SafeAreaView,
   KeyboardAvoidingView,
+  Platform,
+  Dimensions,
 } from "react-native";
 import { Button, CheckBox, Input, useTheme } from "@rneui/themed";
 import { ScrollView } from "react-native-gesture-handler";
@@ -21,6 +23,7 @@ export default function GenerateScreen() {
   const [type, setType] = useState<"movie" | "tv">("movie");
   const [preference, setPreference] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const windowHeight = Dimensions.get("window").height;
   const { theme } = useTheme();
 
   async function handleGenerateMovies() {
@@ -50,7 +53,14 @@ export default function GenerateScreen() {
     >
       <SafeAreaView style={{ flex: 1 }}>
         <KeyboardAvoidingView behavior={"padding"} style={{ flex: 1 }}>
-          <ScrollView>
+          <ScrollView
+            style={{
+              height: Platform.OS === "web" ? windowHeight : "auto",
+            }}
+            contentContainerStyle={{
+              paddingBottom: 20, // Add some bottom padding for content
+            }}
+          >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text style={[styles.title, { color: theme.colors.black }]}>
                 What's Next?

@@ -68,50 +68,48 @@ function SearchScreen() {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: theme.colors.background,
-        }}
-      >
-        <SafeAreaView>
-          <Text
-            style={{
-              color: theme.colors.black,
-              fontFamily: "Lato_700Bold",
-              fontSize: 32,
-              fontWeight: "bold",
-              paddingLeft: 20,
-            }}
-          >
-            Search
-          </Text>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: theme.colors.background,
+      }}
+    >
+      <SafeAreaView>
+        <Text
+          style={{
+            color: theme.colors.black,
+            fontFamily: "Lato_700Bold",
+            fontSize: 32,
+            fontWeight: "bold",
+            paddingLeft: 20,
+          }}
+        >
+          Search
+        </Text>
 
-          <SearchBar
-            containerStyle={{
-              backgroundColor: theme.colors.background,
-              borderTopWidth: 0,
-              borderBottomWidth: 0,
-            }}
-            inputContainerStyle={{
-              borderRadius: 10,
-            }}
-            placeholder="Type Here..."
-            onChangeText={(text) => setSearch(text)}
-            onClear={() => setSearch("")}
-            value={search}
-          />
-          <FlatList
-            style={{ marginBottom: 80 }}
-            numColumns={3}
-            data={results}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => renderItem({ item }) || null}
-          />
-        </SafeAreaView>
-      </View>
-    </TouchableWithoutFeedback>
+        <SearchBar
+          containerStyle={{
+            backgroundColor: theme.colors.background,
+            borderTopWidth: 0,
+            borderBottomWidth: 0,
+          }}
+          inputContainerStyle={{
+            borderRadius: 10,
+          }}
+          placeholder="Type Here..."
+          onChangeText={(text) => setSearch(text)}
+          onClear={() => setSearch("")}
+          value={search}
+        />
+        <FlatList
+          style={{ marginBottom: 80 }}
+          numColumns={3}
+          data={results}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => renderItem({ item }) || null}
+        />
+      </SafeAreaView>
+    </View>
   );
 }
 

@@ -20,6 +20,8 @@ import {
   ScrollView,
   SafeAreaView,
   FlatList,
+  Platform,
+  Dimensions,
 } from "react-native";
 
 const HomeScreen = () => {
@@ -33,6 +35,7 @@ const HomeScreen = () => {
   const [termsCondition, setTermsCondition] = useState<boolean>(false);
   const [movieGenres, setMovieGenres] = useState<Genre[]>([]);
   const [tvGenres, setTVGenres] = useState<Genre[]>([]);
+  const windowHeight = Dimensions.get("window").height;
   const { theme } = useTheme();
 
   const fetchMoviesAndTVShows = async () => {
@@ -68,7 +71,14 @@ const HomeScreen = () => {
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <SafeAreaView>
-        <ScrollView>
+        <ScrollView
+          style={{
+            height: Platform.OS === "web" ? windowHeight : "auto",
+          }}
+          contentContainerStyle={{
+            paddingBottom: 20, // Add some bottom padding for content
+          }}
+        >
           <View
             style={{
               flexDirection: "row",

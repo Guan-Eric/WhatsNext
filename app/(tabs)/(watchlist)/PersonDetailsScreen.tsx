@@ -10,9 +10,9 @@ function PersonDetailsScreen() {
   return (
     <PersonDetails
       theme={theme}
-      personId={personId as string}
+      personId={Number(personId)}
       profilePath={profilePath as string}
-      tab={"(generate)"}
+      tab={"(watchlist)"}
     />
   );
 }

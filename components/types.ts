@@ -62,7 +62,6 @@ interface Movie {
   vote_average: number;
   vote_count: number;
   rating?: number;
-  cast?: Person[];
 }
 
 interface Creator {
@@ -142,7 +141,6 @@ interface TVShow {
   vote_average: number;
   vote_count: number;
   rating?: number;
-  cast?: Person[];
 }
 
 interface ModalOptions {

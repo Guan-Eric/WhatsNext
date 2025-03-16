@@ -12,6 +12,10 @@ function ListStackLayout() {
         name="MovieDetailsScreen"
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="PersonDetailsScreen"
+        options={{ headerShown: false }}
+      />
       <Stack.Screen name="MyListScreen" options={{ headerShown: false }} />
       <Stack.Screen name="ProfileScreen" options={{ headerShown: false }} />
     </Stack>

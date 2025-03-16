@@ -23,10 +23,10 @@ const PersonCard: React.FC<MovieCardProps> = ({
       type="clear"
       onPress={() =>
         router.push({
-          pathname: `/(tabs)/${tab}/MovieDetailsScreen`,
+          pathname: `/(tabs)/${tab}/PersonDetailsScreen`,
           params: {
             personId: personId,
-            posterPath: profilePath,
+            profilePath: profilePath,
           },
         })
       }

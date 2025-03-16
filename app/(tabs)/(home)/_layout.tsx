@@ -14,6 +14,10 @@ function HomeStackLayout() {
         name="MovieDetailsScreen"
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="PersonDetailsScreen"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 }

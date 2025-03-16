@@ -49,3 +49,37 @@ export async function fetchCast(
     throw error;
   }
 }
+
+export async function fetchKnownFor(id: number): Promise<(Movie | TVShow)[]> {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/person/${id}/combined_credits`,
+      options
+    );
+    const creditsData = await response.json();
+    const knownFor = creditsData.cast.map(
+      ({
+        id,
+        title,
+        name,
+        poster_path,
+        media_type,
+      }: {
+        id: number;
+        title?: string;
+        name?: string;
+        poster_path: string | null;
+        media_type: "movie" | "tv";
+      }) => ({
+        id,
+        title: title || name,
+        poster_path: poster_path ? POSTER_URL + poster_path : null,
+        type: media_type == "movie" ? "movie" : "tv",
+      })
+    );
+    return knownFor as (Movie | TVShow)[];
+  } catch (error) {
+    console.error("Error fetching known for details", error);
+    throw error;
+  }
+}

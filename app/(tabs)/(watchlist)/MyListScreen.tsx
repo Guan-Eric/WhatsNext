@@ -9,12 +9,21 @@ import MovieCard from "@/components/cards/MovieCard";
 import { ButtonGroup, useTheme } from "@rneui/themed";
 import { useFocusEffect } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, View, Text } from "react-native";
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  View,
+  Text,
+  Platform,
+  Dimensions,
+} from "react-native";
 
 const MyListScreen = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [tvShows, setTVShows] = useState<TVShow[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const windowHeight = Dimensions.get("window").height;
   const { theme } = useTheme();
 
   const fetchMoviesAndTVShows = async () => {
@@ -50,7 +59,14 @@ const MyListScreen = () => {
             My List
           </Text>
         </View>
-        <ScrollView style={{ marginBottom: 40 }}>
+        <ScrollView
+          style={{
+            height: Platform.OS === "web" ? windowHeight : "auto",
+          }}
+          contentContainerStyle={{
+            paddingBottom: 60,
+          }}
+        >
           <ButtonGroup
             containerStyle={{
               width: 200,

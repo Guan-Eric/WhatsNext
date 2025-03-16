@@ -76,7 +76,7 @@ const HomeScreen = () => {
             height: Platform.OS === "web" ? windowHeight : "auto",
           }}
           contentContainerStyle={{
-            paddingBottom: 20, // Add some bottom padding for content
+            paddingBottom: 20,
           }}
         >
           <View

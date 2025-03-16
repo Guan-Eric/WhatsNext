@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Dimensions,
+  Platform,
 } from "react-native";
 import { Avatar, SearchBar, useTheme } from "@rneui/themed";
 import BackButton from "../../../components/BackButton";
@@ -20,6 +21,7 @@ function SearchScreen() {
   const [results, setResults] = useState<(Movie | TVShow | Person)[]>([]);
   const { theme } = useTheme();
   const screenWidth = Dimensions.get("screen").width;
+  const windowHeight = Dimensions.get("window").height;
 
   const fetchResults = async () => {
     setResults(await multiSearch(search));
@@ -102,7 +104,10 @@ function SearchScreen() {
           value={search}
         />
         <FlatList
-          style={{ marginBottom: 80 }}
+          style={{
+            marginBottom: 100,
+            height: Platform.OS === "web" ? windowHeight : "auto",
+          }}
           numColumns={3}
           data={results}
           keyExtractor={(item) => item.id.toString()}

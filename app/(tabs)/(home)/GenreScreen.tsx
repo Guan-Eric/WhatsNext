@@ -8,7 +8,14 @@ import PosterCard from "@/components/cards/PosterCard";
 import { useTheme } from "@rneui/themed";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, View, Text, Dimensions } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  Platform,
+} from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 
 const MyListScreen = () => {
@@ -17,6 +24,7 @@ const MyListScreen = () => {
   const { theme } = useTheme();
   const { genreId, genreName, selectedIndex } = useLocalSearchParams();
   const screenWidth = Dimensions.get("screen").width;
+  const windowHeight = Dimensions.get("window").height;
 
   const fetchMoviesAndTVShows = async () => {
     setMovies((await fetchMoviesFromGenre(genreId as string)) as Movie[]);
@@ -43,7 +51,10 @@ const MyListScreen = () => {
         </View>
         {selectedIndex == "0" ? (
           <FlatList
-            style={{ marginBottom: 40 }}
+            style={{
+              marginBottom: 80,
+              height: Platform.OS === "web" ? windowHeight : "auto",
+            }}
             data={movies}
             keyExtractor={(item) => item.id.toString()}
             numColumns={3}

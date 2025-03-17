@@ -3,11 +3,12 @@ export default {
   expo: {
     name: "WhatsNext",
     slug: "whats-next",
-    version: "1.0.0",
+    version: "1.1.0",
     orientation: "portrait",
     icon: "./assets/icon.png",
     splash: {
       image: "./assets/icon.png",
+      resizeMode: "contain",
       backgroundColor: "#181818",
     },
     scheme: "myapp",

@@ -1,6 +1,6 @@
 // app/index.tsx
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { Image, View } from "react-native";
 import { router } from "expo-router";
 import { onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "../firebaseConfig";
@@ -35,7 +35,7 @@ export default function App() {
           backgroundColor: "#181818",
         }}
       >
-        <ActivityIndicator size="large" color="#e5e5e5" />
+        <Image source={{ uri: "../assets/icon.png" }} resizeMode="contain" />
       </View>
     );
   }

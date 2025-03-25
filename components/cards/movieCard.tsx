@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet } from "react-native";
 import { Card, Button } from "@rneui/themed";
 import ThreeDotsModal from "../modal/ThreeDotsModal";
 import { router } from "expo-router";
+import { fetchHDMoviePoster } from "@/backend/movie";
 
 interface MovieCardProps {
   movie: Movie | TVShow;
@@ -28,7 +29,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
           pathname: `/(tabs)/${tab}/MovieDetailsScreen`,
           params: {
             movieId: movie.id,
-            posterPath: posterPath,
+            posterPath: fetchHDMoviePoster(movie?.poster_path as string),
             type: movie.hasOwnProperty("title") ? "movie" : "tv",
           },
         })

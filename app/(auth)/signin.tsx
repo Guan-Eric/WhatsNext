@@ -24,8 +24,10 @@ function SignInScreen() {
 
   const signIn = async () => {
     setLoading(true);
-    if (await logIn(email, password)) setLoading(false);
-    else {
+    if (await logIn(email, password)) {
+      setLoading(false);
+      router.push({ pathname: "/(tabs)/(home)/HomeScreen" });
+    } else {
       setIsModalOpen(true);
       setLoading(false);
     }

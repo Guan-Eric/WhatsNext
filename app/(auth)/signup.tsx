@@ -24,16 +24,6 @@ function SignUpScreen() {
     useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const {
-    username,
-    name,
-    primaryHeight,
-    secondaryHeight,
-    weight,
-    heightIsMetric,
-    weightIsMetric,
-  } = useLocalSearchParams();
-
   const validateEmail = (email: string) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailPattern.test(email);
@@ -75,6 +65,7 @@ function SignUpScreen() {
     }
     if (await register(email, password)) {
       setLoading(false);
+      router.push({ pathname: "/(tabs)/(home)/HomeScreen" });
     } else {
       setIsModalOpen(true);
       setLoading(false);

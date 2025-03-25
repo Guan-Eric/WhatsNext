@@ -15,6 +15,7 @@ import {
   deleteFromWatchlist,
   fetchDetails,
   fetchMoviePoster,
+  fetchWatchProviders,
   isAlreadySeen,
   isWatchlist,
   saveToMyList,
@@ -28,6 +29,7 @@ import RatingModal from "./modal/RatingModal";
 import { fetchCast } from "@/backend/person";
 import { router } from "expo-router";
 import PersonCard from "./cards/PersonCard";
+import WatchProviderModal from "./modal/WatchProviderModal";
 
 interface MovieDetailsProps {
   movieId: string;
@@ -51,6 +53,10 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
   const [isModelVisible, setIsModalVisible] = useState<boolean>(false);
   const [watchlist, setWatchlist] = useState<boolean>(false);
   const [myList, setMyList] = useState<boolean>(false);
+  const [watchModal, setWatchModal] = useState<boolean>(false);
+  const [providers, setProviders] = useState<Record<string, WatchProvider[]>>(
+    {}
+  );
 
   const fetchMovieDetails = async () => {
     setMovie(await fetchDetails(movieId, type));
@@ -58,6 +64,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
     setWatchlist(await isWatchlist(movieId));
     setMyList(await isAlreadySeen(movieId));
     setCast(await fetchCast(Number(movieId), type));
+    setProviders(await fetchWatchProviders(movieId, type, "US"));
   };
 
   useEffect(() => {
@@ -201,6 +208,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
           }}
         >
           <Button
+            onPress={() => setWatchModal(true)}
             title="Watch Now"
             buttonStyle={{
               width: 150,
@@ -277,6 +285,12 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
           setIsModalVisible(false);
           setMyList(true);
         }}
+        theme={theme}
+      />
+      <WatchProviderModal
+        modalVisible={watchModal}
+        onClose={() => setWatchModal(false)}
+        providers={providers}
         theme={theme}
       />
     </View>

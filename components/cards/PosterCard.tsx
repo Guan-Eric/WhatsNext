@@ -2,6 +2,7 @@ import React from "react";
 import { Image, StyleSheet } from "react-native";
 import { Button } from "@rneui/themed";
 import { router } from "expo-router";
+import { fetchHDMoviePoster } from "@/backend/movie";
 
 interface MovieCardProps {
   movie: Movie | TVShow;
@@ -26,7 +27,7 @@ const PosterCard: React.FC<MovieCardProps> = ({
           pathname: `/(tabs)/${tab}/MovieDetailsScreen`,
           params: {
             movieId: movie.id,
-            posterPath: posterPath,
+            posterPath: fetchHDMoviePoster(movie?.poster_path as string),
             type: movie.hasOwnProperty("title") ? "movie" : "tv",
           },
         })

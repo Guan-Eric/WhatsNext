@@ -39,17 +39,14 @@ const HomeScreen = () => {
   const { theme } = useTheme();
 
   const fetchMoviesAndTVShows = async () => {
-    setPopularMovies((await fetchPopular("movie")) as Movie[]);
-    setPopularTVShows((await fetchPopular("tv")) as TVShow[]);
-    setNowPlayingMovies((await fetchNowPlaying()) as Movie[]);
-    setOnTheAirTVShows((await fetchOnTheAir()) as TVShow[]);
+    setPopularMovies((await fetchPopular("movie", 2)) as Movie[]);
+    setPopularTVShows((await fetchPopular("tv", 2)) as TVShow[]);
+    setNowPlayingMovies((await fetchNowPlaying(2)) as Movie[]);
+    setOnTheAirTVShows((await fetchOnTheAir(2)) as TVShow[]);
     setMovieGenres((await fetchGenres("movie")) as Genre[]);
+    setTrendingMovies((await fetchTrending("movie", "week", 2)) as Movie[]);
+    setTrendingTVShows((await fetchTrending("tv", "week", 2)) as TVShow[]);
     setTVGenres((await fetchGenres("tv")) as Genre[]);
-  };
-
-  const fetchTrendingMoviesAndTVShows = async () => {
-    setTrendingMovies((await fetchTrending("movie", "week")) as Movie[]);
-    setTrendingTVShows((await fetchTrending("tv", "week")) as TVShow[]);
   };
 
   const handleTermsCondition = () => {
@@ -65,7 +62,6 @@ const HomeScreen = () => {
   useEffect(() => {
     fetchMoviesAndTVShows();
     getTermsCondition();
-    fetchTrendingMoviesAndTVShows();
   }, []);
 
   return (

@@ -12,7 +12,7 @@ import {
 } from "firebase/firestore";
 
 const BASE_URL = "https://api.themoviedb.org/3";
-const POSTER_URL = "https://image.tmdb.org/t/p/original";
+const POSTER_URL = "https://image.tmdb.org/t/p/w500";
 const options = {
   method: "GET",
   headers: {
@@ -46,13 +46,23 @@ export function fetchMoviePoster(path: string): string {
   }
 }
 
+export function fetchHDMoviePoster(path: string): string {
+  try {
+    return `https://image.tmdb.org/t/p/original${path}`;
+  } catch (error) {
+    console.error("Error fetching movie poster:", error);
+    return "";
+  }
+}
+
 export async function fetchTrending(
   mediaType: "movie" | "tv",
-  timeWindow: "day" | "week"
+  timeWindow: "day" | "week",
+  pages: number
 ): Promise<Movie[] | TVShow[]> {
   const trending: Movie[] | TVShow[] = [];
   try {
-    for (let page = 1; page <= 10; page++) {
+    for (let page = 1; page <= pages; page++) {
       const url = `${BASE_URL}/trending/${mediaType}/${timeWindow}?page=${page}`;
 
       const response = await fetch(url, options);
@@ -72,11 +82,12 @@ export async function fetchTrending(
 }
 
 export async function fetchPopular(
-  mediaType: "movie" | "tv"
+  mediaType: "movie" | "tv",
+  pages: number
 ): Promise<Movie[] | TVShow[]> {
   const popular: Movie[] | TVShow[] = [];
   try {
-    for (let page = 1; page <= 10; page++) {
+    for (let page = 1; page <= pages; page++) {
       const url = `${BASE_URL}/${mediaType}/popular?page=${page}`;
       const response = await fetch(url, options);
       const data = await response.json();
@@ -94,10 +105,10 @@ export async function fetchPopular(
   }
 }
 
-export async function fetchNowPlaying(): Promise<Movie[]> {
+export async function fetchNowPlaying(pages: number): Promise<Movie[]> {
   const nowPlaying: Movie[] = [];
   try {
-    for (let page = 1; page <= 10; page++) {
+    for (let page = 1; page <= pages; page++) {
       const url = `${BASE_URL}/movie/now_playing?page=${page}`;
 
       const response = await fetch(url, options);
@@ -116,10 +127,10 @@ export async function fetchNowPlaying(): Promise<Movie[]> {
   }
 }
 
-export async function fetchOnTheAir(): Promise<TVShow[]> {
+export async function fetchOnTheAir(pages: number): Promise<TVShow[]> {
   const onTheAir: TVShow[] = [];
   try {
-    for (let page = 1; page <= 10; page++) {
+    for (let page = 1; page <= pages; page++) {
       const url = `${BASE_URL}/tv/on_the_air?page=${page}`;
 
       const response = await fetch(url, options);
@@ -306,10 +317,10 @@ export async function fetchMoviesFromCategory(
 ): Promise<Movie[]> {
   const movies =
     category === "Most Popular"
-      ? await fetchPopular("movie")
+      ? await fetchPopular("movie", 10)
       : category === "Trending"
-      ? await fetchTrending("movie", "week")
-      : await fetchNowPlaying();
+      ? await fetchTrending("movie", "week", 10)
+      : await fetchNowPlaying(10);
   return movies as Movie[];
 }
 
@@ -318,17 +329,20 @@ export async function fetchTVShowsFromCategory(
 ): Promise<TVShow[]> {
   const tvShows =
     category === "Most Popular"
-      ? await fetchPopular("tv")
+      ? await fetchPopular("tv", 10)
       : category === "Trending"
-      ? await fetchTrending("tv", "week")
-      : await fetchOnTheAir();
+      ? await fetchTrending("tv", "week", 10)
+      : await fetchOnTheAir(10);
   return tvShows as TVShow[];
 }
 
-export async function fetchMoviesFromGenre(genreId: string): Promise<Movie[]> {
+export async function fetchMoviesFromGenre(
+  genreId: string,
+  pages: number
+): Promise<Movie[]> {
   const movies: Movie[] = [];
   try {
-    for (let page = 1; page <= 10; page++) {
+    for (let page = 1; page <= pages; page++) {
       const url = `${BASE_URL}/discover/movie?page=${page}&with_genres=${genreId}`;
       const response = await fetch(url, options);
       const data = await response.json();
@@ -342,11 +356,12 @@ export async function fetchMoviesFromGenre(genreId: string): Promise<Movie[]> {
 }
 
 export async function fetchTVShowsFromGenre(
-  genreId: string
+  genreId: string,
+  pages: number
 ): Promise<TVShow[]> {
   const tvShows: TVShow[] = [];
   try {
-    for (let page = 1; page <= 10; page++) {
+    for (let page = 1; page <= pages; page++) {
       const url = `${BASE_URL}/discover/tv?page=${page}&with_genres=${genreId}`;
       const response = await fetch(url, options);
       const data = await response.json();
@@ -373,4 +388,48 @@ export async function multiSearch(
       (item as TVShow).poster_path ||
       (item as Person).profile_path
   ) as (Movie | TVShow | Person)[];
+}
+
+export async function fetchWatchProviders(
+  id: string,
+  type: "movie" | "tv",
+  region: string = "US" // Default to US if no region provided
+): Promise<{ [category: string]: WatchProvider[] }> {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/${type}/${id}/watch/providers`,
+      options
+    );
+    const data = await response.json();
+
+    // Check if region data exists
+    if (!data.results || !data.results[region]) {
+      console.log(`No provider data found for region: ${region}`);
+      return {};
+    }
+
+    const regionData = data.results[region];
+    const result: { [category: string]: WatchProvider[] } = {};
+
+    // Get all categories: flatrate (streaming), rent, buy, free, ads, etc.
+    const categories = ["flatrate", "rent", "buy", "free"];
+
+    categories.forEach((category) => {
+      if (regionData[category] && regionData[category].length > 0) {
+        result[category] = regionData[category].map((provider: any) => ({
+          provider_id: provider.provider_id,
+          provider_name: provider.provider_name,
+          logo_path: provider.logo_path
+            ? `${POSTER_URL}${provider.logo_path}`
+            : null,
+          display_priority: provider.display_priority,
+        }));
+      }
+    });
+
+    return result;
+  } catch (error) {
+    console.error("Error fetching watch providers:", error);
+    return {};
+  }
 }

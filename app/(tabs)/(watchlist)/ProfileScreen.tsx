@@ -15,9 +15,8 @@ function ProfileScreen() {
 
   const handleDeleteAccount = async () => {
     setIsModalVisible(false);
-    router.push("/(auth)/welcome");
     await deleteAccount();
-    await FIREBASE_AUTH.currentUser.delete();
+    router.push("/(auth)/welcome");
   };
   return (
     <View

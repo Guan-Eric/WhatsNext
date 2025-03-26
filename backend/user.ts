@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../firebaseConfig";
 
 export async function addUser() {
@@ -59,5 +59,17 @@ export async function updateTermsCondition(): Promise<void> {
     });
   } catch (error) {
     console.error("Error saving Terms and Condition:", error);
+  }
+}
+
+export async function deleteAccount() {
+  try {
+    const userDocRef = doc(
+      FIRESTORE_DB,
+      `Users/${FIREBASE_AUTH.currentUser.uid}`
+    );
+    await deleteDoc(userDocRef);
+  } catch (error) {
+    console.error("Error deleting account:", error);
   }
 }

@@ -20,6 +20,13 @@ function GenerateStackLayout() {
         name="PersonDetailsScreen"
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="PaywallScreen"
+        options={{
+          headerShown: false,
+          presentation: "modal", // Makes it feel more important
+        }}
+      />
     </Stack>
   );
 }

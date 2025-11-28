@@ -15,7 +15,20 @@ function LoginStackLayout() {
           headerLeft: () => null,
         }}
       />
-
+      <Stack.Screen
+        name="paywall"
+        options={{
+          headerShown: false,
+          gestureEnabled: false,
+        }}
+      />
+      <Stack.Screen
+        name="onboarding"
+        options={{
+          headerShown: false,
+          gestureEnabled: false,
+        }}
+      />
       <Stack.Screen
         name="signin"
         options={{ headerShown: false, gestureEnabled: false }}

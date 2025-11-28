@@ -1,21 +1,13 @@
 import { Tabs } from "expo-router";
 import React from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useTheme } from "@rneui/themed";
+import CustomNavBar from "@/components/CustomeNavBar";
 
 function TabLayout() {
-  const { theme } = useTheme();
   return (
     <Tabs
       initialRouteName="(home)"
-      screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: theme.colors.primary,
-        tabBarInactiveTintColor: theme.colors.black,
-        tabBarStyle: {
-          backgroundColor: theme.colors.background,
-        },
-      }}
+      tabBar={(props) => <CustomNavBar {...props} />}
     >
       <Tabs.Screen
         name="(home)"

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, SafeAreaView, Dimensions } from "react-native";
-import { useTheme } from "@rneui/themed";
 import { useLocalSearchParams } from "expo-router";
 import { FetchMovieList } from "@/backend/ai";
 import BackButton from "@/components/BackButton";
@@ -12,7 +11,6 @@ import { fetchCast } from "@/backend/person";
 export default function GenerateScreen() {
   const [loading, setLoading] = useState<boolean>(false);
   const [movieList, setMovieList] = useState<Movie[] | TVShow[]>([]);
-  const { theme } = useTheme();
   const { list, type } = useLocalSearchParams();
   const screenWidth = Dimensions.get("screen").width;
   const screenHeight = Dimensions.get("screen").height;

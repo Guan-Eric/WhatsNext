@@ -9,6 +9,7 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../firebaseConfig";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export async function addUser() {
   try {
@@ -96,3 +97,13 @@ export async function deleteAccount() {
     console.error("Error deleting account:", error);
   }
 }
+
+const resetOnboarding = async () => {
+  try {
+    await AsyncStorage.removeItem("@has_seen_onboarding");
+    await AsyncStorage.removeItem("@selected_plan");
+    console.log("Onboarding reset!");
+  } catch (e) {
+    console.error("Failed to reset onboarding:", e);
+  }
+};

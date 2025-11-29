@@ -17,7 +17,8 @@
         "MEASUREMENT_ID": "@MEASUREMENT_ID",
         "OPENAI_ORGANIZATION_ID": "@OPENAI_ORGANIZATION_ID",
         "OPENAI_PROJECT_ID": "@OPENAI_PROJECT_ID",
-        "OPENAI_API_KEY": "@OPENAI_API_KEY"
+        "OPENAI_API_KEY": "@OPENAI_API_KEY",
+        "REVENUE_CAT_IOS": "@REVENUE_CAT_IOS"
       },
       "channel": "development",
       "distribution": "internal"
@@ -37,7 +38,8 @@
         "MEASUREMENT_ID": "@MEASUREMENT_ID",
         "OPENAI_ORGANIZATION_ID": "@OPENAI_ORGANIZATION_ID",
         "OPENAI_PROJECT_ID": "@OPENAI_PROJECT_ID",
-        "OPENAI_API_KEY": "@OPENAI_API_KEY"
+        "OPENAI_API_KEY": "@OPENAI_API_KEY",
+        "REVENUE_CAT_IOS": "@REVENUE_CAT_IOS"
       },
       "channel": "production",
       "autoIncrement": true

@@ -4,6 +4,8 @@ import { View, ActivityIndicator, InteractionManager } from "react-native";
 import { router } from "expo-router";
 import { onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "../firebaseConfig";
+import Constants from "expo-constants";
+import Purchases from "react-native-purchases";
 
 export default function Index() {
   const [loading, setLoading] = useState(true);
@@ -36,7 +38,13 @@ export default function Index() {
   };
 
   useEffect(() => {
-    checkAuth();
+    const fetchData = async () => {
+      Purchases.configure({
+        apiKey: Constants.expoConfig?.extra?.revenueCatIos,
+      });
+      await checkAuth();
+    };
+    fetchData();
   }, []);
 
   if (loading) {

@@ -51,7 +51,7 @@ const WatchlistScreen = () => {
   ];
 
   return (
-    <View className="flex-1 bg-white dark:bg-[#181818]">
+    <View className="flex-1 bg-[#181818]">
       <SafeAreaView>
         <View className="flex-row items-center justify-between">
           <Text className="text-3xl font-bold pl-5 text-black dark:text-white">
@@ -76,12 +76,10 @@ const WatchlistScreen = () => {
           }}
         >
           {/* Button Group */}
-          <View className="w-[200px] h-[30px] bg-grey-0 dark:bg-grey-dark-0 rounded-lg ml-5 flex-row overflow-hidden">
+          <View className="w-[200px] h-[30px] bg-grey-dark-0 rounded-lg ml-5 flex-row overflow-hidden">
             <Pressable
               className={`flex-1 items-center justify-center ${
-                selectedIndex === 0
-                  ? "bg-primary dark:bg-primary-dark"
-                  : "bg-transparent"
+                selectedIndex === 0 ? "bg-primary-dark" : "bg-transparent"
               }`}
               onPress={() => setSelectedIndex(0)}
             >
@@ -97,9 +95,7 @@ const WatchlistScreen = () => {
             </Pressable>
             <Pressable
               className={`flex-1 items-center justify-center ${
-                selectedIndex === 1
-                  ? "bg-primary dark:bg-primary-dark"
-                  : "bg-transparent"
+                selectedIndex === 1 ? "bg-primary-dark" : "bg-transparent"
               }`}
               onPress={() => setSelectedIndex(1)}
             >

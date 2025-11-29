@@ -29,7 +29,7 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
   const screenWidth = Dimensions.get("screen").width;
 
   return (
-    <View className="rounded-2xl bg-grey-1 dark:bg-grey-dark-1 border border-grey-1 dark:border-grey-dark-1">
+    <View className="rounded-2xl bg-grey-dark-1 border border-grey-1 dark:border-grey-dark-1">
       <Pressable
         onPress={() => {
           router.push({
@@ -59,7 +59,7 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
           {movie.genres?.map((genre, index) => (
             <Text
               key={index}
-              className="bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded-md px-1.5 py-1 m-0.5"
+              className="bg-gray-700 text-black dark:text-white rounded-md px-1.5 py-1 m-0.5"
             >
               {genre.name}
             </Text>
@@ -76,7 +76,7 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
                 setIsModalVisible(true);
               }
             }}
-            className="w-[150px] self-center rounded-2xl py-2 items-center bg-grey-1 dark:bg-grey-dark-1"
+            className="w-[150px] self-center rounded-2xl py-2 items-center bg-grey-dark-1"
           >
             {myList ? (
               <Ionicons name="checkmark" size={20} color="#28a745" />
@@ -95,7 +95,7 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
                 setWatchlist(true);
               }
             }}
-            className="p-2 bg-grey-1 dark:bg-grey-dark-1"
+            className="p-2 bg-grey-dark-1"
           >
             <Ionicons
               name={watchlist ? "bookmark" : "bookmark-outline"}

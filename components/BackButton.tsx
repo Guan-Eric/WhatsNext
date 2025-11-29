@@ -7,7 +7,7 @@ const BackButton: React.FC = () => {
   return (
     <Pressable onPress={() => router.back()} className="self-start">
       <View className="p-2">
-        <Ionicons name="chevron-back" size={30} color="#000" />
+        <Ionicons name="chevron-back" size={30} color="#fff" />
       </View>
     </Pressable>
   );

@@ -29,7 +29,7 @@ const WatchProviderModal: React.FC<WatchProviderModalProps> = ({
       onRequestClose={onClose}
     >
       <View className="flex-1 justify-center items-center bg-black/70">
-        <View className="w-[90%] max-w-[400px] p-5 rounded-2xl items-center bg-white dark:bg-[#181818]">
+        <View className="w-[90%] max-w-[400px] p-5 rounded-2xl items-center bg-[#181818]">
           <Text className="text-2xl font-bold mb-5 text-center text-black dark:text-white">
             Where to Watch
           </Text>

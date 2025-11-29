@@ -4,7 +4,18 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 function TabLayout() {
   return (
-    <Tabs initialRouteName="(home)">
+    <Tabs
+      initialRouteName="(home)"
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: "#ffb400", // Primary color
+        tabBarInactiveTintColor: "#6c757d",
+        tabBarStyle: {
+          backgroundColor: "#181818",
+          borderTopColor: "#2d2d2d",
+        },
+      }}
+    >
       <Tabs.Screen
         name="(home)"
         options={{

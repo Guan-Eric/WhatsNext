@@ -23,7 +23,7 @@ const RatingModal: React.FC<StreakModalProps> = ({
       onRequestClose={onClose}
     >
       <View className="flex-1 justify-center items-center bg-black/40">
-        <View className="w-[300px] p-5 rounded-2xl items-center bg-grey-1 dark:bg-grey-dark-1">
+        <View className="w-[300px] p-5 rounded-2xl items-center bg-grey-dark-1">
           <Rating
             tintColor="#e9ecef"
             type="custom"
@@ -42,14 +42,14 @@ const RatingModal: React.FC<StreakModalProps> = ({
           <View className="flex-col w-full">
             <Pressable
               onPress={() => save(rating)}
-              className="p-2.5 my-1 rounded-lg w-full items-center bg-primary dark:bg-primary-dark"
+              className="p-2.5 my-1 rounded-lg w-full items-center bg-primary-dark"
             >
               <Text className="text-base text-white">Save</Text>
             </Pressable>
 
             <Pressable
               onPress={() => onClose()}
-              className="p-2.5 my-1 rounded-lg w-full items-center bg-grey-2 dark:bg-grey-dark-2"
+              className="p-2.5 my-1 rounded-lg w-full items-center bg-grey-dark-2"
             >
               <Text className="text-base text-white">Close</Text>
             </Pressable>

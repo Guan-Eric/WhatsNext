@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, View, Image, Text, Pressable } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  Image,
+  Text,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { signInAnonymous } from "@/backend/auth";
 
 function WelcomeScreen() {
   const [hasSeenOnboarding, setHasSeenOnboarding] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     checkOnboardingStatus();
@@ -19,10 +28,21 @@ function WelcomeScreen() {
     }
   };
 
-  const handleSignUp = async () => {
+  const handleGetStarted = async () => {
+    setLoading(true);
+
+    // Sign in anonymously first
+    const success = await signInAnonymous();
+
+    if (!success) {
+      alert("Failed to start. Please try again.");
+      setLoading(false);
+      return;
+    }
+
     if (hasSeenOnboarding) {
-      // User has seen onboarding before, skip to paywall or signup
-      router.push("/(auth)/paywall");
+      // User has seen onboarding before, skip to paywall
+      router.replace("/(auth)/paywall");
     } else {
       // First time user, show onboarding
       try {
@@ -30,8 +50,10 @@ function WelcomeScreen() {
       } catch (e) {
         console.error("Error saving onboarding status:", e);
       }
-      router.push("/(auth)/onboarding1");
+      router.replace("/(auth)/onboarding1");
     }
+
+    setLoading(false);
   };
 
   return (
@@ -52,30 +74,24 @@ function WelcomeScreen() {
         </View>
 
         <View className="w-full items-center px-8">
-          {/* Sign Up Button */}
+          {/* Get Started Button */}
           <Pressable
-            className="bg-primary rounded-[20px] w-full max-w-[240px] h-[46px] items-center justify-center active:opacity-80 mb-10"
-            onPress={handleSignUp}
+            className="bg-primary rounded-[20px] w-full max-w-[240px] h-[46px] items-center justify-center active:opacity-80"
+            onPress={handleGetStarted}
+            disabled={loading}
           >
-            <Text className="text-white font-bold text-xl font-['Lato_400Regular']">
-              Get Started
-            </Text>
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text className="text-white font-bold text-xl font-['Lato_400Regular']">
+                Get Started
+              </Text>
+            )}
           </Pressable>
 
-          {/* Sign In Section */}
-          <View className="items-center">
-            <Text className="text-gray-500 font-['Lato_400Regular'] text-base">
-              Already have an account?
-            </Text>
-            <Pressable
-              className="w-25 h-12 items-center justify-center active:opacity-60"
-              onPress={() => router.push("/(auth)/signin")}
-            >
-              <Text className="text-primary font-['Lato_400Regular'] text-base">
-                Sign In
-              </Text>
-            </Pressable>
-          </View>
+          <Text className="text-grey-dark-5 text-xs mt-4 text-center px-8">
+            By continuing, you agree to our Terms of Service and Privacy Policy
+          </Text>
         </View>
       </SafeAreaView>
     </View>

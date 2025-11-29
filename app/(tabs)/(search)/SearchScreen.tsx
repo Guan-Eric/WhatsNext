@@ -66,15 +66,15 @@ function SearchScreen() {
   };
 
   return (
-    <View className="flex-1 bg-white dark:bg-[#181818]">
+    <View className="flex-1 bg-[#181818]">
       <SafeAreaView>
         <Text className="text-black dark:text-white font-bold text-3xl pl-5">
           Search
         </Text>
 
         {/* Search Bar */}
-        <View className="bg-white dark:bg-[#181818] px-3 py-2">
-          <View className="flex-row items-center bg-grey-0 dark:bg-grey-dark-0 rounded-lg px-3 h-12">
+        <View className="bg-[#181818] px-3 py-2">
+          <View className="flex-row items-center bg-grey-dark-0 rounded-lg px-3 h-12">
             <Ionicons
               name="search"
               size={20}

@@ -15,24 +15,17 @@ export default function Index() {
       try {
         if (!user) {
           // User not logged in → go to welcome
-          InteractionManager.runAfterInteractions(() => {
-            router.replace("/(auth)/welcome");
-            setLoading(false);
-          });
-          return;
-        }
-
-        // User logged in → go to home
-        InteractionManager.runAfterInteractions(() => {
-          router.replace("/(tabs)/(home)/HomeScreen");
-          setLoading(false);
-        });
-      } catch (error) {
-        console.error("Auth check error:", error);
-        InteractionManager.runAfterInteractions(() => {
           router.replace("/(auth)/welcome");
           setLoading(false);
-        });
+          return;
+        }
+        // User logged in → go to home
+        router.replace("/(tabs)/(home)/HomeScreen");
+        setLoading(false);
+      } catch (error) {
+        console.error("Auth check error:", error);
+        router.replace("/(auth)/welcome");
+        setLoading(false);
       }
     });
   };
@@ -40,7 +33,7 @@ export default function Index() {
   useEffect(() => {
     const fetchData = async () => {
       Purchases.configure({
-        apiKey: Constants.expoConfig?.extra?.revenueCatIos,
+        apiKey: "appl_FbIaieuooqMjHMuUhbHUQqpdJXP",
       });
       await checkAuth();
     };

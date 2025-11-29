@@ -39,7 +39,7 @@ export default function Onboarding4() {
           {/* Get Started Button */}
           <Pressable
             className="bg-primary rounded-[20px] h-14 w-full items-center justify-center active:opacity-80"
-            onPress={() => router.push("/(auth)/paywall")}
+            onPress={() => router.replace("/(auth)/paywall")}
           >
             <Text className="text-white font-bold text-lg">Get Started</Text>
           </Pressable>

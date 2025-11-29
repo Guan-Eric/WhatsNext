@@ -31,7 +31,7 @@ const ThreeDotsModal: React.FC<ThreeDotsModalProps> = ({ options }) => {
           activeOpacity={1}
           onPress={toggleModal}
         >
-          <View className="rounded-2xl w-[300px] p-5 bg-grey-0 dark:bg-grey-dark-0">
+          <View className="rounded-2xl w-[300px] p-5 bg-grey-dark-0">
             {options?.map((option, index) => (
               <Pressable
                 key={index}

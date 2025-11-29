@@ -39,7 +39,7 @@ export default function GenerateScreen() {
   }, []);
 
   return (
-    <View className="flex-1 bg-white dark:bg-[#181818]">
+    <View className="flex-1 bg-[#181818]">
       <SafeAreaView className="flex-1">
         <View className="flex-row items-center">
           <BackButton />

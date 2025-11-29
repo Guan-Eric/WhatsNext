@@ -32,7 +32,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
         })
       }
     >
-      <View className="rounded-2xl w-full bg-grey-0 dark:bg-grey-dark-0 border border-grey-0 dark:border-grey-dark-0">
+      <View className="rounded-2xl w-full bg-grey-dark-0 border border-grey-0 dark:border-grey-dark-0">
         <View className="flex-row p-3">
           <Image
             source={{ uri: posterPath }}
@@ -53,7 +53,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
               {movie.genres?.map((genre, index) => (
                 <Text
                   key={index}
-                  className="rounded-md px-1.5 py-1 m-0.5 bg-grey-1 dark:bg-grey-dark-1 text-grey-4 dark:text-grey-dark-4"
+                  className="rounded-md px-1.5 py-1 m-0.5 bg-grey-dark-1 text-grey-4 dark:text-grey-dark-4"
                 >
                   {genre.name}
                 </Text>

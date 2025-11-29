@@ -81,7 +81,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
     Platform.OS === "ios" ? 40 : (StatusBar.currentHeight || 0) + 10;
 
   return (
-    <View className="flex-1 bg-white dark:bg-[#181818]">
+    <View className="flex-1 bg-[#181818]">
       <ScrollView>
         <View>
           <View
@@ -142,7 +142,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
                   }
                 }
               }}
-              className="rounded-full p-2 bg-grey-1/50 dark:bg-grey-dark-1/50"
+              className="rounded-full p-2 bg-grey-dark-1/50"
             >
               <Ionicons
                 name={watchlist ? "bookmark" : "bookmark-outline"}
@@ -191,7 +191,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
         <View className="flex-row self-center">
           <Pressable
             onPress={() => setWatchModal(true)}
-            className="w-[150px] self-center mt-2.5 rounded-2xl mx-2.5 py-3 items-center bg-primary dark:bg-primary-dark"
+            className="w-[150px] self-center mt-2.5 rounded-2xl mx-2.5 py-3 items-center bg-primary-dark"
           >
             <Text className="text-white font-semibold">Watch Now</Text>
           </Pressable>
@@ -205,7 +205,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
                 setIsModalVisible(true);
               }
             }}
-            className="w-[150px] self-center mt-2.5 rounded-2xl mx-2.5 py-3 items-center flex-row justify-center bg-grey-1 dark:bg-grey-dark-1"
+            className="w-[150px] self-center mt-2.5 rounded-2xl mx-2.5 py-3 items-center flex-row justify-center bg-grey-dark-1"
           >
             {myList ? (
               <Ionicons name="checkmark" size={20} color="#28a745" />

@@ -22,7 +22,7 @@ const TermsConditionModal: React.FC<TermsConditionModalProps> = ({
       onRequestClose={onClose}
     >
       <View className="flex-1 justify-center items-center bg-black/50">
-        <View className="w-[86%] h-[80%] rounded-2xl p-5 bg-grey-0 dark:bg-grey-dark-0">
+        <View className="w-[86%] h-[80%] rounded-2xl p-5 bg-grey-dark-0">
           <ScrollView className="pb-5">
             <Text className="text-lg font-bold text-center mb-2.5 text-black dark:text-white">
               End User License Agreement (EULA) and Terms of Service
@@ -126,12 +126,12 @@ const TermsConditionModal: React.FC<TermsConditionModalProps> = ({
 
             <Pressable
               onPress={() => setIsCheck(!isCheck)}
-              className="flex-row items-center mt-2.5 p-2 bg-grey-0 dark:bg-grey-dark-0"
+              className="flex-row items-center mt-2.5 p-2 bg-grey-dark-0"
             >
               <View
                 className={`w-6 h-6 rounded mr-2 items-center justify-center border-2 ${
                   isCheck
-                    ? "bg-primary dark:bg-primary-dark border-primary dark:border-primary-dark"
+                    ? "bg-primary-dark border-primary dark:border-primary-dark"
                     : "border-primary dark:border-primary-dark bg-transparent"
                 }`}
               >
@@ -147,7 +147,7 @@ const TermsConditionModal: React.FC<TermsConditionModalProps> = ({
             <Pressable
               disabled={!isCheck}
               onPress={onClose}
-              className={`mt-2.5 rounded-lg items-center p-3 bg-primary dark:bg-primary-dark ${
+              className={`mt-2.5 rounded-lg items-center p-3 bg-primary-dark ${
                 !isCheck ? "opacity-50" : ""
               }`}
             >

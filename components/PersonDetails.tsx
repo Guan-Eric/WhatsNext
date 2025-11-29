@@ -30,7 +30,7 @@ const PersonDetails: React.FC<PersonDetailsProps> = ({
   }, []);
 
   return (
-    <View className="flex-1 bg-white dark:bg-[#181818]">
+    <View className="flex-1 bg-[#181818]">
       <SafeAreaView>
         <ScrollView>
           <View>

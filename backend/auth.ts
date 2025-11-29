@@ -1,34 +1,32 @@
 import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
+  signInAnonymously,
+  onAuthStateChanged,
+  User as FirebaseUser,
 } from "firebase/auth";
 import { FIREBASE_AUTH } from "../firebaseConfig";
 import { addUser } from "./user";
 
-export async function logIn(email: string, password: string): Promise<boolean> {
+// Sign in anonymously (seamless)
+export async function signInAnonymous(): Promise<boolean> {
   try {
-    await signInWithEmailAndPassword(FIREBASE_AUTH, email, password);
+    const userCredential = await signInAnonymously(FIREBASE_AUTH);
+    // Create user document in Firestore
+    await addUser();
+    return true;
   } catch (error) {
-    console.error(error);
+    console.error("Anonymous sign in error:", error);
     return false;
   }
-  return true;
 }
 
-export async function register(
-  email: string,
-  password: string
-): Promise<boolean> {
-  try {
-    await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password);
-    addUser();
-  } catch (error) {
-    console.error(error);
-    return false;
-  }
-  return true;
+// Check auth state
+export function observeAuthState(
+  callback: (user: FirebaseUser | null) => void
+) {
+  return onAuthStateChanged(FIREBASE_AUTH, callback);
 }
 
+// Sign out
 export function logOut() {
   FIREBASE_AUTH.signOut();
 }

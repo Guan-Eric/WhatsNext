@@ -88,7 +88,10 @@ export default function PaywallScreen() {
       // Check if user has premium entitlement
       if (customerInfo.entitlements.active["premium"]) {
         Alert.alert("Success! 🎉", "Welcome to Premium!", [
-          { text: "Let's Go!", onPress: () => router.push("/(auth)/signup") },
+          {
+            text: "Let's Go!",
+            onPress: () => router.replace("/(tabs)/(home)/HomeScreen"),
+          },
         ]);
       }
     } catch (error: any) {
@@ -388,7 +391,7 @@ export default function PaywallScreen() {
           </Pressable>
 
           <Pressable
-            onPress={() => router.push("/(auth)/signup")}
+            onPress={() => router.replace("/(tabs)/(home)/HomeScreen")}
             disabled={purchasing}
             className="items-center py-3 mt-2"
           >

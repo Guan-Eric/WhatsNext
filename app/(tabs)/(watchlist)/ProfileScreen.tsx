@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Text, View, Pressable } from "react-native";
+import { Text, View, Pressable, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { logOut } from "../../../backend/auth";
 import { Href, router } from "expo-router";
 import BackButton from "../../../components/BackButton";
 import DeleteAccountModal from "@/components/modal/DeleteAccountModal";
-import { deleteAccount } from "@/backend/user";
+import { deleteAccount, resetOnboarding } from "@/backend/user";
 import { Ionicons } from "@expo/vector-icons";
 
 function ProfileScreen() {
@@ -14,11 +14,31 @@ function ProfileScreen() {
   const handleDeleteAccount = async () => {
     setIsModalVisible(false);
     await deleteAccount();
-    router.push("/(auth)/welcome");
+    await resetOnboarding();
+    router.replace("/(auth)/welcome");
+  };
+
+  const handleLogout = async () => {
+    Alert.alert(
+      "Sign Out",
+      "Are you sure you want to sign out? Your data will be deleted.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Sign Out",
+          style: "destructive",
+          onPress: async () => {
+            await logOut();
+            await resetOnboarding();
+            router.replace("/(auth)/welcome");
+          },
+        },
+      ]
+    );
   };
 
   return (
-    <View className="flex-1 bg-white dark:bg-[#181818]">
+    <View className="flex-1 bg-[#181818]">
       <SafeAreaView>
         <View className="flex-row">
           <BackButton />
@@ -35,7 +55,7 @@ function ProfileScreen() {
         ].map((item, index) => (
           <View
             key={index}
-            className="rounded-2xl bg-grey-0 dark:bg-grey-dark-0 border border-grey-0 dark:border-grey-dark-0 mx-3 my-2"
+            className="rounded-2xl bg-grey-dark-0 border border-grey-0 dark:border-grey-dark-0 mx-3 my-2"
           >
             <Pressable
               onPress={() => router.push(item.route as Href)}
@@ -51,11 +71,11 @@ function ProfileScreen() {
 
         <View className="p-5 w-[200px] self-center">
           <Pressable
-            className="rounded-2xl bg-grey-2 dark:bg-grey-dark-2 py-3 items-center"
-            onPress={() => logOut()}
+            className="rounded-2xl bg-grey-dark-2 py-3 items-center"
+            onPress={handleLogout}
           >
             <Text className="font-bold text-black dark:text-white">
-              Log Out
+              Sign Out
             </Text>
           </Pressable>
         </View>

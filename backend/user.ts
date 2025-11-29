@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../firebaseConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { User } from "firebase/auth";
 
 export async function addUser() {
   try {
@@ -17,10 +18,18 @@ export async function addUser() {
       FIRESTORE_DB,
       `Users/${FIREBASE_AUTH?.currentUser?.uid}`
     );
+
+    // Check if user already exists
+    const docSnap = await getDoc(userDocRef);
+    if (docSnap.exists()) {
+      return; // User already exists
+    }
+
     await setDoc(userDocRef, {
-      email: FIREBASE_AUTH?.currentUser?.email,
       id: FIREBASE_AUTH?.currentUser?.uid,
+      isAnonymous: FIREBASE_AUTH?.currentUser?.isAnonymous,
       showTermsCondition: true,
+      createdAt: new Date().toISOString(),
     });
   } catch (error) {
     console.error("Error creating user:", error);
@@ -36,6 +45,7 @@ export async function getUser(userId: string): Promise<User | undefined> {
     console.error("Error fetching user:", error);
   }
 }
+
 export async function savePushToken(token: string) {
   try {
     const userDocRef = doc(
@@ -58,6 +68,7 @@ export async function savePushToken(token: string) {
     console.error("Error saving push token:", error);
   }
 }
+
 export async function updateTermsCondition(): Promise<void> {
   try {
     const userDocRef = doc(
@@ -98,10 +109,11 @@ export async function deleteAccount() {
   }
 }
 
-const resetOnboarding = async () => {
+export const resetOnboarding = async () => {
   try {
     await AsyncStorage.removeItem("@has_seen_onboarding");
     await AsyncStorage.removeItem("@selected_plan");
+    await AsyncStorage.removeItem("@user_plan");
     console.log("Onboarding reset!");
   } catch (e) {
     console.error("Failed to reset onboarding:", e);

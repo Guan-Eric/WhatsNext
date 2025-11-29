@@ -60,16 +60,6 @@ function LoginStackLayout() {
           animation: "slide_from_right",
         }}
       />
-
-      <Stack.Screen
-        name="signin"
-        options={{ headerShown: false, gestureEnabled: false }}
-      />
-
-      <Stack.Screen
-        name="signup"
-        options={{ headerShown: false, gestureEnabled: false }}
-      />
     </Stack>
   );
 }

@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  Dimensions,
-  Pressable,
-} from "react-native";
-import { Button, Card, CheckBox, Icon } from "@rneui/themed";
+import { View, Text, Image, Dimensions, Pressable } from "react-native";
 import {
   deleteFromMyList,
   deleteFromWatchlist,
@@ -15,13 +7,13 @@ import {
   saveToWatchlist,
 } from "@/backend/movie";
 import RatingModal from "../modal/RatingModal";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { Movie, TVShow } from "../types";
 
 interface MovieCardProps {
   movie: Movie | TVShow;
   posterPath: string;
-  theme: any;
   type: "movie" | "tv";
   tab: "(generate)" | "(home)" | "(list)" | "(watchlist)";
 }
@@ -29,25 +21,15 @@ interface MovieCardProps {
 const GeneratedMovieCard: React.FC<MovieCardProps> = ({
   movie,
   posterPath,
-  theme,
   type,
 }) => {
   const [isModelVisible, setIsModalVisible] = useState(false);
   const [watchlist, setWatchlist] = useState(false);
   const [myList, setMyList] = useState(false);
   const screenWidth = Dimensions.get("screen").width;
-  const screenHeight = Dimensions.get("screen").height;
 
   return (
-    <Card
-      containerStyle={[
-        styles.card,
-        {
-          backgroundColor: theme.colors.grey1,
-          borderColor: theme.colors.grey1,
-        },
-      ]}
-    >
+    <View className="rounded-2xl bg-grey-1 dark:bg-grey-dark-1 border border-grey-1 dark:border-grey-dark-1">
       <Pressable
         onPress={() => {
           router.push({
@@ -62,39 +44,30 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
       >
         <Image
           source={{ uri: posterPath }}
-          style={[
-            styles.poster,
-            { width: screenWidth * 0.84, height: screenWidth * 0.84 * 1.5 },
-          ]}
+          className="self-center rounded-lg"
+          style={{
+            width: screenWidth * 0.84,
+            height: screenWidth * 0.84 * 1.5,
+          }}
         />
-        <Text style={[styles.title, { color: theme.colors.black }]}>
+
+        <Text className="text-lg font-bold mt-2.5 text-black dark:text-white">
           {"title" in movie ? movie.title : movie.name}
         </Text>
-        <View style={styles.genresContainer}>
+
+        <View className="flex-row flex-wrap mt-1">
           {movie.genres?.map((genre, index) => (
-            <Text key={index} style={styles.genre}>
+            <Text
+              key={index}
+              className="bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded-md px-1.5 py-1 m-0.5"
+            >
               {genre.name}
             </Text>
           ))}
         </View>
-        <View
-          style={{
-            paddingTop: 10,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Button
-            title={myList ? "" : "Already Seen?"}
-            type="clear"
-            titleStyle={{ color: theme.colors.black }}
-            buttonStyle={{
-              width: 150,
-              alignSelf: "center",
-              borderRadius: 20,
-              backgroundColor: theme.colors.grey1,
-            }}
+
+        <View className="pt-2.5 flex-row items-center justify-between">
+          <Pressable
             onPress={() => {
               if (myList) {
                 deleteFromMyList(movie.id.toString());
@@ -103,13 +76,16 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
                 setIsModalVisible(true);
               }
             }}
-            icon={
-              myList ? (
-                <Icon name={"check"} color={theme.colors.success} />
-              ) : undefined
-            }
-          />
-          <CheckBox
+            className="w-[150px] self-center rounded-2xl py-2 items-center bg-grey-1 dark:bg-grey-dark-1"
+          >
+            {myList ? (
+              <Ionicons name="checkmark" size={20} color="#28a745" />
+            ) : (
+              <Text className="text-black dark:text-white">Already Seen?</Text>
+            )}
+          </Pressable>
+
+          <Pressable
             onPress={() => {
               if (watchlist) {
                 deleteFromWatchlist(movie.id.toString());
@@ -119,12 +95,16 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
                 setWatchlist(true);
               }
             }}
-            containerStyle={{ backgroundColor: theme.colors.grey1 }}
-            checked={watchlist}
-            uncheckedIcon={<Icon name="bookmark-outline" />}
-            checkedIcon={<Icon name="bookmark" />}
-          />
+            className="p-2 bg-grey-1 dark:bg-grey-dark-1"
+          >
+            <Ionicons
+              name={watchlist ? "bookmark" : "bookmark-outline"}
+              size={24}
+              color="#000"
+            />
+          </Pressable>
         </View>
+
         <RatingModal
           modalVisible={isModelVisible}
           onClose={() => setIsModalVisible(false)}
@@ -133,37 +113,10 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
             setIsModalVisible(false);
             setMyList(true);
           }}
-          theme={theme}
         />
       </Pressable>
-    </Card>
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  card: {
-    borderRadius: 20,
-  },
-  poster: {
-    alignSelf: "center",
-    borderRadius: 10,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginTop: 10,
-  },
-  genresContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginTop: 5,
-  },
-  genre: {
-    backgroundColor: "#e0e0e0",
-    borderRadius: 5,
-    padding: 5,
-    margin: 2,
-  },
-});
 
 export default GeneratedMovieCard;

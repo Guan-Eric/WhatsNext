@@ -1,40 +1,40 @@
-interface User {
+export interface User {
   id: string;
   email: string;
   showTermsCondition: boolean;
 }
 
-interface Genre {
+export interface Genre {
   id: number;
   name: string;
 }
 
-interface ProductionCompany {
+export interface ProductionCompany {
   id: number;
   logo_path: string | null;
   name: string;
   origin_country: string;
 }
 
-interface ProductionCountry {
+export interface ProductionCountry {
   iso_3166_1: string;
   name: string;
 }
 
-interface SpokenLanguage {
+export interface SpokenLanguage {
   english_name: string;
   iso_639_1: string;
   name: string;
 }
 
-interface BelongsToCollection {
+export interface BelongsToCollection {
   backdrop_path: string | null;
   id: number;
   name: string;
   poster_path: string | null;
 }
 
-interface Movie {
+export interface Movie {
   adult: boolean;
   backdrop_path: string | null;
   belongs_to_collection: BelongsToCollection | null;
@@ -64,7 +64,7 @@ interface Movie {
   rating?: number;
 }
 
-interface Creator {
+export interface Creator {
   credit_id: string;
   gender: number;
   id: number;
@@ -73,14 +73,14 @@ interface Creator {
   profile_path: string | null;
 }
 
-interface Network {
+export interface Network {
   id: number;
   logo_path: string | null;
   name: string;
   origin_country: string;
 }
 
-interface Episode {
+export interface Episode {
   air_date: string;
   episode_number: number;
   episode_type: string;
@@ -96,7 +96,7 @@ interface Episode {
   vote_count: number;
 }
 
-interface Season {
+export interface Season {
   air_date: string;
   episode_count: number;
   id: number;
@@ -107,7 +107,7 @@ interface Season {
   vote_average: number;
 }
 
-interface TVShow {
+export interface TVShow {
   adult: boolean;
   backdrop_path: string | null;
   created_by: Creator[];
@@ -143,14 +143,14 @@ interface TVShow {
   rating?: number;
 }
 
-interface ModalOptions {
+export interface ModalOptions {
   title?: string;
   containerStyle: object;
   titleStyle?: object;
   onPress?: () => void;
 }
 
-interface Person {
+export interface Person {
   id: number;
   name: string;
   biography?: string;
@@ -161,7 +161,7 @@ interface Person {
   job?: string;
 }
 
-interface WatchProvider {
+export interface WatchProvider {
   provider_id: number;
   provider_name: string;
   logo_path: string | null;

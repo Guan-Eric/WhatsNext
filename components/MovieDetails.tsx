@@ -3,18 +3,16 @@ import {
   View,
   Text,
   Image,
-  StyleSheet,
   Dimensions,
   Platform,
   StatusBar,
   FlatList,
+  Pressable,
 } from "react-native";
-import { Button, CheckBox, Icon } from "@rneui/themed";
 import {
   deleteFromMyList,
   deleteFromWatchlist,
   fetchDetails,
-  fetchMoviePoster,
   fetchWatchProviders,
   isAlreadySeen,
   isWatchlist,
@@ -27,15 +25,15 @@ import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView } from "react-native-gesture-handler";
 import RatingModal from "./modal/RatingModal";
 import { fetchCast } from "@/backend/person";
-import { router } from "expo-router";
 import PersonCard from "./cards/PersonCard";
 import WatchProviderModal from "./modal/WatchProviderModal";
+import { Ionicons } from "@expo/vector-icons";
+import { Movie, TVShow, Genre, Person, WatchProvider } from "./types";
 
 interface MovieDetailsProps {
   movieId: string;
   type: "movie" | "tv";
   posterPath: string;
-  theme: any;
   tab: "(generate)" | "(home)" | "(watchlist)" | "(search)";
 }
 
@@ -43,7 +41,6 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
   movieId,
   type,
   posterPath,
-  theme,
   tab,
 }) => {
   const screenWidth = Dimensions.get("screen").width;
@@ -78,62 +75,62 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
       .join(", ");
   };
 
+  const topPosition =
+    Platform.OS === "ios" ? 42 : (StatusBar.currentHeight || 0) + 12;
+  const buttonTopPosition =
+    Platform.OS === "ios" ? 40 : (StatusBar.currentHeight || 0) + 10;
+
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <View className="flex-1 bg-white dark:bg-[#181818]">
       <ScrollView>
         <View>
           <View
-            style={[
-              styles.imageContainer,
-              {
-                width: screenWidth,
-                height: screenWidth * 0.9,
-                overflow: "hidden",
-                position: "relative",
-              },
-            ]}
+            className="relative overflow-hidden"
+            style={{
+              width: screenWidth,
+              height: screenWidth * 0.9,
+            }}
           >
             <Image
               source={{ uri: posterPath }}
-              style={[
-                styles.poster,
-                {
-                  width: screenWidth,
-                  height: screenWidth * 1.5,
-                  top: 0,
-                },
-              ]}
+              className="absolute left-0 right-0 top-0"
+              style={{
+                width: screenWidth,
+                height: screenWidth * 1.5,
+              }}
               resizeMode="cover"
             />
             <LinearGradient
-              colors={[theme.colors.background, "transparent"]}
-              style={styles.gradientTop}
+              colors={["#ffffff", "transparent"]}
+              className="absolute top-0 left-0 right-0 h-[50px]"
             />
-            {/* Bottom Gradient */}
             <LinearGradient
-              colors={["transparent", theme.colors.background]}
-              style={styles.gradientBottom}
+              colors={["transparent", "#ffffff"]}
+              className="absolute bottom-0 left-0 right-0 h-[100px]"
             />
-            {/* Left Gradient */}
             <LinearGradient
-              colors={["transparent", theme.colors.background]}
-              style={styles.gradientLeft}
+              colors={["transparent", "#ffffff"]}
+              className="absolute top-0 left-0 bottom-0 w-[50px]"
               start={{ x: 1, y: 0.5 }}
               end={{ x: 0, y: 0.5 }}
             />
-            {/* Right Gradient */}
             <LinearGradient
-              colors={["transparent", theme.colors.background]}
-              style={styles.gradientRight}
+              colors={["transparent", "#ffffff"]}
+              className="absolute top-0 right-0 bottom-0 w-[50px]"
               start={{ x: 0, y: 0.5 }}
               end={{ x: 1, y: 0.5 }}
             />
           </View>
-          <View style={styles.backButtonContainer}>
+
+          <View className="absolute left-0 z-10" style={{ top: topPosition }}>
             <BackButton />
           </View>
-          <View style={styles.buttonsContainer}>
-            <CheckBox
+
+          <View
+            className="absolute right-0 z-10 flex-row"
+            style={{ top: buttonTopPosition }}
+          >
+            <Pressable
               onPress={() => {
                 if (movie) {
                   if (watchlist) {
@@ -145,28 +142,23 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
                   }
                 }
               }}
-              containerStyle={{
-                backgroundColor: `${theme.colors.grey1}80`,
-                borderRadius: 50,
-              }}
-              checked={watchlist}
-              uncheckedIcon={<Icon name="bookmark-outline" />}
-              checkedIcon={<Icon name="bookmark" />}
-            />
+              className="rounded-full p-2 bg-grey-1/50 dark:bg-grey-dark-1/50"
+            >
+              <Ionicons
+                name={watchlist ? "bookmark" : "bookmark-outline"}
+                size={24}
+                color="#000"
+              />
+            </Pressable>
           </View>
         </View>
+
         {movie?.hasOwnProperty("title") ? (
           <>
-            <Text style={[styles.title, { color: theme.colors.black }]}>
+            <Text className="text-3xl font-bold my-2.5 text-center flex-wrap text-black dark:text-white">
               {(movie as Movie)?.title}
             </Text>
-            <Text
-              style={{
-                color: theme.colors.black,
-                textAlign: "center",
-                flexWrap: "wrap",
-              }}
-            >
+            <Text className="text-center flex-wrap text-black dark:text-white">
               {(movie as Movie)?.release_date.slice(0, 4) +
                 " • " +
                 getGenreNames(
@@ -181,16 +173,10 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
           </>
         ) : movie?.hasOwnProperty("name") ? (
           <>
-            <Text style={[styles.title, { color: theme.colors.black }]}>
+            <Text className="text-3xl font-bold my-2.5 text-center flex-wrap text-black dark:text-white">
               {(movie as TVShow)?.name}
             </Text>
-            <Text
-              style={{
-                color: theme.colors.black,
-                textAlign: "center",
-                flexWrap: "wrap",
-              }}
-            >
+            <Text className="text-center flex-wrap text-black dark:text-white">
               {getGenreNames(
                 (movie as TVShow)?.genres.map((genre) => genre.id)
               ) +
@@ -201,35 +187,16 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
             </Text>
           </>
         ) : null}
-        <View
-          style={{
-            flexDirection: "row",
-            alignSelf: "center",
-          }}
-        >
-          <Button
-            onPress={() => setWatchModal(true)}
-            title="Watch Now"
-            buttonStyle={{
-              width: 150,
-              alignSelf: "center",
-              marginTop: 10,
-              borderRadius: 20,
-              marginHorizontal: 10,
-            }}
-          />
-          <Button
-            title={myList ? "" : "Already Seen?"}
-            buttonStyle={{
-              width: 150,
-              alignSelf: "center",
-              marginTop: 10,
-              borderRadius: 20,
-              marginHorizontal: 10,
-              backgroundColor: theme.colors.grey1,
 
-              alignItems: "center", // Center the content
-            }}
+        <View className="flex-row self-center">
+          <Pressable
+            onPress={() => setWatchModal(true)}
+            className="w-[150px] self-center mt-2.5 rounded-2xl mx-2.5 py-3 items-center bg-primary dark:bg-primary-dark"
+          >
+            <Text className="text-white font-semibold">Watch Now</Text>
+          </Pressable>
+
+          <Pressable
             onPress={() => {
               if (myList) {
                 deleteFromMyList(movieId);
@@ -238,21 +205,26 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
                 setIsModalVisible(true);
               }
             }}
-            icon={
-              myList ? (
-                <Icon name={"check"} color={theme.colors.success} />
-              ) : undefined
-            }
-          />
+            className="w-[150px] self-center mt-2.5 rounded-2xl mx-2.5 py-3 items-center flex-row justify-center bg-grey-1 dark:bg-grey-dark-1"
+          >
+            {myList ? (
+              <Ionicons name="checkmark" size={20} color="#28a745" />
+            ) : (
+              <Text className="text-black dark:text-white">Already Seen?</Text>
+            )}
+          </Pressable>
         </View>
-        <Text style={[styles.description, { color: theme.colors.black }]}>
+
+        <Text className="text-base mx-5 my-2.5 text-center text-black dark:text-white">
           {movie?.overview}
         </Text>
+
         {cast?.length > 0 ? (
-          <Text style={[styles.subtitle, { color: theme.colors.black }]}>
+          <Text className="text-2xl font-bold pl-2.5 text-black dark:text-white">
             Cast
           </Text>
         ) : null}
+
         <FlatList
           data={cast}
           horizontal
@@ -260,13 +232,12 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) =>
             item.profile_path != null ? (
-              <View style={{ flexDirection: "column" }}>
+              <View className="flex-col">
                 <PersonCard
                   personId={item?.id}
                   profilePath={item?.profile_path as string}
                   width={140}
                   height={210}
-                  theme={theme}
                   tab={tab}
                   name={item?.name}
                 />
@@ -275,6 +246,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
           }
         />
       </ScrollView>
+
       <RatingModal
         modalVisible={isModelVisible}
         onClose={() => setIsModalVisible(false)}
@@ -285,96 +257,15 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
           setIsModalVisible(false);
           setMyList(true);
         }}
-        theme={theme}
       />
+
       <WatchProviderModal
         modalVisible={watchModal}
         onClose={() => setWatchModal(false)}
         providers={providers}
-        theme={theme}
       />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  backButtonContainer: {
-    position: "absolute",
-    top:
-      Platform.OS === "ios"
-        ? 42
-        : StatusBar.currentHeight !== undefined
-        ? StatusBar.currentHeight + 12
-        : 12,
-    left: 0,
-    zIndex: 1,
-  },
-  buttonsContainer: {
-    position: "absolute",
-    top:
-      Platform.OS === "ios"
-        ? 40
-        : StatusBar.currentHeight !== undefined
-        ? StatusBar.currentHeight + 10
-        : 10,
-    right: 0,
-    zIndex: 1,
-    flexDirection: "row",
-  },
-  imageContainer: {
-    position: "relative",
-  },
-  poster: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-  },
-  gradientTop: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 50, // Adjust height for the blur effect
-  },
-  gradientBottom: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 100, // Adjust height for the blur effect
-  },
-  gradientLeft: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    bottom: 0,
-    width: 50, // Adjust width for the blur effect
-  },
-  gradientRight: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    width: 50, // Adjust width for the blur effect
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    marginVertical: 10,
-    textAlign: "center",
-    flexWrap: "wrap",
-  },
-  subtitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    paddingLeft: 10,
-  },
-  description: {
-    fontSize: 16,
-    marginHorizontal: 20,
-    marginVertical: 10,
-    textAlign: "center",
-  },
-});
 
 export default MovieDetails;

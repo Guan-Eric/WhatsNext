@@ -1,6 +1,5 @@
-import { Button } from "@rneui/base";
 import React from "react";
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Modal, View, Text, TouchableOpacity, Pressable } from "react-native";
 
 interface StreakModalProps {
   modalVisible: boolean;
@@ -21,32 +20,23 @@ const AuthErrorModal: React.FC<StreakModalProps> = ({
       onRequestClose={onClose}
     >
       <TouchableOpacity
-        style={{
-          flex: 1,
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+        className="flex-1 bg-black/50 justify-center items-center"
         activeOpacity={1}
         onPress={onClose}
       >
-        <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: "#1f1f1f" }]}>
-            <Text style={[styles.modalText, { color: "#f8f9fa" }]}>
+        <View className="flex-1 justify-center items-center bg-black/40">
+          <View className="w-[300px] p-5 rounded-2xl items-center bg-[#1f1f1f]">
+            <Text className="text-lg font-bold text-left text-[#f8f9fa]">
               {errorMessage}
             </Text>
-            <View style={styles.buttonContainer}>
-              <Button
+
+            <View className="flex-col w-full mt-3">
+              <Pressable
                 onPress={onClose}
-                buttonStyle={[
-                  styles.newStreakButton,
-                  { backgroundColor: "#3490de" },
-                ]}
+                className="bg-[#3490de] p-2.5 my-1 rounded-lg w-full items-center"
               >
-                <Text style={[styles.buttonText, { color: "#f8f9fa" }]}>
-                  Ok
-                </Text>
-              </Button>
+                <Text className="text-base text-[#f8f9fa]">Ok</Text>
+              </Pressable>
             </View>
           </View>
         </View>
@@ -54,55 +44,5 @@ const AuthErrorModal: React.FC<StreakModalProps> = ({
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
-  },
-  modalContent: {
-    width: 300,
-    padding: 20,
-
-    borderRadius: 20,
-    alignItems: "center",
-  },
-  modalText: {
-    fontSize: 18,
-    fontWeight: "bold",
-
-    textAlign: "left",
-  },
-  modalSubText: {
-    fontSize: 14,
-    marginBottom: 10,
-    textAlign: "left",
-  },
-  buttonContainer: {
-    flexDirection: "column",
-    width: "100%",
-  },
-  continueButton: {
-    backgroundColor: "#27ae60",
-    padding: 10,
-    marginVertical: 5,
-    borderRadius: 10,
-    width: "100%",
-    alignItems: "center",
-  },
-  newStreakButton: {
-    backgroundColor: "#e74c3c",
-    padding: 10,
-    marginVertical: 5,
-    borderRadius: 10,
-    width: "100%",
-    alignItems: "center",
-  },
-  buttonText: {
-    fontSize: 16,
-  },
-});
 
 export default AuthErrorModal;

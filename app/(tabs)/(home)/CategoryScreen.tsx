@@ -5,24 +5,23 @@ import {
 } from "@/backend/movie";
 import BackButton from "@/components/BackButton";
 import PosterCard from "@/components/cards/PosterCard";
-import { ButtonGroup, useTheme } from "@rneui/themed";
+import { Movie, TVShow } from "@/components/types";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
-  StyleSheet,
   View,
   Text,
   Dimensions,
   Platform,
+  Pressable,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 
-const MyListScreen = () => {
+const CategoryScreen = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [tvShows, setTVShows] = useState<TVShow[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const { theme } = useTheme();
   const { category } = useLocalSearchParams();
   const screenWidth = Dimensions.get("screen").width;
   const windowHeight = Dimensions.get("window").height;
@@ -39,39 +38,45 @@ const MyListScreen = () => {
   }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <View className="flex-1 bg-background-dark">
       <SafeAreaView>
-        <View
-          style={{
-            flexDirection: "row",
-
-            alignItems: "center",
-          }}
-        >
+        {/* Header */}
+        <View className="flex-row items-center">
           <BackButton />
-          <Text style={[styles.title, { color: theme.colors.black }]}>
+          <Text className="text-text-dark text-[32px] font-bold">
             {category}
           </Text>
         </View>
-        <ButtonGroup
-          containerStyle={{
-            width: 200,
-            height: 30,
-            backgroundColor: theme.colors.grey0,
-            borderWidth: 0,
-            borderRadius: 10,
-          }}
-          buttons={["Movie", "TV Show"]}
-          selectedIndex={selectedIndex}
-          onPress={(value) => {
-            setSelectedIndex(value);
-          }}
-        />
-        {selectedIndex == 0 ? (
+
+        {/* Button Group */}
+        <View className="flex-row bg-grey-dark-0 rounded-[10px] w-[200px] h-[30px] overflow-hidden ml-5 mb-2">
+          {["Movie", "TV Show"].map((button, index) => (
+            <Pressable
+              key={index}
+              className={`flex-1 items-center justify-center ${
+                selectedIndex === index ? "bg-primary" : ""
+              }`}
+              onPress={() => setSelectedIndex(index)}
+            >
+              <Text
+                className={`text-sm font-['Lato_400Regular'] ${
+                  selectedIndex === index
+                    ? "text-white font-bold"
+                    : "text-text-dark"
+                }`}
+              >
+                {button}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+
+        {/* Content */}
+        {selectedIndex === 0 ? (
           <FlatList
             style={{
               marginBottom: 80,
-              height: Platform.OS === "web" ? windowHeight : "auto",
+              height: Platform.OS === "web" ? windowHeight : undefined,
             }}
             data={movies}
             keyExtractor={(item) => item.id.toString()}
@@ -108,14 +113,4 @@ const MyListScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-  },
-});
-
-export default MyListScreen;
+export default CategoryScreen;

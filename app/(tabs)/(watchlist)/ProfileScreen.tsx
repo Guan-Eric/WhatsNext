@@ -1,16 +1,14 @@
 import React, { useState } from "react";
-import { Text, View, StyleSheet } from "react-native";
-import { FIREBASE_AUTH, FIRESTORE_DB } from "../../../firebaseConfig";
+import { Text, View, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useTheme, Card, Icon, Button } from "@rneui/themed";
 import { logOut } from "../../../backend/auth";
 import { Href, router } from "expo-router";
 import BackButton from "../../../components/BackButton";
 import DeleteAccountModal from "@/components/modal/DeleteAccountModal";
 import { deleteAccount } from "@/backend/user";
+import { Ionicons } from "@expo/vector-icons";
 
 function ProfileScreen() {
-  const { theme } = useTheme();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleDeleteAccount = async () => {
@@ -18,14 +16,13 @@ function ProfileScreen() {
     await deleteAccount();
     router.push("/(auth)/welcome");
   };
+
   return (
-    <View
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-    >
+    <View className="flex-1 bg-white dark:bg-[#181818]">
       <SafeAreaView>
-        <View style={{ flexDirection: "row" }}>
+        <View className="flex-row">
           <BackButton />
-          <Text style={[styles.title, { color: theme.colors.black }]}>
+          <Text className="text-3xl font-bold text-black dark:text-white">
             Profile
           </Text>
         </View>
@@ -35,97 +32,52 @@ function ProfileScreen() {
             title: "My List",
             route: "/(tabs)/(watchlist)/MyListScreen",
           },
-          //{ title: "App Settings", route: "/(tabs)/(profile)/notifications" },
         ].map((item, index) => (
-          <Card
+          <View
             key={index}
-            containerStyle={[
-              styles.card,
-              {
-                backgroundColor: theme.colors.grey0,
-                borderColor: theme.colors.grey0,
-              },
-            ]}
+            className="rounded-2xl bg-grey-0 dark:bg-grey-dark-0 border border-grey-0 dark:border-grey-dark-0 mx-3 my-2"
           >
-            <Button
-              type="clear"
-              title={item.title}
+            <Pressable
               onPress={() => router.push(item.route as Href)}
-              containerStyle={styles.buttonContainer}
-              buttonStyle={styles.buttonStyle}
-              titleStyle={[styles.buttonTitle, { color: theme.colors.black }]}
-              iconPosition="right"
-              icon={
-                <Icon
-                  name="chevron-right"
-                  type="material-community"
-                  size={20}
-                  color={theme.colors.black}
-                />
-              }
-            />
-          </Card>
+              className="flex-row items-center justify-between p-4"
+            >
+              <Text className="text-base font-bold text-black dark:text-white">
+                {item.title}
+              </Text>
+              <Ionicons name="chevron-forward" size={20} color="#000" />
+            </Pressable>
+          </View>
         ))}
-        <View>
-          <Button
-            style={{ padding: 20, width: 200, alignSelf: "center" }}
-            buttonStyle={{
-              borderRadius: 20,
-              backgroundColor: theme.colors.grey2,
-            }}
-            titleStyle={{ fontFamily: "Lato_700Bold" }}
+
+        <View className="p-5 w-[200px] self-center">
+          <Pressable
+            className="rounded-2xl bg-grey-2 dark:bg-grey-dark-2 py-3 items-center"
             onPress={() => logOut()}
-            title="Log Out"
-          />
+          >
+            <Text className="font-bold text-black dark:text-white">
+              Log Out
+            </Text>
+          </Pressable>
         </View>
-        <View style={{ marginTop: 20, marginBottom: 20 }}>
-          <Button
-            style={{ padding: 20, width: 200, alignSelf: "center" }}
-            buttonStyle={{
-              borderRadius: 20,
-              backgroundColor: theme.colors.error,
-            }}
-            title="Delete Account"
-            titleStyle={{ fontFamily: "Lato_700Bold" }}
+
+        <View className="mt-5 mb-5 p-5 w-[200px] self-center">
+          <Pressable
+            className="rounded-2xl bg-error py-3 items-center"
             onPress={() => setIsModalVisible(true)}
-            color={theme.colors.error}
-          />
+          >
+            <Text className="font-bold text-white">Delete Account</Text>
+          </Pressable>
         </View>
+
         <DeleteAccountModal
           modalVisible={isModalVisible}
           onClose={() => setIsModalVisible(false)}
           onDeleteAccount={() => handleDeleteAccount()}
           onCancel={() => setIsModalVisible(false)}
-          theme={theme}
         />
       </SafeAreaView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  card: {
-    borderRadius: 20,
-  },
-  buttonContainer: {
-    width: "100%",
-  },
-  buttonStyle: {
-    justifyContent: "space-between",
-    paddingHorizontal: 0,
-  },
-  buttonTitle: {
-    textAlign: "left",
-    fontSize: 16,
-    fontFamily: "Lato_700Bold",
-  },
-  title: {
-    fontFamily: "Lato_700Bold",
-    fontSize: 32,
-  },
-});
 
 export default ProfileScreen;

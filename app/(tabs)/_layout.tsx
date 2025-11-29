@@ -1,18 +1,15 @@
 import { Tabs } from "expo-router";
 import React from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import CustomNavBar from "@/components/CustomeNavBar";
 
 function TabLayout() {
   return (
-    <Tabs
-      initialRouteName="(home)"
-      tabBar={(props) => <CustomNavBar {...props} />}
-    >
+    <Tabs initialRouteName="(home)">
       <Tabs.Screen
         name="(home)"
         options={{
           title: "Home",
+          animation: "shift",
           tabBarIcon: ({ size, color }) => (
             <MaterialCommunityIcons name="home" size={size} color={color} />
           ),
@@ -22,6 +19,7 @@ function TabLayout() {
         name="(search)"
         options={{
           title: "Search",
+          animation: "shift",
           tabBarIcon: ({ size, color }) => (
             <MaterialCommunityIcons name="magnify" size={size} color={color} />
           ),
@@ -31,6 +29,7 @@ function TabLayout() {
         name="(generate)"
         options={{
           title: "What's Next?",
+          animation: "shift",
           tabBarIcon: ({ size, color }) => (
             <MaterialCommunityIcons name="movie" size={size} color={color} />
           ),
@@ -40,6 +39,7 @@ function TabLayout() {
         name="(watchlist)"
         options={{
           title: "Watchlist",
+          animation: "shift",
           tabBarIcon: ({ size, color }) => (
             <MaterialCommunityIcons name="bookmark" size={size} color={color} />
           ),

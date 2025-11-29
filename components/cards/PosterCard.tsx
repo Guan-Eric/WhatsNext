@@ -1,8 +1,8 @@
 import React from "react";
-import { Image, StyleSheet } from "react-native";
-import { Button } from "@rneui/themed";
+import { Image, Pressable } from "react-native";
 import { router } from "expo-router";
 import { fetchHDMoviePoster } from "@/backend/movie";
+import { Movie, TVShow } from "../types";
 
 interface MovieCardProps {
   movie: Movie | TVShow;
@@ -20,8 +20,7 @@ const PosterCard: React.FC<MovieCardProps> = ({
   tab,
 }) => {
   return (
-    <Button
-      type="clear"
+    <Pressable
       onPress={() =>
         router.push({
           pathname: `/(tabs)/${tab}/MovieDetailsScreen`,
@@ -35,16 +34,11 @@ const PosterCard: React.FC<MovieCardProps> = ({
     >
       <Image
         source={{ uri: posterPath }}
-        style={[styles.poster, { width: width, height: height }]}
+        className="rounded-lg"
+        style={{ width: width, height: height }}
       />
-    </Button>
+    </Pressable>
   );
 };
-
-const styles = StyleSheet.create({
-  poster: {
-    borderRadius: 10,
-  },
-});
 
 export default PosterCard;

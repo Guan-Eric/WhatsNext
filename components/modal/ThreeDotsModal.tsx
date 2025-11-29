@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { Modal, View, StyleSheet, TouchableOpacity, Text } from "react-native";
-import { Button, Icon } from "@rneui/themed";
+import { Modal, View, TouchableOpacity, Pressable, Text } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { ModalOptions } from "../types";
 
 interface ThreeDotsModalProps {
   options: ModalOptions[];
-  theme: any;
 }
 
-const ThreeDotsModal: React.FC<ThreeDotsModalProps> = ({ options, theme }) => {
+const ThreeDotsModal: React.FC<ThreeDotsModalProps> = ({ options }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const toggleModal = () => {
@@ -16,18 +16,10 @@ const ThreeDotsModal: React.FC<ThreeDotsModalProps> = ({ options, theme }) => {
 
   return (
     <View>
-      <Button
-        type="clear"
-        icon={
-          <Icon
-            name="dots-vertical"
-            size={24}
-            color={theme.colors.black}
-            type="material-community"
-          />
-        }
-        onPress={toggleModal}
-      />
+      <Pressable onPress={toggleModal} className="p-2">
+        <MaterialCommunityIcons name="dots-vertical" size={24} color="#000" />
+      </Pressable>
+
       <Modal
         animationType="fade"
         transparent={true}
@@ -35,27 +27,25 @@ const ThreeDotsModal: React.FC<ThreeDotsModalProps> = ({ options, theme }) => {
         onRequestClose={toggleModal}
       >
         <TouchableOpacity
-          style={styles.overlay}
+          className="flex-1 bg-black/50 justify-center items-center"
           activeOpacity={1}
           onPress={toggleModal}
         >
-          <View
-            style={[
-              styles.modalContent,
-              { backgroundColor: theme.colors.grey0 },
-            ]}
-          >
+          <View className="rounded-2xl w-[300px] p-5 bg-grey-0 dark:bg-grey-dark-0">
             {options?.map((option, index) => (
-              <Button
+              <Pressable
                 key={index}
-                buttonStyle={[styles.option, option?.containerStyle]}
+                style={option?.containerStyle}
+                className="p-2.5 my-1 rounded-lg w-full"
                 onPress={() => {
                   option?.onPress?.();
                   toggleModal();
                 }}
-                title={option?.title}
-                titleStyle={styles.optionText}
-              ></Button>
+              >
+                <Text className="text-base font-bold text-black dark:text-white">
+                  {option?.title}
+                </Text>
+              </Pressable>
             ))}
           </View>
         </TouchableOpacity>
@@ -63,30 +53,5 @@ const ThreeDotsModal: React.FC<ThreeDotsModalProps> = ({ options, theme }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalContent: {
-    backgroundColor: "white",
-    borderRadius: 20,
-    width: 300,
-    padding: 20,
-  },
-  option: {
-    padding: 10,
-    marginVertical: 5,
-    borderRadius: 10,
-    width: "100%",
-  },
-  optionText: {
-    fontSize: 16,
-    fontFamily: "Lato_700Bold",
-  },
-});
 
 export default ThreeDotsModal;

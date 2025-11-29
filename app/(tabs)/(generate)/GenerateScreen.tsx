@@ -1,5 +1,3 @@
-// app/(tabs)/(generate)/GenerateScreen.tsx - WITH PAYWALL LOGIC
-
 import React, { useState, useEffect } from "react";
 import {
   View,

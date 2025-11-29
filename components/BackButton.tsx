@@ -1,16 +1,15 @@
 import React from "react";
-import { Button, Icon } from "@rneui/themed";
+import { Pressable, View } from "react-native";
 import { router } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
-const BackButton: React.FC = ({}) => {
+const BackButton: React.FC = () => {
   return (
-    <Button
-      onPress={() => router.back()}
-      style={{ alignSelf: "flex-start" }}
-      type="clear"
-    >
-      <Icon name="chevron-left" size={30} />
-    </Button>
+    <Pressable onPress={() => router.back()} className="self-start">
+      <View className="p-2">
+        <Ionicons name="chevron-back" size={30} color="#000" />
+      </View>
+    </Pressable>
   );
 };
 

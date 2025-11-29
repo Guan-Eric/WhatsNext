@@ -1,28 +1,42 @@
 // app/index.tsx
 import React, { useEffect, useState } from "react";
-import { Image, View } from "react-native";
+import { View, ActivityIndicator, InteractionManager } from "react-native";
 import { router } from "expo-router";
 import { onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "../firebaseConfig";
 
-export default function App() {
-  const [loading, setLoading] = useState(true); // Track loading state
+export default function Index() {
+  const [loading, setLoading] = useState(true);
+
+  const checkAuth = async () => {
+    onAuthStateChanged(FIREBASE_AUTH, async (user) => {
+      try {
+        if (!user) {
+          // User not logged in → go to welcome
+          InteractionManager.runAfterInteractions(() => {
+            router.replace("/(auth)/welcome");
+            setLoading(false);
+          });
+          return;
+        }
+
+        // User logged in → go to home
+        InteractionManager.runAfterInteractions(() => {
+          router.replace("/(tabs)/(home)/HomeScreen");
+          setLoading(false);
+        });
+      } catch (error) {
+        console.error("Auth check error:", error);
+        InteractionManager.runAfterInteractions(() => {
+          router.replace("/(auth)/welcome");
+          setLoading(false);
+        });
+      }
+    });
+  };
 
   useEffect(() => {
-    // Subscribe to auth state changes
-    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
-      if (user) {
-        // Navigate to the home screen if the user is logged in
-        router.replace("/(tabs)/(home)/HomeScreen");
-      } else {
-        // Navigate to the welcome screen if the user is not logged in
-        router.replace("/(auth)/welcome");
-      }
-      setLoading(false); // Set loading to false after the initial auth check
-    });
-
-    // Keep the listener active (no cleanup)
-    // return () => unsubscribe(); // Comment this out to keep the listener active
+    checkAuth();
   }, []);
 
   if (loading) {
@@ -35,11 +49,10 @@ export default function App() {
           backgroundColor: "#181818",
         }}
       >
-        <Image source={{ uri: "../assets/icon.png" }} resizeMode="contain" />
+        <ActivityIndicator size="large" />
       </View>
     );
   }
 
-  // Render nothing (navigation is handled by the router)
   return null;
 }

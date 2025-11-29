@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, SafeAreaView, Dimensions } from "react-native";
+import { View, Text, SafeAreaView, Dimensions } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { FetchMovieList } from "@/backend/ai";
 import BackButton from "@/components/BackButton";
 import Carousel from "react-native-reanimated-carousel";
 import GeneratedMovieCard from "@/components/cards/GeneratedMovieCard";
 import { fetchMoviePoster } from "@/backend/movie";
-import { fetchCast } from "@/backend/person";
+import { Movie, TVShow } from "@/components/types";
 
 export default function GenerateScreen() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -19,11 +19,11 @@ export default function GenerateScreen() {
     <GeneratedMovieCard
       movie={item}
       posterPath={fetchMoviePoster(item.poster_path as string)}
-      theme={theme}
       type={type as "movie" | "tv"}
       tab={"(generate)"}
     />
   );
+
   useEffect(() => {
     const fetchMovies = async () => {
       setMovieList(
@@ -39,13 +39,11 @@ export default function GenerateScreen() {
   }, []);
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-    >
-      <SafeAreaView style={{ flex: 1 }}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+    <View className="flex-1 bg-white dark:bg-[#181818]">
+      <SafeAreaView className="flex-1">
+        <View className="flex-row items-center">
           <BackButton />
-          <Text style={[styles.title, { color: theme.colors.black }]}>
+          <Text className="text-3xl font-bold text-black dark:text-white">
             What's Next?
           </Text>
         </View>
@@ -70,64 +68,3 @@ export default function GenerateScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-  },
-  sectionTitle: {
-    fontSize: 18,
-    marginTop: 20,
-    fontFamily: "Lato_700Bold",
-    paddingLeft: 20,
-  },
-  input: {
-    borderColor: "white",
-    flex: 1,
-    fontFamily: "Lato_400Regular",
-    fontSize: 14,
-  },
-  planContainer: {
-    marginTop: 30,
-  },
-  planTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 15,
-  },
-  inputContainer: {
-    width: "100%",
-    height: 42,
-    borderRadius: 10,
-    marginBottom: 20,
-    paddingHorizontal: 20,
-  },
-  inputText: {
-    color: "white",
-    fontFamily: "Lato_400Regular",
-    fontSize: 12,
-  },
-  inputRoundedContainer: {
-    marginTop: 2,
-    paddingLeft: 10,
-    borderRadius: 10,
-    borderBottomWidth: 0,
-  },
-  checkboxRow: {
-    flexDirection: "row",
-    marginBottom: 5,
-  },
-  checkboxContainer: { width: "28%" },
-  buttonContainer: {
-    marginVertical: 30,
-    paddingHorizontal: 20,
-  },
-  buttonTitle: {
-    fontFamily: "Lato_700Bold",
-  },
-});

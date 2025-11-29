@@ -30,7 +30,7 @@ function WelcomeScreen() {
       } catch (e) {
         console.error("Error saving onboarding status:", e);
       }
-      router.push("/(auth)/onboarding");
+      router.push("/(auth)/onboarding1");
     }
   };
 

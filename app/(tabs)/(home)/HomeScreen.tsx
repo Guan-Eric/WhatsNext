@@ -10,19 +10,20 @@ import { getUser, updateTermsCondition } from "@/backend/user";
 import PosterCard from "@/components/cards/PosterCard";
 import TermsConditionModal from "@/components/modal/TermsConditionModal";
 import { FIREBASE_AUTH } from "@/firebaseConfig";
-import { ButtonGroup, useTheme, Button, Icon } from "@rneui/themed";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  StyleSheet,
   ScrollView,
   SafeAreaView,
   FlatList,
   Platform,
   Dimensions,
+  Pressable,
 } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Movie, TVShow, Genre } from "@/components/types";
 
 const HomeScreen = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -36,7 +37,6 @@ const HomeScreen = () => {
   const [movieGenres, setMovieGenres] = useState<Genre[]>([]);
   const [tvGenres, setTVGenres] = useState<Genre[]>([]);
   const windowHeight = Dimensions.get("window").height;
-  const { theme } = useTheme();
 
   const fetchMoviesAndTVShows = async () => {
     setPopularMovies((await fetchPopular("movie", 2)) as Movie[]);
@@ -65,52 +65,53 @@ const HomeScreen = () => {
   }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <View className="flex-1 bg-background-dark">
       <SafeAreaView>
         <ScrollView
-          style={{
-            height: Platform.OS === "web" ? windowHeight : "auto",
-          }}
-          contentContainerStyle={{
-            paddingBottom: 20,
-          }}
+          style={{ height: Platform.OS === "web" ? windowHeight : undefined }}
+          contentContainerStyle={{ paddingBottom: 20 }}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={[styles.title, { color: theme.colors.black }]}>
-              Home
-            </Text>
-            <ButtonGroup
-              containerStyle={{
-                width: 200,
-                height: 30,
-                backgroundColor: theme.colors.grey0,
-                borderWidth: 0,
-                borderRadius: 10,
-              }}
-              buttons={["Movie", "TV Show"]}
-              selectedIndex={selectedIndex}
-              onPress={(value) => {
-                setSelectedIndex(value);
-              }}
-            />
+          {/* Header with Title and Button Group */}
+          <View className="flex-row items-center justify-between px-5">
+            <Text className="text-text-dark text-[32px] font-bold">Home</Text>
+
+            {/* Button Group */}
+            <View className="flex-row bg-grey-dark-0 rounded-[10px] w-[200px] h-[30px] overflow-hidden">
+              {["Movie", "TV Show"].map((button, index) => (
+                <Pressable
+                  key={index}
+                  className={`flex-1 items-center justify-center ${
+                    selectedIndex === index ? "bg-primary" : ""
+                  }`}
+                  onPress={() => setSelectedIndex(index)}
+                >
+                  <Text
+                    className={`text-sm font-['Lato_400Regular'] ${
+                      selectedIndex === index
+                        ? "text-white font-bold"
+                        : "text-text-dark"
+                    }`}
+                  >
+                    {button}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
           </View>
-          <Text style={[styles.genreTitle, { color: theme.colors.black }]}>
+
+          {/* Genres Section */}
+          <Text className="text-text-dark text-2xl font-bold pl-5 mt-4">
             Genres
           </Text>
-          {selectedIndex == 0 ? (
+
+          {selectedIndex === 0 ? (
             <FlatList
               data={movieGenres}
               showsHorizontalScrollIndicator={false}
               horizontal
               keyExtractor={(movie) => movie.id.toString()}
               renderItem={({ item }) => (
-                <Button
+                <Pressable
                   onPress={() =>
                     router.push({
                       pathname: "/(tabs)/(home)/GenreScreen",
@@ -121,16 +122,12 @@ const HomeScreen = () => {
                       },
                     })
                   }
-                  buttonStyle={{
-                    backgroundColor: theme.colors.grey1,
-                    borderRadius: 20,
-                    paddingHorizontal: 16,
-                    marginLeft: 10,
-                    marginVertical: 5,
-                  }}
-                  titleStyle={{ color: theme.colors.black }}
-                  title={item.name}
-                />
+                  className="bg-grey-dark-1 rounded-[20px] px-4 py-2 ml-2 my-1 active:opacity-80"
+                >
+                  <Text className="text-text-dark font-['Lato_400Regular']">
+                    {item.name}
+                  </Text>
+                </Pressable>
               )}
             />
           ) : (
@@ -140,7 +137,7 @@ const HomeScreen = () => {
               horizontal
               keyExtractor={(tv) => tv.id.toString()}
               renderItem={({ item }) => (
-                <Button
+                <Pressable
                   onPress={() =>
                     router.push({
                       pathname: "/(tabs)/(home)/GenreScreen",
@@ -151,34 +148,37 @@ const HomeScreen = () => {
                       },
                     })
                   }
-                  buttonStyle={{
-                    backgroundColor: theme.colors.grey1,
-                    borderRadius: 20,
-                    paddingHorizontal: 16,
-                    marginLeft: 10,
-                    marginVertical: 5,
-                  }}
-                  titleStyle={{ color: theme.colors.black }}
-                  title={item.name}
-                />
+                  className="bg-grey-dark-1 rounded-[20px] px-4 py-2 ml-2 my-1 active:opacity-80"
+                >
+                  <Text className="text-text-dark font-['Lato_400Regular']">
+                    {item.name}
+                  </Text>
+                </Pressable>
               )}
             />
           )}
-          <Button
-            type="clear"
+
+          {/* Most Popular Section */}
+          <Pressable
             onPress={() =>
               router.push({
                 pathname: "/(tabs)/(home)/CategoryScreen",
                 params: { category: "Most Popular" },
               })
             }
-            buttonStyle={{ alignSelf: "flex-start" }}
-            title="Most Popular"
-            titleStyle={[styles.subtitle, { color: theme.colors.black }]}
-            iconRight
-            icon={<Icon name="chevron-right" />}
-          />
-          {selectedIndex == 0 ? (
+            className="flex-row items-center self-start pl-2 active:opacity-60"
+          >
+            <Text className="text-text-dark text-2xl font-bold pl-2">
+              Most Popular
+            </Text>
+            <MaterialCommunityIcons
+              name="chevron-right"
+              size={24}
+              color="#f8f9fa"
+            />
+          </Pressable>
+
+          {selectedIndex === 0 ? (
             <FlatList
               data={popularMovies}
               showsHorizontalScrollIndicator={false}
@@ -211,21 +211,28 @@ const HomeScreen = () => {
               )}
             />
           )}
-          <Button
-            type="clear"
+
+          {/* Trending Section */}
+          <Pressable
             onPress={() =>
               router.push({
                 pathname: "/(tabs)/(home)/CategoryScreen",
                 params: { category: "Trending" },
               })
             }
-            buttonStyle={{ alignSelf: "flex-start" }}
-            title="Trending"
-            titleStyle={[styles.subtitle, { color: theme.colors.black }]}
-            iconRight
-            icon={<Icon name="chevron-right" />}
-          />
-          {selectedIndex == 0 ? (
+            className="flex-row items-center self-start pl-2 active:opacity-60"
+          >
+            <Text className="text-text-dark text-2xl font-bold pl-2">
+              Trending
+            </Text>
+            <MaterialCommunityIcons
+              name="chevron-right"
+              size={24}
+              color="#f8f9fa"
+            />
+          </Pressable>
+
+          {selectedIndex === 0 ? (
             <FlatList
               data={trendingMovies}
               showsHorizontalScrollIndicator={false}
@@ -258,22 +265,28 @@ const HomeScreen = () => {
               )}
             />
           )}
-          {selectedIndex == 0 ? (
+
+          {/* Now Playing / On The Air Section */}
+          {selectedIndex === 0 ? (
             <>
-              <Button
-                type="clear"
+              <Pressable
                 onPress={() =>
                   router.push({
                     pathname: "/(tabs)/(home)/CategoryScreen",
                     params: { category: "Now" },
                   })
                 }
-                buttonStyle={{ alignSelf: "flex-start" }}
-                title="Now Playing"
-                titleStyle={[styles.subtitle, { color: theme.colors.black }]}
-                iconRight
-                icon={<Icon name="chevron-right" />}
-              />
+                className="flex-row items-center self-start pl-2 active:opacity-60"
+              >
+                <Text className="text-text-dark text-2xl font-bold pl-2">
+                  Now Playing
+                </Text>
+                <MaterialCommunityIcons
+                  name="chevron-right"
+                  size={24}
+                  color="#f8f9fa"
+                />
+              </Pressable>
               <FlatList
                 data={nowPlayingMovies}
                 showsHorizontalScrollIndicator={false}
@@ -292,20 +305,24 @@ const HomeScreen = () => {
             </>
           ) : (
             <>
-              <Button
-                type="clear"
+              <Pressable
                 onPress={() =>
                   router.push({
                     pathname: "/(tabs)/(home)/CategoryScreen",
                     params: { category: "Now" },
                   })
                 }
-                buttonStyle={{ alignSelf: "flex-start" }}
-                title="On The Air"
-                titleStyle={[styles.subtitle, { color: theme.colors.black }]}
-                iconRight
-                icon={<Icon name="chevron-right" />}
-              />
+                className="flex-row items-center self-start pl-2 active:opacity-60"
+              >
+                <Text className="text-text-dark text-2xl font-bold pl-2">
+                  On The Air
+                </Text>
+                <MaterialCommunityIcons
+                  name="chevron-right"
+                  size={24}
+                  color="#f8f9fa"
+                />
+              </Pressable>
               <FlatList
                 data={onTheAirTVShows}
                 showsHorizontalScrollIndicator={false}
@@ -327,28 +344,10 @@ const HomeScreen = () => {
         <TermsConditionModal
           modalVisible={termsCondition}
           onClose={handleTermsCondition}
-          theme={theme}
         />
       </SafeAreaView>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    paddingLeft: 20,
-  },
-  subtitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    paddingLeft: 10,
-  },
-  genreTitle: { fontSize: 24, fontWeight: "bold", paddingLeft: 20 },
-});
 
 export default HomeScreen;

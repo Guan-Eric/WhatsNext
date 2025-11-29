@@ -4,22 +4,19 @@ import {
   View,
   FlatList,
   Text,
-  Pressable,
-  TouchableWithoutFeedback,
-  Keyboard,
+  TextInput,
   Dimensions,
   Platform,
 } from "react-native";
-import { Avatar, SearchBar, useTheme } from "@rneui/themed";
-import BackButton from "../../../components/BackButton";
 import { fetchMoviePoster, multiSearch } from "@/backend/movie";
 import PersonCard from "@/components/cards/PersonCard";
 import PosterCard from "@/components/cards/PosterCard";
+import { Ionicons } from "@expo/vector-icons";
+import { Movie, TVShow, Person } from "@/components/types";
 
 function SearchScreen() {
   const [search, setSearch] = useState<string>("");
   const [results, setResults] = useState<(Movie | TVShow | Person)[]>([]);
-  const { theme } = useTheme();
   const screenWidth = Dimensions.get("screen").width;
   const windowHeight = Dimensions.get("window").height;
 
@@ -52,7 +49,6 @@ function SearchScreen() {
           width={screenWidth / 3 - 20}
           height={(screenWidth / 3 - 20) * 1.5}
           tab={"(search)"}
-          theme={theme}
           name={item?.name}
         />
       );
@@ -70,42 +66,42 @@ function SearchScreen() {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: theme.colors.background,
-      }}
-    >
+    <View className="flex-1 bg-white dark:bg-[#181818]">
       <SafeAreaView>
-        <Text
-          style={{
-            color: theme.colors.black,
-            fontFamily: "Lato_700Bold",
-            fontSize: 32,
-            fontWeight: "bold",
-            paddingLeft: 20,
-          }}
-        >
+        <Text className="text-black dark:text-white font-bold text-3xl pl-5">
           Search
         </Text>
 
-        <SearchBar
-          containerStyle={{
-            backgroundColor: theme.colors.background,
-            borderTopWidth: 0,
-            borderBottomWidth: 0,
-          }}
-          inputContainerStyle={{
-            borderRadius: 10,
-          }}
-          placeholder="Type Here..."
-          onChangeText={(text) => setSearch(text)}
-          onClear={() => setSearch("")}
-          value={search}
-        />
+        {/* Search Bar */}
+        <View className="bg-white dark:bg-[#181818] px-3 py-2">
+          <View className="flex-row items-center bg-grey-0 dark:bg-grey-dark-0 rounded-lg px-3 h-12">
+            <Ionicons
+              name="search"
+              size={20}
+              color="#6c757d"
+              style={{ marginRight: 8 }}
+            />
+            <TextInput
+              className="flex-1 text-black dark:text-white"
+              placeholder="Type Here..."
+              placeholderTextColor="#6c757d"
+              onChangeText={(text) => setSearch(text)}
+              value={search}
+            />
+            {search.length > 0 && (
+              <Ionicons
+                name="close-circle"
+                size={20}
+                color="#6c757d"
+                onPress={() => setSearch("")}
+              />
+            )}
+          </View>
+        </View>
+
         <FlatList
+          className="mb-[100px]"
           style={{
-            marginBottom: 100,
             height: Platform.OS === "web" ? windowHeight : "auto",
           }}
           numColumns={3}

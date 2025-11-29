@@ -1,20 +1,17 @@
-import { Button } from "@rneui/themed";
 import React, { useState } from "react";
-import { Modal, View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Modal, View, Text, Pressable } from "react-native";
 import { Rating } from "react-native-ratings";
 
 interface StreakModalProps {
   modalVisible: boolean;
   onClose: () => void;
   save: (rating: number) => void;
-  theme: any;
 }
 
 const RatingModal: React.FC<StreakModalProps> = ({
   modalVisible,
   onClose,
   save,
-  theme,
 }) => {
   const [rating, setRating] = useState(2.5);
 
@@ -25,18 +22,14 @@ const RatingModal: React.FC<StreakModalProps> = ({
       visible={modalVisible}
       onRequestClose={onClose}
     >
-      <View style={styles.modalOverlay}>
-        <View
-          style={[styles.modalContent, { backgroundColor: theme.colors.grey1 }]}
-        >
+      <View className="flex-1 justify-center items-center bg-black/40">
+        <View className="w-[300px] p-5 rounded-2xl items-center bg-grey-1 dark:bg-grey-dark-1">
           <Rating
-            tintColor={theme.colors.grey1}
+            tintColor="#e9ecef"
             type="custom"
-            style={{
-              paddingVertical: 10,
-            }}
+            style={{ paddingVertical: 10 }}
             imageSize={40}
-            ratingBackgroundColor={theme.colors.black}
+            ratingBackgroundColor="#000000"
             onFinishRating={(value: number) => {
               setRating(value);
             }}
@@ -45,80 +38,26 @@ const RatingModal: React.FC<StreakModalProps> = ({
             fractions={1}
             jumpValue={0.5}
           />
-          <View style={styles.buttonContainer}>
-            <Button
+
+          <View className="flex-col w-full">
+            <Pressable
               onPress={() => save(rating)}
-              buttonStyle={[styles.newStreakButton]}
+              className="p-2.5 my-1 rounded-lg w-full items-center bg-primary dark:bg-primary-dark"
             >
-              <Text style={[styles.buttonText, { color: "#f8f9fa" }]}>
-                Save
-              </Text>
-            </Button>
-            <Button
+              <Text className="text-base text-white">Save</Text>
+            </Pressable>
+
+            <Pressable
               onPress={() => onClose()}
-              buttonStyle={[
-                styles.newStreakButton,
-                { backgroundColor: theme.colors.grey2 },
-              ]}
+              className="p-2.5 my-1 rounded-lg w-full items-center bg-grey-2 dark:bg-grey-dark-2"
             >
-              <Text style={[styles.buttonText, { color: "#f8f9fa" }]}>
-                Close
-              </Text>
-            </Button>
+              <Text className="text-base text-white">Close</Text>
+            </Pressable>
           </View>
         </View>
       </View>
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
-  },
-  modalContent: {
-    width: 300,
-    padding: 20,
-
-    borderRadius: 20,
-    alignItems: "center",
-  },
-  modalText: {
-    fontSize: 18,
-    fontWeight: "bold",
-
-    textAlign: "left",
-  },
-  modalSubText: {
-    fontSize: 14,
-    marginBottom: 10,
-    textAlign: "left",
-  },
-  buttonContainer: {
-    flexDirection: "column",
-    width: "100%",
-  },
-  continueButton: {
-    backgroundColor: "#27ae60",
-    padding: 10,
-    marginVertical: 5,
-    borderRadius: 10,
-    width: "100%",
-    alignItems: "center",
-  },
-  newStreakButton: {
-    padding: 10,
-    marginVertical: 5,
-    borderRadius: 10,
-    width: "100%",
-    alignItems: "center",
-  },
-  buttonText: {
-    fontSize: 16,
-  },
-});
 
 export default RatingModal;

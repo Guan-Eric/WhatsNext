@@ -3,20 +3,19 @@ import {
   fetchMoviePoster,
   fetchMoviesFromMyList,
 } from "@/backend/movie";
-import { fetchCast } from "@/backend/person";
 import BackButton from "@/components/BackButton";
 import MovieCard from "@/components/cards/MovieCard";
-import { ButtonGroup, useTheme } from "@rneui/themed";
+import { Movie, TVShow } from "@/components/types";
 import { useFocusEffect } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
-  StyleSheet,
   View,
   Text,
   Platform,
   Dimensions,
+  Pressable,
 } from "react-native";
 
 const MyListScreen = () => {
@@ -24,7 +23,6 @@ const MyListScreen = () => {
   const [tvShows, setTVShows] = useState<TVShow[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const windowHeight = Dimensions.get("window").height;
-  const { theme } = useTheme();
 
   const fetchMoviesAndTVShows = async () => {
     setMovies((await fetchMoviesFromMyList("movie")) as Movie[]);
@@ -40,6 +38,7 @@ const MyListScreen = () => {
       fetchMoviesAndTVShows();
     }, [])
   );
+
   const options = (id: number) => [
     {
       title: "Remove from list",
@@ -47,18 +46,20 @@ const MyListScreen = () => {
         await deleteFromMyList(id.toString());
         await fetchMoviesAndTVShows();
       },
-      containerStyle: { backgroundColor: theme.colors.error },
+      containerStyle: { backgroundColor: "#dc3545" },
     },
   ];
+
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <View className="flex-1 bg-white dark:bg-[#181818]">
       <SafeAreaView>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View className="flex-row items-center">
           <BackButton />
-          <Text style={[styles.title, { color: theme.colors.black }]}>
+          <Text className="text-3xl font-bold text-black dark:text-white">
             My List
           </Text>
         </View>
+
         <ScrollView
           style={{
             height: Platform.OS === "web" ? windowHeight : "auto",
@@ -67,27 +68,52 @@ const MyListScreen = () => {
             paddingBottom: 60,
           }}
         >
-          <ButtonGroup
-            containerStyle={{
-              width: 200,
-              height: 30,
-              backgroundColor: theme.colors.grey0,
-              borderWidth: 0,
-              borderRadius: 10,
-            }}
-            buttons={["Movie", "TV Show"]}
-            selectedIndex={selectedIndex}
-            onPress={(value) => {
-              setSelectedIndex(value);
-            }}
-          />
+          {/* Button Group */}
+          <View className="w-[200px] h-[30px] bg-grey-0 dark:bg-grey-dark-0 rounded-lg ml-5 flex-row overflow-hidden">
+            <Pressable
+              className={`flex-1 items-center justify-center ${
+                selectedIndex === 0
+                  ? "bg-primary dark:bg-primary-dark"
+                  : "bg-transparent"
+              }`}
+              onPress={() => setSelectedIndex(0)}
+            >
+              <Text
+                className={`font-bold text-sm ${
+                  selectedIndex === 0
+                    ? "text-white"
+                    : "text-black dark:text-white"
+                }`}
+              >
+                Movie
+              </Text>
+            </Pressable>
+            <Pressable
+              className={`flex-1 items-center justify-center ${
+                selectedIndex === 1
+                  ? "bg-primary dark:bg-primary-dark"
+                  : "bg-transparent"
+              }`}
+              onPress={() => setSelectedIndex(1)}
+            >
+              <Text
+                className={`font-bold text-sm ${
+                  selectedIndex === 1
+                    ? "text-white"
+                    : "text-black dark:text-white"
+                }`}
+              >
+                TV Show
+              </Text>
+            </Pressable>
+          </View>
+
           {selectedIndex == 0
             ? movies.map((movie) => (
                 <MovieCard
                   key={movie.id}
                   movie={movie}
                   posterPath={fetchMoviePoster(movie?.poster_path as string)}
-                  theme={theme}
                   options={options(movie.id)}
                   tab="(watchlist)"
                 />
@@ -97,7 +123,6 @@ const MyListScreen = () => {
                   key={tvShow.id}
                   movie={tvShow}
                   posterPath={fetchMoviePoster(tvShow?.poster_path as string)}
-                  theme={theme}
                   options={options(tvShow.id)}
                   tab="(watchlist)"
                 />
@@ -107,15 +132,5 @@ const MyListScreen = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-  },
-});
 
 export default MyListScreen;

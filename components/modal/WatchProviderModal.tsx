@@ -1,28 +1,17 @@
-import { Button } from "@rneui/themed";
 import React from "react";
-import {
-  Modal,
-  View,
-  Image,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Linking,
-  Platform,
-} from "react-native";
+import { Modal, View, Image, Text, Pressable } from "react-native";
+import { WatchProvider } from "../types";
 
 interface WatchProviderModalProps {
   modalVisible: boolean;
   onClose: () => void;
   providers: { [category: string]: WatchProvider[] };
-  theme: any;
 }
 
 const WatchProviderModal: React.FC<WatchProviderModalProps> = ({
   modalVisible,
   onClose,
   providers,
-  theme,
 }) => {
   const categoryTitles: { [key: string]: string } = {
     flatrate: "Stream On",
@@ -39,22 +28,14 @@ const WatchProviderModal: React.FC<WatchProviderModalProps> = ({
       visible={modalVisible}
       onRequestClose={onClose}
     >
-      <View
-        style={[styles.modalOverlay, { backgroundColor: "rgba(0, 0, 0, 0.7)" }]}
-      >
-        <View
-          style={[
-            styles.modalContent,
-            { backgroundColor: theme.colors.background },
-          ]}
-        >
-          <Text style={[styles.title, { color: theme.colors.black }]}>
+      <View className="flex-1 justify-center items-center bg-black/70">
+        <View className="w-[90%] max-w-[400px] p-5 rounded-2xl items-center bg-white dark:bg-[#181818]">
+          <Text className="text-2xl font-bold mb-5 text-center text-black dark:text-white">
             Where to Watch
           </Text>
+
           {Object.keys(providers).length === 0 ? (
-            <Text
-              style={[styles.noProvidersText, { color: theme.colors.black }]}
-            >
+            <Text className="text-base text-center mb-5 text-black dark:text-white">
               No streaming providers available in your region
             </Text>
           ) : (
@@ -62,20 +43,17 @@ const WatchProviderModal: React.FC<WatchProviderModalProps> = ({
               ([category, providerList]) =>
                 providerList &&
                 providerList.length > 0 && (
-                  <View key={category} style={styles.categoryContainer}>
-                    <Text
-                      style={[
-                        styles.categoryTitle,
-                        { color: theme.colors.black },
-                      ]}
-                    >
+                  <View key={category} className="w-full mb-5">
+                    <Text className="text-lg pl-2.5 mb-2.5 text-black dark:text-white">
                       {categoryTitles[category] || category}
                     </Text>
-                    <View style={styles.providerContainer}>
+
+                    <View className="flex-row flex-wrap justify-start">
                       {providerList.map((provider: WatchProvider) => (
                         <Image
+                          key={provider.provider_id}
                           source={{ uri: provider.logo_path || "" }}
-                          style={styles.providerLogo}
+                          className="w-[60px] h-[60px] rounded-lg mx-1"
                           resizeMode="contain"
                         />
                       ))}
@@ -84,74 +62,17 @@ const WatchProviderModal: React.FC<WatchProviderModalProps> = ({
                 )
             )
           )}
-          <Button onPress={onClose} buttonStyle={styles.closeButton}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </Button>
+
+          <Pressable
+            onPress={onClose}
+            className="bg-[#3a3a3a] rounded-full px-5 py-2"
+          >
+            <Text className="text-white text-base font-semibold">Close</Text>
+          </Pressable>
         </View>
       </View>
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalContent: {
-    width: "90%",
-    maxWidth: 400,
-    padding: 20,
-    borderRadius: 15,
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  categoryContainer: {
-    width: "100%",
-    marginBottom: 20,
-  },
-  categoryTitle: {
-    fontSize: 18,
-    paddingLeft: 10,
-    marginBottom: 10,
-  },
-  providerContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "flex-start",
-  },
-  providerLogo: {
-    width: 60,
-    height: 60,
-    borderRadius: 10,
-    marginHorizontal: 5,
-  },
-  providerName: {
-    fontSize: 12,
-    textAlign: "center",
-    fontWeight: "500",
-  },
-  noProvidersText: {
-    fontSize: 16,
-    textAlign: "center",
-    marginBottom: 20,
-  },
-  closeButton: {
-    backgroundColor: "#3a3a3a",
-    borderRadius: 25,
-    paddingHorizontal: 20,
-  },
-  closeButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-});
 
 export default WatchProviderModal;

@@ -1,14 +1,13 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
-import { Card, Button } from "@rneui/themed";
+import { View, Text, Image, Pressable } from "react-native";
 import ThreeDotsModal from "../modal/ThreeDotsModal";
 import { router } from "expo-router";
 import { fetchHDMoviePoster } from "@/backend/movie";
+import { Movie, TVShow, ModalOptions } from "../types";
 
 interface MovieCardProps {
   movie: Movie | TVShow;
   posterPath: string;
-  theme: any;
   options: ModalOptions[];
   tab: "(generate)" | "(home)" | "(watchlist)";
 }
@@ -16,14 +15,12 @@ interface MovieCardProps {
 const MovieCard: React.FC<MovieCardProps> = ({
   movie,
   posterPath,
-  theme,
   options,
   tab,
 }) => {
   return (
-    <Button
-      buttonStyle={{ paddingVertical: 0 }}
-      type="clear"
+    <Pressable
+      className="py-0"
       onPress={() =>
         router.push({
           pathname: `/(tabs)/${tab}/MovieDetailsScreen`,
@@ -35,45 +32,28 @@ const MovieCard: React.FC<MovieCardProps> = ({
         })
       }
     >
-      <Card
-        containerStyle={[
-          styles.card,
-          {
-            backgroundColor: theme.colors.grey0,
-            borderColor: theme.colors.grey0,
-          },
-        ]}
-      >
-        <View style={{ flexDirection: "row" }}>
-          <Image source={{ uri: posterPath }} style={styles.poster} />
-          <View style={{ marginLeft: 10, justifyContent: "space-between" }}>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginBottom: 20,
-                width: "86%",
-                justifyContent: "space-between",
-              }}
-            >
-              <Text style={[styles.title, { color: theme.colors.black }]}>
+      <View className="rounded-2xl w-full bg-grey-0 dark:bg-grey-dark-0 border border-grey-0 dark:border-grey-dark-0">
+        <View className="flex-row p-3">
+          <Image
+            source={{ uri: posterPath }}
+            className="w-[100px] h-[150px] rounded-lg"
+          />
+
+          <View className="ml-2.5 justify-between flex-1">
+            <View className="flex-row items-center mb-5 justify-between">
+              <Text className="text-lg font-bold flex-wrap flex-1 mr-2 text-black dark:text-white">
                 {movie?.hasOwnProperty("title")
                   ? (movie as Movie)?.title
                   : (movie as TVShow)?.name}
               </Text>
-              <ThreeDotsModal options={options} theme={theme} />
+              <ThreeDotsModal options={options} />
             </View>
-            <View style={styles.genresContainer}>
+
+            <View className="flex-row flex-wrap">
               {movie.genres?.map((genre, index) => (
                 <Text
                   key={index}
-                  style={[
-                    styles.genre,
-                    {
-                      backgroundColor: theme.colors.grey1,
-                      color: theme.colors.grey4,
-                    },
-                  ]}
+                  className="rounded-md px-1.5 py-1 m-0.5 bg-grey-1 dark:bg-grey-dark-1 text-grey-4 dark:text-grey-dark-4"
                 >
                   {genre.name}
                 </Text>
@@ -81,40 +61,9 @@ const MovieCard: React.FC<MovieCardProps> = ({
             </View>
           </View>
         </View>
-      </Card>
-    </Button>
+      </View>
+    </Pressable>
   );
 };
-
-const styles = StyleSheet.create({
-  card: {
-    borderRadius: 20,
-    width: "100%",
-  },
-  poster: {
-    width: 100,
-    height: 150,
-    borderRadius: 10,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-    flexWrap: "wrap",
-    maxWidth: 205,
-    overflow: "hidden",
-  },
-  genresContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    maxWidth: 200,
-    overflow: "hidden",
-  },
-  genre: {
-    backgroundColor: "#e0e0e0",
-    borderRadius: 5,
-    padding: 5,
-    margin: 2,
-  },
-});
 
 export default MovieCard;

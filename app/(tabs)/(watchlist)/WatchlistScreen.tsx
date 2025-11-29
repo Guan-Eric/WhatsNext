@@ -1,29 +1,28 @@
 import {
   deleteFromWatchlist,
   fetchMoviePoster,
-  fetchMoviesFromMyList,
   fetchMoviesFromWatchlist,
 } from "@/backend/movie";
 import MovieCard from "@/components/cards/MovieCard";
-import { Button, ButtonGroup, Icon, useTheme } from "@rneui/themed";
 import { router, useFocusEffect } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   SafeAreaView,
   ScrollView,
-  StyleSheet,
   View,
   Text,
   Platform,
   Dimensions,
+  Pressable,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { Movie, TVShow } from "@/components/types";
 
 const WatchlistScreen = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [tvShows, setTVShows] = useState<TVShow[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const windowHeight = Dimensions.get("window").height;
-  const { theme } = useTheme();
 
   const fetchMoviesAndTVShows = async () => {
     setMovies((await fetchMoviesFromWatchlist("movie")) as Movie[]);
@@ -47,32 +46,27 @@ const WatchlistScreen = () => {
         await deleteFromWatchlist(id.toString());
         await fetchMoviesAndTVShows();
       },
-      containerStyle: { backgroundColor: theme.colors.error },
+      containerStyle: { backgroundColor: "#dc3545" },
     },
   ];
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <View className="flex-1 bg-white dark:bg-[#181818]">
       <SafeAreaView>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={[styles.title, { color: theme.colors.black }]}>
+        <View className="flex-row items-center justify-between">
+          <Text className="text-3xl font-bold pl-5 text-black dark:text-white">
             Watchlist
           </Text>
-          <Button
+          <Pressable
             onPress={() => {
               router.push({ pathname: "/(tabs)/(watchlist)/ProfileScreen" });
             }}
-            buttonStyle={{ paddingRight: 20 }}
-            type="clear"
-            icon={<Icon name="person" size={28} />}
-          />
+            className="pr-5 p-2"
+          >
+            <Ionicons name="person" size={28} color="#000" />
+          </Pressable>
         </View>
+
         <ScrollView
           style={{
             height: Platform.OS === "web" ? windowHeight : "auto",
@@ -81,28 +75,52 @@ const WatchlistScreen = () => {
             paddingBottom: 60,
           }}
         >
-          <ButtonGroup
-            containerStyle={{
-              width: 200,
-              height: 30,
-              backgroundColor: theme.colors.grey0,
-              borderWidth: 0,
-              borderRadius: 10,
-              marginLeft: 20,
-            }}
-            buttons={["Movie", "TV Show"]}
-            selectedIndex={selectedIndex}
-            onPress={(value) => {
-              setSelectedIndex(value);
-            }}
-          />
+          {/* Button Group */}
+          <View className="w-[200px] h-[30px] bg-grey-0 dark:bg-grey-dark-0 rounded-lg ml-5 flex-row overflow-hidden">
+            <Pressable
+              className={`flex-1 items-center justify-center ${
+                selectedIndex === 0
+                  ? "bg-primary dark:bg-primary-dark"
+                  : "bg-transparent"
+              }`}
+              onPress={() => setSelectedIndex(0)}
+            >
+              <Text
+                className={`font-bold text-sm ${
+                  selectedIndex === 0
+                    ? "text-white"
+                    : "text-black dark:text-white"
+                }`}
+              >
+                Movie
+              </Text>
+            </Pressable>
+            <Pressable
+              className={`flex-1 items-center justify-center ${
+                selectedIndex === 1
+                  ? "bg-primary dark:bg-primary-dark"
+                  : "bg-transparent"
+              }`}
+              onPress={() => setSelectedIndex(1)}
+            >
+              <Text
+                className={`font-bold text-sm ${
+                  selectedIndex === 1
+                    ? "text-white"
+                    : "text-black dark:text-white"
+                }`}
+              >
+                TV Show
+              </Text>
+            </Pressable>
+          </View>
+
           {selectedIndex == 0
             ? movies.map((movie) => (
                 <MovieCard
                   key={movie.id}
                   movie={movie}
                   posterPath={fetchMoviePoster(movie?.poster_path as string)}
-                  theme={theme}
                   options={options(movie.id)}
                   tab="(watchlist)"
                 />
@@ -112,7 +130,6 @@ const WatchlistScreen = () => {
                   key={tvShow.id}
                   movie={tvShow}
                   posterPath={fetchMoviePoster(tvShow?.poster_path as string)}
-                  theme={theme}
                   options={options(tvShow.id)}
                   tab="(watchlist)"
                 />
@@ -122,16 +139,5 @@ const WatchlistScreen = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    paddingLeft: 20,
-  },
-});
 
 export default WatchlistScreen;

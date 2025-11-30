@@ -17,6 +17,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Movie, TVShow } from "@/components/types";
+import ToggleButton from "@/components/ToggleButton";
 
 const WatchlistScreen = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -66,7 +67,18 @@ const WatchlistScreen = () => {
             <Ionicons name="person" size={28} color="#f8f9fa" />
           </Pressable>
         </View>
-
+        {/* Button Group */}
+        <View className="ml-4">
+          <ToggleButton
+            options={[
+              { value: "0", label: "Movies", icon: "movie" },
+              { value: "1", label: "TV Shows", icon: "television" },
+            ]}
+            selectedValue={selectedIndex.toString()}
+            onValueChange={(value) => setSelectedIndex(Number(value))}
+            size="sm"
+          />
+        </View>
         <ScrollView
           style={{
             height: Platform.OS === "web" ? windowHeight : "auto",
@@ -75,42 +87,6 @@ const WatchlistScreen = () => {
             paddingBottom: 60,
           }}
         >
-          {/* Button Group */}
-          <View className="w-[200px] h-[30px] bg-grey-dark-0 rounded-lg ml-5 flex-row overflow-hidden">
-            <Pressable
-              className={`flex-1 items-center justify-center ${
-                selectedIndex === 0 ? "bg-primary-dark" : "bg-transparent"
-              }`}
-              onPress={() => setSelectedIndex(0)}
-            >
-              <Text
-                className={`font-bold text-sm ${
-                  selectedIndex === 0
-                    ? "text-white"
-                    : "text-black dark:text-white"
-                }`}
-              >
-                Movie
-              </Text>
-            </Pressable>
-            <Pressable
-              className={`flex-1 items-center justify-center ${
-                selectedIndex === 1 ? "bg-primary-dark" : "bg-transparent"
-              }`}
-              onPress={() => setSelectedIndex(1)}
-            >
-              <Text
-                className={`font-bold text-sm ${
-                  selectedIndex === 1
-                    ? "text-white"
-                    : "text-black dark:text-white"
-                }`}
-              >
-                TV Show
-              </Text>
-            </Pressable>
-          </View>
-
           {selectedIndex == 0
             ? movies.map((movie) => (
                 <MovieCard

@@ -5,6 +5,7 @@ import {
 } from "@/backend/movie";
 import BackButton from "@/components/BackButton";
 import PosterCard from "@/components/cards/PosterCard";
+import ToggleButton from "@/components/ToggleButton";
 import { Movie, TVShow } from "@/components/types";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -49,27 +50,14 @@ const CategoryScreen = () => {
         </View>
 
         {/* Button Group */}
-        <View className="flex-row bg-grey-dark-0 rounded-[10px] w-[200px] h-[30px] overflow-hidden ml-5 mb-2">
-          {["Movie", "TV Show"].map((button, index) => (
-            <Pressable
-              key={index}
-              className={`flex-1 items-center justify-center ${
-                selectedIndex === index ? "bg-primary" : ""
-              }`}
-              onPress={() => setSelectedIndex(index)}
-            >
-              <Text
-                className={`text-sm font-['Lato_400Regular'] ${
-                  selectedIndex === index
-                    ? "text-white font-bold"
-                    : "text-text-dark"
-                }`}
-              >
-                {button}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
+        <ToggleButton
+          options={[
+            { value: "0", label: "Movies", icon: "movie" },
+            { value: "1", label: "TV Shows", icon: "television" },
+          ]}
+          selectedValue={selectedIndex.toString()}
+          onValueChange={(value) => setSelectedIndex(Number(value))}
+        />
 
         {/* Content */}
         {selectedIndex === 0 ? (

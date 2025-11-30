@@ -50,9 +50,9 @@ function TabLayout() {
       <Tabs.Screen
         name="(watchlist)"
         options={{
-          title: "Watchlist",
+          title: "Profile",
           tabBarIcon: ({ size, color }) => (
-            <MaterialCommunityIcons name="bookmark" size={size} color={color} />
+            <MaterialCommunityIcons name="account" size={size} color={color} />
           ),
         }}
       />

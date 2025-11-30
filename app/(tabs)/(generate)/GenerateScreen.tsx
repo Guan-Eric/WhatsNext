@@ -15,6 +15,7 @@ import { router } from "expo-router";
 import { GenerateStringList } from "@/backend/ai";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Purchases from "react-native-purchases";
+import ToggleButton from "@/components/ToggleButton";
 
 export default function GenerateScreen() {
   const [genre, setGenre] = useState<string>("");
@@ -185,29 +186,19 @@ export default function GenerateScreen() {
               <Text className="text-text-dark text-lg font-bold mb-3">
                 Release Year
               </Text>
-              <View className="flex-row flex-wrap">
-                {["all-time", "recent", "classic"].map((option) => (
-                  <Pressable
-                    key={option}
-                    className={`mr-2 mb-2 rounded-full px-4 py-2 border ${
-                      releaseYear === option
-                        ? "border-primary bg-primary/20"
-                        : "border-grey-dark-3 bg-grey-dark-0"
-                    }`}
-                    onPress={() => setReleaseYear(option as any)}
-                  >
-                    <Text
-                      className={`font-semibold capitalize ${
-                        releaseYear === option
-                          ? "text-primary"
-                          : "text-grey-dark-5"
-                      }`}
-                    >
-                      {option.replace("-", " ")}
-                    </Text>
-                  </Pressable>
-                ))}
-              </View>
+              <ToggleButton
+                options={[
+                  { value: "all-time", label: "All Time", icon: "infinity" },
+                  { value: "recent", label: "Recent", icon: "calendar" },
+                  {
+                    value: "classic",
+                    label: "Classic",
+                    icon: "clock-time-four",
+                  },
+                ]}
+                selectedValue={releaseYear}
+                onValueChange={(value) => setReleaseYear(value as any)}
+              />
             </View>
 
             {/* Language Input */}

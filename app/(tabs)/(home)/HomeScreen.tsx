@@ -24,6 +24,7 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Movie, TVShow, Genre } from "@/components/types";
+import ToggleButton from "@/components/ToggleButton";
 
 const HomeScreen = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -75,28 +76,15 @@ const HomeScreen = () => {
           <View className="flex-row items-center justify-between px-5">
             <Text className="text-text-dark text-[32px] font-bold">Home</Text>
 
-            {/* Button Group */}
-            <View className="flex-row bg-grey-dark-0 rounded-[10px] w-[200px] h-[30px] overflow-hidden">
-              {["Movie", "TV Show"].map((button, index) => (
-                <Pressable
-                  key={index}
-                  className={`flex-1 items-center justify-center ${
-                    selectedIndex === index ? "bg-primary" : ""
-                  }`}
-                  onPress={() => setSelectedIndex(index)}
-                >
-                  <Text
-                    className={`text-sm font-['Lato_400Regular'] ${
-                      selectedIndex === index
-                        ? "text-white font-bold"
-                        : "text-text-dark"
-                    }`}
-                  >
-                    {button}
-                  </Text>
-                </Pressable>
-              ))}
-            </View>
+            <ToggleButton
+              options={[
+                { value: "0", label: "Movie", icon: "movie" },
+                { value: "1", label: "TV Show", icon: "television" },
+              ]}
+              selectedValue={selectedIndex.toString()}
+              onValueChange={(value) => setSelectedIndex(Number(value))}
+              size="sm"
+            />
           </View>
 
           {/* Genres Section */}

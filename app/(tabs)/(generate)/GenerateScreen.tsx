@@ -17,7 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Constants for free tier limits
-const FREE_DAILY_LIMIT = 1;
+const FREE_DAILY_LIMIT = 100;
 const STORAGE_KEY = "@ai_generations";
 
 export default function GenerateScreen() {

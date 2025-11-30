@@ -12,6 +12,7 @@ export default {
       backgroundColor: "#181818",
     },
     scheme: "myapp",
+    backgroundColor: "#181818",
     userInterfaceStyle: "dark",
     newArchEnabled: true,
     ios: {

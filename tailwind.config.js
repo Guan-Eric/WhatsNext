@@ -14,11 +14,11 @@ module.exports = {
           dark: "#f5a623",
         },
         background: {
-          DEFAULT: "#ffffff",
+          DEFAULT: "#181818",
           dark: "#181818",
         },
         text: {
-          DEFAULT: "#000000",
+          DEFAULT: "#f8f9fa",
           dark: "#f8f9fa",
         },
         grey: {
@@ -36,18 +36,18 @@ module.exports = {
           "dark-5": "#adb5bd",
         },
         outline: {
-          DEFAULT: "#dee2e6",
+          DEFAULT: "#333333",
           dark: "#333333",
         },
         search: {
-          DEFAULT: "#f8f9fa",
+          DEFAULT: "#262626",
           dark: "#262626",
         },
         success: "#28a745",
         error: "#dc3545",
         warning: "#ffc107",
         divider: {
-          DEFAULT: "#e9ecef",
+          DEFAULT: "#2d2d2d",
           dark: "#2d2d2d",
         },
       },

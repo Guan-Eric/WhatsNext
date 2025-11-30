@@ -17,7 +17,11 @@ const ThreeDotsModal: React.FC<ThreeDotsModalProps> = ({ options }) => {
   return (
     <View>
       <Pressable onPress={toggleModal} className="p-2">
-        <MaterialCommunityIcons name="dots-vertical" size={24} color="#000" />
+        <MaterialCommunityIcons
+          name="dots-vertical"
+          size={24}
+          color="#f8f9fa"
+        />
       </Pressable>
 
       <Modal

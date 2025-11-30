@@ -29,7 +29,7 @@ const RatingModal: React.FC<StreakModalProps> = ({
             type="custom"
             style={{ paddingVertical: 10 }}
             imageSize={40}
-            ratingBackgroundColor="#000000"
+            ratingBackgroundColor="#181818"
             onFinishRating={(value: number) => {
               setRating(value);
             }}

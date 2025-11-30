@@ -8,6 +8,7 @@ import {
   fetchMoviesFromWatchlist,
 } from "./movie";
 import { fetchCast } from "./person";
+import { Movie, TVShow } from "@/components/types";
 
 const API_KEY = Constants.expoConfig?.extra?.tmdbApiKey;
 const openai = new OpenAI({
@@ -33,15 +34,17 @@ export async function GenerateStringList(
   while (attempts < maxRetries) {
     try {
       const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+        model: "gpt-5-nano",
         messages: [
           {
             role: "system",
-            content: `You are a ${
-              type === "movie" ? "movie" : "TV Show"
-            } List Generator who suggests personalized ${
-              type === "movie" ? "movies" : "TV Shows"
-            } based on user preferences.`,
+            content: `
+            You MUST output ONLY a valid JSON array.
+            No explanation, no markdown, no text before or after.
+            Example of correct output:
+            ["Movie A","Movie B","Movie C"]
+            If you include anything else, the app will break.
+            `,
           },
           {
             role: "user",
@@ -75,13 +78,13 @@ export async function GenerateStringList(
                     .join(", ")}`
             }
                 
-                Respond in a string array of ${
-                  type === "movie" ? "movie" : "TV Show"
-                } names
+                Return ONLY a JSON array of ${
+                  type === "movie" ? "movie" : "TV show"
+                } titles.
                 `,
           },
         ],
-        temperature: 0.7,
+        temperature: 1,
       });
 
       const content =

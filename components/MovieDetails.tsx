@@ -147,7 +147,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
               <Ionicons
                 name={watchlist ? "bookmark" : "bookmark-outline"}
                 size={24}
-                color="#000"
+                color="#f8f9fa"
               />
             </Pressable>
           </View>

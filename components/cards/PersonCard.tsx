@@ -31,6 +31,7 @@ const PersonCard: React.FC<MovieCardProps> = ({
           },
         })
       }
+      className="my-4 ml-4"
     >
       <View className="relative">
         <Image
@@ -44,7 +45,7 @@ const PersonCard: React.FC<MovieCardProps> = ({
               colors={["transparent", "#ffffff"]}
               className="absolute bottom-0 left-0 right-0 h-[100px]"
             />
-            <Text className="absolute text-center flex-wrap pb-2.5 bottom-2.5 text-black dark:text-white">
+            <Text className="absolute text-center flex-wrap ml-4 pb-2.5 bottom-2.5 text-black dark:text-white">
               {name}
             </Text>
           </>

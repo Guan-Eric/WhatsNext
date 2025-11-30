@@ -44,18 +44,18 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
       >
         <Image
           source={{ uri: posterPath }}
-          className="self-center rounded-lg"
+          className="self-center rounded-lg mt-4"
           style={{
             width: screenWidth * 0.84,
             height: screenWidth * 0.84 * 1.5,
           }}
         />
 
-        <Text className="text-lg font-bold mt-2.5 text-black dark:text-white">
+        <Text className="text-lg font-bold mt-4 ml-6 text-black dark:text-white">
           {"title" in movie ? movie.title : movie.name}
         </Text>
 
-        <View className="flex-row flex-wrap mt-1">
+        <View className="flex-row flex-wrap mt-1 ml-4">
           {movie.genres?.map((genre, index) => (
             <Text
               key={index}
@@ -100,7 +100,7 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
             <Ionicons
               name={watchlist ? "bookmark" : "bookmark-outline"}
               size={24}
-              color="#000"
+              color="#f8f9fa"
             />
           </Pressable>
         </View>

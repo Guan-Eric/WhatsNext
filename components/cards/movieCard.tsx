@@ -20,7 +20,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
 }) => {
   return (
     <Pressable
-      className="py-0"
+      className="mx-4 mt-4"
       onPress={() =>
         router.push({
           pathname: `/(tabs)/${tab}/MovieDetailsScreen`,

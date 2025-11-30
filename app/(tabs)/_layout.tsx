@@ -8,19 +8,22 @@ function TabLayout() {
       initialRouteName="(home)"
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#ffb400", // Primary color
+        tabBarActiveTintColor: "#ffb400",
         tabBarInactiveTintColor: "#6c757d",
         tabBarStyle: {
           backgroundColor: "#181818",
           borderTopColor: "#2d2d2d",
         },
+        sceneStyle: {
+          backgroundColor: "#181818",
+        },
+        animation: "none",
       }}
     >
       <Tabs.Screen
         name="(home)"
         options={{
           title: "Home",
-          animation: "shift",
           tabBarIcon: ({ size, color }) => (
             <MaterialCommunityIcons name="home" size={size} color={color} />
           ),
@@ -30,7 +33,6 @@ function TabLayout() {
         name="(search)"
         options={{
           title: "Search",
-          animation: "shift",
           tabBarIcon: ({ size, color }) => (
             <MaterialCommunityIcons name="magnify" size={size} color={color} />
           ),
@@ -40,7 +42,6 @@ function TabLayout() {
         name="(generate)"
         options={{
           title: "What's Next?",
-          animation: "shift",
           tabBarIcon: ({ size, color }) => (
             <MaterialCommunityIcons name="movie" size={size} color={color} />
           ),
@@ -50,7 +51,6 @@ function TabLayout() {
         name="(watchlist)"
         options={{
           title: "Watchlist",
-          animation: "shift",
           tabBarIcon: ({ size, color }) => (
             <MaterialCommunityIcons name="bookmark" size={size} color={color} />
           ),

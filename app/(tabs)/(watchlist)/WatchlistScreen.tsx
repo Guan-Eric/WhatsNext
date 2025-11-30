@@ -63,7 +63,7 @@ const WatchlistScreen = () => {
             }}
             className="pr-5 p-2"
           >
-            <Ionicons name="person" size={28} color="#000" />
+            <Ionicons name="person" size={28} color="#f8f9fa" />
           </Pressable>
         </View>
 

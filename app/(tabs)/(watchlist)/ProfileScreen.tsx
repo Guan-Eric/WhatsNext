@@ -64,7 +64,7 @@ function ProfileScreen() {
               <Text className="text-base font-bold text-black dark:text-white">
                 {item.title}
               </Text>
-              <Ionicons name="chevron-forward" size={20} color="#000" />
+              <Ionicons name="chevron-forward" size={20} color="#f8f9fa" />
             </Pressable>
           </View>
         ))}

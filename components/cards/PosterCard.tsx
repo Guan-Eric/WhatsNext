@@ -31,6 +31,7 @@ const PosterCard: React.FC<MovieCardProps> = ({
           },
         })
       }
+      className="ml-4 my-4"
     >
       <Image
         source={{ uri: posterPath }}

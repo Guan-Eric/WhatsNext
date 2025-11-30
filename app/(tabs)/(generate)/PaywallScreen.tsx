@@ -90,7 +90,7 @@ export default function PaywallScreen() {
         Alert.alert("Success! 🎉", "Welcome to Premium!", [
           {
             text: "Let's Go!",
-            onPress: () => router.push("/(tabs)/(generate)/GenerateScreen"),
+            onPress: () => router.back(),
           },
         ]);
       }
@@ -104,8 +104,8 @@ export default function PaywallScreen() {
   };
 
   const getPackageDetails = (pkg: PurchasesPackage) => {
-    const isWeekly = pkg.identifier === "weekly";
-    const isAnnual = pkg.identifier === "annual";
+    const isWeekly = pkg.identifier === "$rc_monthly";
+    const isAnnual = pkg.identifier === "$rc_annual";
 
     if (isWeekly) {
       return {
@@ -118,16 +118,54 @@ export default function PaywallScreen() {
     }
 
     if (isAnnual) {
-      // Calculate savings vs weekly
-      // Weekly: $3.99/week × 52 weeks = $207.48/year
-      // Annual: $24.99/year
-      // Savings: $182.49 (88% off)
+      // Calculate savings vs weekly using localized pricing
+      // Fallback logic if pkg or weeklyPkg not found
+      const annualPrice = pkg.product.price || 0;
+      const annualPriceString = pkg.product.priceString || "";
+      // Try to find the weekly package for comparison
+      let weeklyPkg = offering?.availablePackages.find(
+        (p) => p.identifier === "$rc_monthly"
+      );
+      let weeklyPrice = weeklyPkg?.product.price || 0;
+      let weeklyPriceString = weeklyPkg?.product.priceString || "";
+
+      // Annualized weekly price
+      const approxWeeksPerYear = 52;
+      const annualizedWeekly = weeklyPrice * approxWeeksPerYear;
+      // Calculate savings
+      const savingsAmount = annualizedWeekly - annualPrice;
+      const percentOff =
+        annualizedWeekly > 0
+          ? Math.round((savingsAmount / annualizedWeekly) * 100)
+          : 0;
+
+      // Get currency symbol if available
+      const matchCurrency = (priceStr: string) => {
+        // Attempt to extract leading currency symbol from priceString
+        const match = priceStr.match(/^([^\d,.]+)/);
+        return match ? match[1] : "";
+      };
+      const currency =
+        matchCurrency(annualPriceString) ||
+        matchCurrency(weeklyPriceString) ||
+        "$";
+      // Format amounts
+      const formatAmount = (amount: number, fallback: string) =>
+        amount > 0 ? `${currency}${amount.toFixed(2)}` : fallback;
+
+      // Per month calculation
+      const perMonth = annualPrice / 12;
       return {
         name: "Annual",
-        badge: "BEST VALUE - Save 88%",
+        badge:
+          percentOff > 0 ? `BEST VALUE - Save ${percentOff}%` : "BEST VALUE",
         description: "Best value • Cancel anytime",
-        savings: "Save $182 vs weekly",
-        perMonth: "Just $2.08/month",
+        savings:
+          weeklyPrice > 0
+            ? `Save ${formatAmount(savingsAmount, "")} vs weekly`
+            : null,
+        perMonth:
+          annualPrice > 0 ? `Just ${formatAmount(perMonth, "")}/month` : null,
       };
     }
 
@@ -149,11 +187,10 @@ export default function PaywallScreen() {
       if (b.identifier === "annual") return 1;
       return 0;
     });
-
+    console.log(sortedPackages);
     return sortedPackages.map((pkg) => {
       const isSelected = selectedPackage === pkg.identifier;
       const details = getPackageDetails(pkg);
-      const isAnnual = pkg.identifier === "annual";
 
       return (
         <Pressable
@@ -200,7 +237,7 @@ export default function PaywallScreen() {
                   {pkg.product.priceString}
                 </Text>
                 <Text className="text-sm text-grey-dark-5 ml-2">
-                  /{pkg.identifier}
+                  /{pkg.identifier === "$rc_annual" ? " Year" : " Week"}
                 </Text>
               </View>
 
@@ -244,7 +281,7 @@ export default function PaywallScreen() {
         {/* Close Button */}
         <View className="flex-row justify-end px-6 pt-2">
           <Pressable
-            onPress={() => router.replace("/(tabs)/(home)/HomeScreen")}
+            onPress={() => router.back()}
             className="h-10 w-10 items-center justify-center"
             disabled={purchasing}
           >
@@ -257,7 +294,7 @@ export default function PaywallScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 200 }}
         >
-          <View className="px-6">
+          <View className="px-6 pt-4">
             {/* Hero */}
             <View className="items-center mb-8">
               <View className="bg-grey-dark-1 rounded-full p-6 mb-4">
@@ -353,13 +390,6 @@ export default function PaywallScreen() {
                 </Text>
               </View>
             </View>
-
-            {/* Terms */}
-            <Text className="text-grey-dark-5 text-xs text-center leading-4 px-4">
-              Try free for 3 days, then{" "}
-              {selectedPackage === "weekly" ? "$3.99/week" : "$24.99/year"}.
-              Cancel anytime.
-            </Text>
           </View>
         </ScrollView>
 
@@ -391,7 +421,7 @@ export default function PaywallScreen() {
           </Pressable>
 
           <Pressable
-            onPress={() => router.push("/(tabs)/(generate)/GenerateScreen")}
+            onPress={() => router.back()}
             disabled={purchasing}
             className="items-center py-3 mt-2"
           >

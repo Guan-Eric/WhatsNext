@@ -29,7 +29,7 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
   const screenWidth = Dimensions.get("screen").width;
 
   return (
-    <View className="rounded-2xl bg-grey-dark-1 border border-grey-1 dark:border-grey-dark-1">
+    <View className="rounded-2xl bg-grey-dark-1 border border-primary p-4">
       <Pressable
         onPress={() => {
           router.push({
@@ -37,36 +37,37 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
             params: {
               movieId: movie.id,
               posterPath: posterPath,
-              type: movie.hasOwnProperty("title") ? "movie" : "tv",
+              type: "title" in movie ? "movie" : "tv",
             },
           });
         }}
       >
         <Image
           source={{ uri: posterPath }}
-          className="self-center rounded-lg mt-4"
+          className="self-center rounded-xl mt-4"
           style={{
-            width: screenWidth * 0.84,
-            height: screenWidth * 0.84 * 1.5,
+            width: screenWidth * 0.85,
+            height: screenWidth * 0.85 * 1.45,
           }}
         />
 
-        <Text className="text-lg font-bold mt-4 ml-6 text-black dark:text-white">
+        <Text className="text-xl font-semibold mt-4 ml-4 text-text-dark">
           {"title" in movie ? movie.title : movie.name}
         </Text>
 
-        <View className="flex-row flex-wrap mt-1 ml-4">
+        <View className="flex-row flex-wrap mt-2 ml-4">
           {movie.genres?.map((genre, index) => (
             <Text
               key={index}
-              className="bg-gray-700 text-black dark:text-white rounded-md px-1.5 py-1 m-0.5"
+              className="bg-grey-dark-2 text-text-dark rounded-lg px-2 py-1 mr-2 mb-2 text-xs"
             >
               {genre.name}
             </Text>
           ))}
         </View>
 
-        <View className="pt-2.5 flex-row items-center justify-between">
+        <View className="flex-row items-center justify-between mt-4 px-4">
+          {/* Already Seen Button */}
           <Pressable
             onPress={() => {
               if (myList) {
@@ -76,15 +77,16 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
                 setIsModalVisible(true);
               }
             }}
-            className="w-[150px] self-center rounded-2xl py-2 items-center bg-grey-dark-1"
+            className="w-[150px] rounded-2xl py-2 items-center bg-grey-dark-2 border border-primary"
           >
             {myList ? (
               <Ionicons name="checkmark" size={20} color="#28a745" />
             ) : (
-              <Text className="text-black dark:text-white">Already Seen?</Text>
+              <Text className="text-primary text-sm">Already Seen?</Text>
             )}
           </Pressable>
 
+          {/* Watchlist Button */}
           <Pressable
             onPress={() => {
               if (watchlist) {
@@ -95,12 +97,12 @@ const GeneratedMovieCard: React.FC<MovieCardProps> = ({
                 setWatchlist(true);
               }
             }}
-            className="p-2 bg-grey-dark-1"
+            className="p-3 bg-grey-dark-2 rounded-2xl"
           >
             <Ionicons
               name={watchlist ? "bookmark" : "bookmark-outline"}
               size={24}
-              color="#f8f9fa"
+              color={watchlist ? "#ffb400" : "#ffb400"}
             />
           </Pressable>
         </View>

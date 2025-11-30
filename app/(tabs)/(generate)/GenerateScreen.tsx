@@ -13,12 +13,8 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import { router } from "expo-router";
 import { GenerateStringList } from "@/backend/ai";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-// Constants for free tier limits
-const FREE_DAILY_LIMIT = 100;
-const STORAGE_KEY = "@ai_generations";
+import Purchases from "react-native-purchases";
 
 export default function GenerateScreen() {
   const [genre, setGenre] = useState<string>("");
@@ -32,98 +28,37 @@ export default function GenerateScreen() {
   const [loading, setLoading] = useState<boolean>(false);
 
   // Paywall related state
-  const [userPlan, setUserPlan] = useState<string>("free");
-  const [generationsUsed, setGenerationsUsed] = useState<number>(0);
-  const [canGenerate, setCanGenerate] = useState<boolean>(true);
+  const [canGenerate, setCanGenerate] = useState<boolean>(false);
 
   const windowHeight = Dimensions.get("window").height;
 
   useEffect(() => {
-    checkUserPlanAndUsage();
+    checkUserPlan();
   }, []);
 
-  const checkUserPlanAndUsage = async () => {
+  const checkUserPlan = async () => {
     try {
-      // Get user's plan
-      const plan = (await AsyncStorage.getItem("@user_plan")) || "free";
-      setUserPlan(plan);
-
-      // If free user, check daily usage
-      if (plan === "free") {
-        const today = new Date().toDateString();
-        const storageData = await AsyncStorage.getItem(STORAGE_KEY);
-
-        if (storageData) {
-          const { date, count } = JSON.parse(storageData);
-
-          // Reset count if it's a new day
-          if (date !== today) {
-            await AsyncStorage.setItem(
-              STORAGE_KEY,
-              JSON.stringify({ date: today, count: 0 })
-            );
-            setGenerationsUsed(0);
-            setCanGenerate(true);
-          } else {
-            setGenerationsUsed(count);
-            setCanGenerate(count < FREE_DAILY_LIMIT);
-          }
-        } else {
-          // First time user
-          await AsyncStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify({ date: today, count: 0 })
-          );
-          setGenerationsUsed(0);
-          setCanGenerate(true);
-        }
-      } else {
-        // Premium/Lifetime users have unlimited access
+      const customerInfo = await Purchases.getCustomerInfo();
+      if (customerInfo.entitlements.active["Pro"]) {
         setCanGenerate(true);
+      } else {
+        router.push("/(tabs)/(generate)/PaywallScreen");
       }
     } catch (error) {
       console.error("Error checking plan:", error);
-      setCanGenerate(true); // Fail open
-    }
-  };
-
-  const incrementGenerationCount = async () => {
-    if (userPlan === "free") {
-      try {
-        const today = new Date().toDateString();
-        const storageData = await AsyncStorage.getItem(STORAGE_KEY);
-
-        if (storageData) {
-          const { count } = JSON.parse(storageData);
-          const newCount = count + 1;
-
-          await AsyncStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify({ date: today, count: newCount })
-          );
-
-          setGenerationsUsed(newCount);
-          setCanGenerate(newCount < FREE_DAILY_LIMIT);
-        }
-      } catch (error) {
-        console.error("Error incrementing count:", error);
-      }
+      setCanGenerate(false);
     }
   };
 
   async function handleGenerateMovies() {
     // Check if user can generate
-    if (!canGenerate && userPlan === "free") {
+    if (!canGenerate) {
       router.push("/(tabs)/(generate)/PaywallScreen");
       return;
     }
 
     try {
       setLoading(true);
-
-      // Increment usage count for free users
-      await incrementGenerationCount();
-
       const list = await GenerateStringList(
         genre,
         mood,
@@ -144,8 +79,6 @@ export default function GenerateScreen() {
     }
   }
 
-  const remainingGenerations = FREE_DAILY_LIMIT - generationsUsed;
-
   return (
     <View className="flex-1 bg-background-dark">
       <SafeAreaView className="flex-1">
@@ -162,69 +95,7 @@ export default function GenerateScreen() {
               <Text className="text-text-dark text-3xl font-bold">
                 What's Next?
               </Text>
-
-              {/* Show usage indicator for free users */}
-              {userPlan === "free" && (
-                <Pressable
-                  className="bg-grey-dark-1 rounded-full px-3 py-1.5 flex-row items-center"
-                  onPress={() =>
-                    router.push("/(tabs)/(generate)/PaywallScreen")
-                  }
-                >
-                  <MaterialCommunityIcons
-                    name="robot"
-                    size={16}
-                    color="#ffb400"
-                  />
-                  <Text className="text-primary text-xs font-bold ml-1">
-                    {remainingGenerations}/{FREE_DAILY_LIMIT} left
-                  </Text>
-                </Pressable>
-              )}
-
-              {userPlan !== "free" && (
-                <View className="bg-primary/20 rounded-full px-3 py-1.5 flex-row items-center">
-                  <MaterialCommunityIcons
-                    name="crown"
-                    size={16}
-                    color="#ffb400"
-                  />
-                  <Text className="text-primary text-xs font-bold ml-1">
-                    {userPlan.toUpperCase()}
-                  </Text>
-                </View>
-              )}
             </View>
-
-            {/* Warning banner if approaching limit */}
-            {userPlan === "free" &&
-              remainingGenerations <= 1 &&
-              remainingGenerations > 0 && (
-                <View className="mx-5 mt-4 bg-warning/20 border border-warning rounded-xl p-3">
-                  <View className="flex-row items-center">
-                    <MaterialCommunityIcons
-                      name="alert"
-                      size={20}
-                      color="#ffc107"
-                    />
-                    <Text className="text-warning font-semibold ml-2 flex-1">
-                      Only {remainingGenerations} generation
-                      {remainingGenerations > 1 ? "s" : ""} left today!
-                    </Text>
-                  </View>
-                  <Pressable
-                    className="mt-2"
-                    onPress={() =>
-                      router.push("/(tabs)/(generate)/PaywallScreen")
-                    }
-                  >
-                    <Text className="text-primary text-sm underline">
-                      Upgrade for unlimited →
-                    </Text>
-                  </Pressable>
-                </View>
-              )}
-
             {/* Genre Input */}
             <View className="px-5 mt-5">
               <Text className="text-text-dark text-lg font-bold mb-2">
@@ -371,7 +242,7 @@ export default function GenerateScreen() {
             <View className="px-5 mt-8">
               <Pressable
                 className={`rounded-[20px] h-14 items-center justify-center ${
-                  !canGenerate && userPlan === "free"
+                  !canGenerate
                     ? "bg-grey-dark-3"
                     : "bg-primary active:opacity-80"
                 }`}
@@ -388,28 +259,11 @@ export default function GenerateScreen() {
                       color="#fff"
                     />
                     <Text className="text-white font-bold text-lg ml-2">
-                      {!canGenerate && userPlan === "free"
-                        ? "Upgrade to Generate More"
-                        : "Generate List"}
+                      {!canGenerate ? "Upgrade to Generate" : "Generate List"}
                     </Text>
                   </View>
                 )}
               </Pressable>
-
-              {/* Upgrade prompt for free users */}
-              {userPlan === "free" && (
-                <Pressable
-                  className="mt-4 items-center"
-                  onPress={() =>
-                    router.push("/(tabs)/(generate)/PaywallScreen")
-                  }
-                >
-                  <Text className="text-grey-dark-5 text-sm">
-                    Want unlimited generations?{" "}
-                    <Text className="text-primary underline">Upgrade now</Text>
-                  </Text>
-                </Pressable>
-              )}
             </View>
           </ScrollView>
         </KeyboardAvoidingView>

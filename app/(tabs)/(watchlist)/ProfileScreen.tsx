@@ -297,7 +297,7 @@ function ProfileScreen() {
           {/* App Info */}
           <View className="px-5 mb-8 items-center">
             <Text className="text-grey-dark-5 text-xs mb-1">
-              Watchfolio v1.0.0
+              What’s Next? v2.0.0
             </Text>
             <Text className="text-grey-dark-5 text-xs">
               Made with ❤️ for movie lovers

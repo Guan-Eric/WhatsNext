@@ -3,7 +3,7 @@ export default {
   expo: {
     name: "WhatsNext",
     slug: "whats-next",
-    version: "1.1.1",
+    version: "2.0.1",
     orientation: "portrait",
     icon: "./assets/icon.png",
     splash: {

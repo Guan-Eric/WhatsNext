@@ -66,7 +66,7 @@ function WelcomeScreen() {
             source={require("../../assets/logo.png")}
           />
           <Text className="text-6xl font-['Roboto_700Bold'] text-white">
-            Watchfolio
+            What’s Next?
           </Text>
           <Text className="text-xl text-white font-['Lato_400Regular'] mt-2">
             Never lose track of what's next.

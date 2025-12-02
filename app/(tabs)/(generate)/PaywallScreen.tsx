@@ -86,7 +86,7 @@ export default function PaywallScreen() {
       const { customerInfo } = await Purchases.purchasePackage(pkg);
 
       // Check if user has premium entitlement
-      if (customerInfo.entitlements.active["premium"]) {
+      if (customerInfo.entitlements.active["Pro"]) {
         Alert.alert("Success! 🎉", "Welcome to Premium!", [
           {
             text: "Let's Go!",

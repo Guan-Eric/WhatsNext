@@ -25,7 +25,7 @@ const RatingModal: React.FC<StreakModalProps> = ({
       <View className="flex-1 justify-center items-center bg-black/40">
         <View className="w-[300px] p-5 rounded-2xl items-center bg-grey-dark-1">
           <Rating
-            tintColor="#e9ecef"
+            tintColor="#2b2b2b"
             type="custom"
             style={{ paddingVertical: 10 }}
             imageSize={40}

@@ -32,9 +32,9 @@ export default function Index() {
 
   useEffect(() => {
     const fetchData = async () => {
-      Purchases.configure({
-        apiKey: "appl_FbIaieuooqMjHMuUhbHUQqpdJXP",
-      });
+      // Purchases.configure({
+      //   apiKey: "appl_FbIaieuooqMjHMuUhbHUQqpdJXP",
+      // });
       await checkAuth();
     };
     fetchData();

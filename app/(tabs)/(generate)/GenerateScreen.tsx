@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { GenerateStringList } from "@/backend/ai";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Purchases from "react-native-purchases";
@@ -36,6 +36,12 @@ export default function GenerateScreen() {
   useEffect(() => {
     checkUserPlan();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      checkUserPlan();
+    }, [])
+  );
 
   const checkUserPlan = async () => {
     try {

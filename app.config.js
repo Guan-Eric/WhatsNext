@@ -3,7 +3,7 @@ export default {
   expo: {
     name: "WhatsNext",
     slug: "whats-next",
-    version: "2.0.1",
+    version: "2.0.2",
     orientation: "portrait",
     icon: "./assets/icon.png",
     splash: {
@@ -39,10 +39,10 @@ export default {
       [
         "expo-splash-screen",
         {
-          image: "./assets/images/splash-icon.png",
-          imageWidth: 200,
+          imageWidth: 300,
+          image: "./assets/logo.png",
           resizeMode: "contain",
-          backgroundColor: "#ffffff",
+          backgroundColor: "#181818",
         },
       ],
     ],

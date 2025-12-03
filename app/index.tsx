@@ -6,6 +6,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "../firebaseConfig";
 import Constants from "expo-constants";
 import Purchases from "react-native-purchases";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Index() {
   const [loading, setLoading] = useState(true);
@@ -14,12 +15,19 @@ export default function Index() {
     onAuthStateChanged(FIREBASE_AUTH, async (user) => {
       try {
         if (!user) {
-          // User not logged in → go to welcome
           router.replace("/(auth)/welcome");
           setLoading(false);
           return;
         }
-        // User logged in → go to home
+
+        // Check if user is in onboarding flow
+        const isOnboarding = await AsyncStorage.getItem("@is_onboarding");
+        if (isOnboarding === "true") {
+          // Don't redirect, let onboarding flow handle navigation
+          setLoading(false);
+          return;
+        }
+
         router.replace("/(tabs)/(home)/HomeScreen");
         setLoading(false);
       } catch (error) {
@@ -32,9 +40,9 @@ export default function Index() {
 
   useEffect(() => {
     const fetchData = async () => {
-      // Purchases.configure({
-      //   apiKey: "appl_FbIaieuooqMjHMuUhbHUQqpdJXP",
-      // });
+      Purchases.configure({
+        apiKey: "appl_FbIaieuooqMjHMuUhbHUQqpdJXP",
+      });
       await checkAuth();
     };
     fetchData();

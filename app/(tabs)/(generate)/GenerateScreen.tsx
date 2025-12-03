@@ -39,7 +39,18 @@ export default function GenerateScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      checkUserPlan();
+      const fetchCustomerInfo = async () => {
+        try {
+          const customerInfo = await Purchases.getCustomerInfo();
+          if (customerInfo.entitlements.active["Pro"]) {
+            setCanGenerate(true);
+          }
+        } catch (error) {
+          console.error("Error checking plan:", error);
+          setCanGenerate(false);
+        }
+      };
+      fetchCustomerInfo();
     }, [])
   );
 

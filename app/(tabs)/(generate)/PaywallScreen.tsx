@@ -45,7 +45,7 @@ export default function PaywallScreen() {
   const [offering, setOffering] = useState<PurchasesOffering | null>(null);
   const [loading, setLoading] = useState(true);
   const [purchasing, setPurchasing] = useState(false);
-  const [selectedPackage, setSelectedPackage] = useState<string>("annual");
+  const [selectedPackage, setSelectedPackage] = useState<string>("$rc_annual");
 
   useEffect(() => {
     loadOfferings();
@@ -57,7 +57,7 @@ export default function PaywallScreen() {
       if (offerings.current) {
         setOffering(offerings.current);
         // Default to annual (best value)
-        setSelectedPackage("annual");
+        setSelectedPackage("$rc_annual");
       }
     } catch (error) {
       console.error("Error loading offerings:", error);
@@ -412,7 +412,7 @@ export default function PaywallScreen() {
                 <ActivityIndicator color="#fff" />
               ) : (
                 <Text className="text-center text-lg font-bold text-white">
-                  {selectedPackage === "weekly"
+                  {selectedPackage === "$rc_monthly"
                     ? "Start Free Trial"
                     : "Start Annual Plan"}
                 </Text>

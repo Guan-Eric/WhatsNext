@@ -31,20 +31,20 @@ function WelcomeScreen() {
   const handleGetStarted = async () => {
     setLoading(true);
 
-    // Sign in anonymously first
+    await AsyncStorage.setItem("@is_onboarding", "true");
     const success = await signInAnonymous();
 
     if (!success) {
+      await AsyncStorage.removeItem("@is_onboarding");
       alert("Failed to start. Please try again.");
       setLoading(false);
       return;
     }
 
     if (hasSeenOnboarding) {
-      // User has seen onboarding before, skip to paywall
+      await AsyncStorage.removeItem("@is_onboarding");
       router.replace("/(auth)/paywall");
     } else {
-      // First time user, show onboarding
       try {
         await AsyncStorage.setItem("@has_seen_onboarding", "true");
       } catch (e) {

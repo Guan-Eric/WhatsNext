@@ -37,25 +37,6 @@ function ProfileScreen() {
     router.replace("/(auth)/welcome");
   };
 
-  const handleLogout = async () => {
-    Alert.alert(
-      "Sign Out",
-      "Are you sure you want to sign out? Your data will be deleted.",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Sign Out",
-          style: "destructive",
-          onPress: async () => {
-            await logOut();
-            await resetOnboarding();
-            router.replace("/(auth)/welcome");
-          },
-        },
-      ]
-    );
-  };
-
   const menuItems = [
     {
       title: "My List",
@@ -258,24 +239,6 @@ function ProfileScreen() {
             <Text className="text-white text-lg font-bold mb-3">
               Danger Zone
             </Text>
-
-            {/* Sign Out Button */}
-            <Pressable
-              onPress={handleLogout}
-              className="bg-grey-dark-1 rounded-2xl p-4 mb-3 border-2 border-grey-dark-2 active:opacity-80"
-            >
-              <View className="flex-row items-center justify-center">
-                <MaterialCommunityIcons
-                  name="logout"
-                  size={20}
-                  color="#f8f9fa"
-                />
-                <Text className="text-white font-bold text-base ml-2">
-                  Sign Out
-                </Text>
-              </View>
-            </Pressable>
-
             {/* Delete Account Button */}
             <Pressable
               onPress={() => setIsModalVisible(true)}

@@ -41,7 +41,7 @@ export default function Index() {
   useEffect(() => {
     const fetchData = async () => {
       Purchases.configure({
-        apiKey: "appl_FbIaieuooqMjHMuUhbHUQqpdJXP",
+        apiKey: Constants.expoConfig?.extra?.revenueCatIos,
       });
       await checkAuth();
     };

@@ -9,6 +9,8 @@ import {
   ActivityIndicator,
   Alert,
   StatusBar,
+  TouchableOpacity,
+  Linking,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -388,6 +390,39 @@ export default function PaywallScreen() {
                 <Text className="text-grey-dark-5 text-xs ml-1">
                   Cancel Anytime
                 </Text>
+              </View>
+            </View>
+            {/* REQUIRED FOR APP STORE REVIEW */}
+            <View className="mt-6 px-2">
+              <Text className="text-grey-dark-5 text-[11px] leading-4 text-center">
+                Auto-renewable subscription. Payment will be charged to your
+                Apple ID account at confirmation of purchase. The subscription
+                automatically renews unless auto-renew is turned off at least 24
+                hours before the end of the current period. Your account will be
+                charged for renewal 24 hours prior to the end of the current
+                period.
+                {"\n\n"}You can manage or cancel your subscription at any time
+                in your App Store account settings after purchase. Free trial
+                will convert to a paid subscription unless cancelled at least 24
+                hours before the trial ends.
+              </Text>
+              <View className="flex-row items-center justify-center gap-4 mt-4">
+                <TouchableOpacity
+                  onPress={() =>
+                    Linking.openURL(
+                      "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
+                    )
+                  }
+                >
+                  <Text className="text-primary text-sm">Terms of Use</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    Linking.openURL("https://www.gym-pulse.fit/watchfolio")
+                  }
+                >
+                  <Text className="text-primary text-sm">Privacy Policy</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
